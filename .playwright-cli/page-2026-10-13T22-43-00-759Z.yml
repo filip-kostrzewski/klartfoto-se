@@ -1,0 +1,102 @@
+- generic [active] [ref=f44e1]:
+  - link "Zum Inhalt springen" [ref=f44e2] [cursor=pointer]:
+    - /url: "#main"
+  - generic [ref=f44e3]: Produkt in Vorbereitung
+  - banner [ref=f44e6]:
+    - generic [ref=f44e7]:
+      - link "Klartfoto – Startseite" [ref=f44e8] [cursor=pointer]:
+        - /url: /de
+        - generic [ref=f44e14]: Klartfoto
+      - generic [ref=f44e15]:
+        - group [ref=f44e16]:
+          - generic "Sprache auswählen" [ref=f44e17] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f44e18]: DE
+        - group [ref=f44e19]:
+          - generic "Menü" [ref=f44e20] [cursor=pointer]:
+            - text: Menü
+            - generic [aria-hidden] [ref=f44e21]: +
+        - link "Frühzugang" [ref=f44e22] [cursor=pointer]:
+          - /url: /de#signup
+          - text: Frühzugang
+          - generic [aria-hidden] [ref=f44e23]: ↗
+  - main [ref=f44e24]:
+    - generic [ref=f44e26]:
+      - navigation "Hauptnavigation" [ref=f44e27]:
+        - link "Klartfoto – Startseite" [ref=f44e28] [cursor=pointer]:
+          - /url: /de
+        - generic [aria-hidden] [ref=f44e29]: /
+        - generic [ref=f44e30]: Berichtsvorlage
+      - paragraph [ref=f44e31]: PRAKTISCHE VORLAGE · VORHER UND NACHHER
+      - heading "Vorlage für einen Bericht mit Vorher-Nachher-Fotos." [level=1] [ref=f44e33]
+      - paragraph [ref=f44e34]: "Beispielaufbau für Dienstleistungsbetriebe: Fotos, Ort, kurze Checkliste und Notiz. Angaben und Bilder sind anschaulich."
+      - generic [ref=f44e35]:
+        - button "Drucken / als PDF speichern" [ref=f44e36] [cursor=pointer]:
+          - text: Drucken / als PDF speichern
+          - generic [aria-hidden] [ref=f44e37]: ↗
+        - link "Interesse anmelden" [ref=f44e38] [cursor=pointer]:
+          - /url: /de#signup
+          - text: Interesse anmelden
+          - generic [aria-hidden] [ref=f44e39]: ↗
+      - paragraph [ref=f44e40]: Wählen Sie im Druckdialog „Als PDF speichern“.
+    - generic [ref=f44e41]:
+      - article [ref=f44e42]:
+        - generic [ref=f44e43]:
+          - generic [ref=f44e44]:
+            - paragraph [ref=f44e45]: BERICHTSVORLAGE · ANSCHAULICHE ANGABEN
+            - heading "Bericht über erledigte Arbeit" [level=2] [ref=f44e46]
+            - paragraph [ref=f44e47]: Vorher-Nachher-Fotos · Beispielversion
+          - generic [aria-hidden] [ref=f44e48]: R/01
+        - generic [ref=f44e49]:
+          - generic [ref=f44e50]:
+            - generic [ref=f44e51]: OBJEKT
+            - strong [ref=f44e52]: Beispielwohnung
+          - generic [ref=f44e53]:
+            - generic [ref=f44e54]: ORT
+            - strong [ref=f44e55]: Küche
+          - generic [ref=f44e56]:
+            - generic [ref=f44e57]: DATUM
+            - strong [ref=f44e58]: Anschauliches Beispiel
+        - generic [ref=f44e59]: Anschauliches Beispiel · generierte Bilder · keine Kundendaten
+        - generic [ref=f44e60]:
+          - figure "01 / VORHER Zustand vor der Arbeit" [ref=f44e61]:
+            - img "Generiertes Foto der Beispielküche vor der Reinigung." [ref=f44e62]
+            - generic [ref=f44e63]:
+              - generic [ref=f44e64]: 01 / VORHER
+              - generic [ref=f44e65]: Zustand vor der Arbeit
+          - figure "02 / NACHHER Zustand nach der Arbeit" [ref=f44e66]:
+            - img "Generiertes Foto derselben Küche nach der Reinigung." [ref=f44e67]
+            - generic [ref=f44e68]:
+              - generic [ref=f44e69]: 02 / NACHHER
+              - generic [ref=f44e70]: Zustand nach der Arbeit
+        - generic [ref=f44e71]:
+          - generic [ref=f44e72]:
+            - heading "Beispielcheckliste" [level=3] [ref=f44e73]
+            - list [ref=f44e74]:
+              - listitem [ref=f44e75]:
+                - generic [aria-hidden] [ref=f44e76]: ✓
+                - text: Arbeitsfläche abgewischt
+              - listitem [ref=f44e77]:
+                - generic [aria-hidden] [ref=f44e78]: ✓
+                - text: Spüle gereinigt und getrocknet
+              - listitem [ref=f44e79]:
+                - generic [aria-hidden] [ref=f44e80]: ✓
+                - text: Kochfeld abgewischt
+          - generic [ref=f44e81]:
+            - heading "Notiz" [level=3] [ref=f44e82]
+            - paragraph [ref=f44e83]: "Beispielaufbau: kurze Beschreibung der Arbeit oder Hinweis für den Empfänger des Berichts."
+        - generic [ref=f44e84]:
+          - generic [ref=f44e85]: Klartfoto · Demonstrationsbeispiel
+          - generic [ref=f44e86]: Bericht mit Vorher-Nachher-Fotos
+      - paragraph [ref=f44e87]: Die Bilder zeigen dieselbe generierte Küche in zwei Zuständen. Der Bericht dient nur als Formatbeispiel.
+  - contentinfo [ref=f44e88]:
+    - generic [ref=f44e89]:
+      - link "Klartfoto" [ref=f44e90] [cursor=pointer]:
+        - /url: /de
+      - paragraph [ref=f44e97]: Arbeit zeigen. Ergebnis teilen.
+      - link "Interesse anmelden" [ref=f44e98] [cursor=pointer]:
+        - /url: /de#signup
+        - text: Interesse anmelden ↗
+    - generic [ref=f44e99]:
+      - generic [ref=f44e100]: Fotoberichte für Dienstleistungsbetriebe.
+      - link "Datenschutz" [ref=f44e101] [cursor=pointer]:
+        - /url: /de/datenschutz

@@ -1,0 +1,239 @@
+- generic [active] [ref=f10e1]:
+  - link "Przejdź do treści" [ref=f10e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=f10e3]:
+    - generic [ref=f10e4]:
+      - link "RaportPo — strona główna" [ref=f10e5] [cursor=pointer]:
+        - /url: http://before-after-reports.test
+        - generic [ref=f10e11]: RaportPo
+      - generic [ref=f10e12]:
+        - group [ref=f10e13]:
+          - generic "Otwórz menu" [ref=f10e14] [cursor=pointer]:
+            - text: Menu
+            - generic [aria-hidden] [ref=f10e15]: +
+        - link "Wczesny dostęp" [ref=f10e16] [cursor=pointer]:
+          - /url: http://before-after-reports.test#lista-testowa
+          - text: Wczesny dostęp
+          - generic [aria-hidden] [ref=f10e17]: ↗
+  - main [ref=f10e18]:
+    - generic [ref=f10e19]:
+      - generic [ref=f10e20]:
+        - generic [ref=f10e21]:
+          - paragraph [ref=f10e22]:
+            - text: Wczesny dostęp
+            - generic [ref=f10e24]: /
+            - text: produkt w przygotowaniu
+          - heading "Zdjęcia z pracy. Raport gotowy dla klienta." [level=1] [ref=f10e25]: Zdjęcia z pracy.Raport gotowydla klienta.
+          - paragraph [ref=f10e26]: "Projekt prostego sposobu na pokazanie, co wydarzyło się na obiekcie: zdjęcia przed i po, krótka notatka i czytelny raport dla klienta."
+          - generic [ref=f10e27]:
+            - link "Dołącz do listy testowej" [ref=f10e28] [cursor=pointer]:
+              - /url: "#lista-testowa"
+              - text: Dołącz do listy testowej
+              - generic [aria-hidden] [ref=f10e29]: ↗
+            - link "Zobacz przykład" [ref=f10e30] [cursor=pointer]:
+              - /url: "#przykladowy-raport"
+              - text: Zobacz przykład
+              - generic [aria-hidden] [ref=f10e31]: ↓
+          - paragraph [ref=f10e32]: Zapis oznacza zainteresowanie testami, nie zakup ani rezerwację planu.
+          - generic "Zakres projektu" [ref=f10e33]:
+            - generic [ref=f10e34]:
+              - generic [aria-hidden] [ref=f10e35]: "01"
+              - text: Raport dla firm usługowych
+            - generic [ref=f10e36]:
+              - generic [aria-hidden] [ref=f10e37]: "02"
+              - text: Czytelnie dla klienta
+        - generic [ref=f10e38]:
+          - generic [ref=f10e39]:
+            - generic [ref=f10e40]: Przykład poglądowy · obrazy wygenerowane
+            - generic [ref=f10e43]:
+              - img "Poglądowe zdjęcie kuchni po sprzątaniu." [ref=f10e44]
+              - generic [ref=f10e47]: Przed
+              - generic [ref=f10e48]: Po
+              - slider "Przesuń, aby porównać zdjęcia przed i po" [ref=f10e49]: "54"
+              - generic [ref=f10e50]: Po lewej widoczne jest 54 procent zdjęcia przed sprzątaniem, po prawej zdjęcie po sprzątaniu.
+            - generic [ref=f10e51]:
+              - generic [ref=f10e52]: Ta sama perspektywa
+              - generic [ref=f10e53]: Kuchnia · blat i zlew
+          - generic [ref=f10e54]:
+            - generic [ref=f10e59]:
+              - generic [ref=f10e60]: Fragment przykładowego raportu
+              - strong [ref=f10e61]: Zdjęcia + krótka notatka
+              - generic [ref=f10e62]: Przykładowy układ raportu
+            - generic [aria-hidden] [ref=f10e63]: ↗
+          - generic [aria-hidden] [ref=f10e64]: R/01
+      - generic [ref=f10e65]:
+        - generic [ref=f10e66]: PROJEKT RAPORTU Z WYKONANEJ PRACY
+        - generic [ref=f10e67]: POLSKA WERSJA · DLA FIRM USŁUGOWYCH
+    - generic [ref=f10e68]:
+      - generic [ref=f10e69]:
+        - generic [ref=f10e70]: "01"
+        - text: Po co raport?
+      - generic [ref=f10e71]:
+        - heading [level=2] [ref=f10e72]:
+          - text: Klient widzi więcej
+          - emphasis [ref=f10e73]: niż samo „już zrobione”.
+        - paragraph [ref=f10e75]: Po wizycie klient często chce po prostu wiedzieć, co zostało wykonane. Raport zdjęciowy może połączyć widoczną zmianę z zakresem pracy i krótkim kontekstem — bez długiego szukania zdjęć w rozmowie.
+      - generic [ref=f10e76]:
+        - article [ref=f10e77]:
+          - generic [ref=f10e78]: "01"
+          - heading "Zdjęcia, które mówią o pracy" [level=3] [ref=f10e79]
+          - paragraph [ref=f10e80]: Para przed i po zrobiona z porównywalnego miejsca, opisana pomieszczeniem lub etapem.
+        - article [ref=f10e81]:
+          - generic [ref=f10e82]: "02"
+          - heading "Krótka lista wykonanych zadań" [level=3] [ref=f10e83]
+          - paragraph [ref=f10e84]: Checklisty dopasowane do rodzaju usługi zamiast jednego sztywnego formularza.
+        - article [ref=f10e85]:
+          - generic [ref=f10e86]: "03"
+          - heading "Czytelne przekazanie klientowi" [level=3] [ref=f10e87]
+          - paragraph [ref=f10e88]: Raport, który łatwo przejrzeć po zakończeniu wizyty lub etapu pracy.
+    - generic [ref=f10e89]:
+      - generic [ref=f10e90]:
+        - generic [ref=f10e91]:
+          - generic [ref=f10e92]: "02"
+          - text: Zaprojektowane wokół konkretnej pracy
+        - paragraph [ref=f10e93]: Inny obiekt, inna checklista. Wybierz scenariusz, który najbardziej przypomina Twoją usługę.
+      - generic [ref=f10e94]:
+        - link "01 SPRZĄTANIE Raport po sprzątaniu dla klienta Pomieszczenia, zdjęcia i krótka uwaga po wizycie." [ref=f10e95] [cursor=pointer]:
+          - /url: http://before-after-reports.test/dla-firm-sprzatajacych
+          - generic [ref=f10e96]: "01"
+          - generic [ref=f10e97]:
+            - generic [ref=f10e98]: SPRZĄTANIE
+            - strong [ref=f10e99]: Raport po sprzątaniu dla klienta
+            - generic [ref=f10e100]: Pomieszczenia, zdjęcia i krótka uwaga po wizycie.
+          - generic [aria-hidden] [ref=f10e101]: ↗
+        - link "02 REMONTY I NAPRAWY Dokumentacja zdjęciowa remontu Etap, miejsce, postęp i rzecz do odbioru." [ref=f10e102] [cursor=pointer]:
+          - /url: http://before-after-reports.test/dla-ekip-remontowych
+          - generic [ref=f10e103]: "02"
+          - generic [ref=f10e104]:
+            - generic [ref=f10e105]: REMONTY I NAPRAWY
+            - strong [ref=f10e106]: Dokumentacja zdjęciowa remontu
+            - generic [ref=f10e107]: Etap, miejsce, postęp i rzecz do odbioru.
+          - generic [aria-hidden] [ref=f10e108]: ↗
+        - link "03 OBSŁUGA NAJMU Raport przygotowania apartamentu Stan pokoi, wyposażenie i uwagi dla gospodarza." [ref=f10e109] [cursor=pointer]:
+          - /url: http://before-after-reports.test/dla-zarzadcow-apartamentow
+          - generic [ref=f10e110]: "03"
+          - generic [ref=f10e111]:
+            - generic [ref=f10e112]: OBSŁUGA NAJMU
+            - strong [ref=f10e113]: Raport przygotowania apartamentu
+            - generic [ref=f10e114]: Stan pokoi, wyposażenie i uwagi dla gospodarza.
+          - generic [aria-hidden] [ref=f10e115]: ↗
+    - generic [ref=f10e116]:
+      - generic [ref=f10e117]:
+        - generic [ref=f10e118]:
+          - generic [ref=f10e119]:
+            - generic [ref=f10e120]: "03"
+            - text: Zobacz format
+          - heading [level=2] [ref=f10e121]:
+            - text: Raport, który można
+            - emphasis [ref=f10e122]: przejrzeć w chwilę.
+        - link "Otwórz wzór raportu" [ref=f10e123] [cursor=pointer]:
+          - /url: http://before-after-reports.test/wzor-raportu-przed-po
+          - text: Otwórz wzór raportu
+          - generic [aria-hidden] [ref=f10e124]: ↗
+      - generic [ref=f10e125]:
+        - generic [ref=f10e126]:
+          - paragraph [ref=f10e127]:
+            - generic [aria-hidden] [ref=f10e128]: ✳
+            - text: Przykład poglądowy · obrazy wygenerowane
+          - paragraph [ref=f10e129]: Ten układ pokazuje, jak zdjęcie może sąsiadować z nazwą miejsca, checklistą i jedną krótką notatką.
+          - list [ref=f10e130]:
+            - listitem [ref=f10e131]:
+              - generic [aria-hidden] [ref=f10e132]: ↳
+              - text: Jedno miejsce lub etap pracy
+            - listitem [ref=f10e133]:
+              - generic [aria-hidden] [ref=f10e134]: ↳
+              - text: Porównanie przed i po
+            - listitem [ref=f10e135]:
+              - generic [aria-hidden] [ref=f10e136]: ↳
+              - text: Krótka informacja dla odbiorcy
+          - link "Otwórz pełny przykład" [ref=f10e137] [cursor=pointer]:
+            - /url: http://before-after-reports.test/wzor-raportu-przed-po
+            - text: Otwórz pełny przykład
+            - generic [aria-hidden] [ref=f10e138]: ↗
+        - generic "Fragment przykładowego raportu" [ref=f10e139]:
+          - generic [ref=f10e141]:
+            - text: PRZYKŁADOWY RAPORT / DANE POGLĄDOWE
+            - heading "Przygotowanie pomieszczenia" [level=3] [ref=f10e142]
+          - generic [ref=f10e148]:
+            - generic [ref=f10e149]:
+              - generic [ref=f10e150]: OBIEKT
+              - strong [ref=f10e151]: Mieszkanie pokazowe
+            - generic [ref=f10e152]:
+              - generic [ref=f10e153]: MIEJSCE
+              - strong [ref=f10e154]: Kuchnia
+            - generic [ref=f10e155]:
+              - generic [ref=f10e156]: STATUS
+              - strong [ref=f10e157]: Przykład
+          - generic [ref=f10e159]:
+            - generic [ref=f10e160]: PRZED
+            - generic [ref=f10e162]: PO
+            - generic [ref=f10e164]:
+              - text: NOTATKA
+              - paragraph [ref=f10e165]: "Przykład układu: zdjęcia oraz krótki opis wykonanej pracy."
+          - generic [ref=f10e166]:
+            - generic [ref=f10e167]: Raport demonstracyjny · dane poglądowe
+            - generic [aria-hidden] [ref=f10e168]: R/01
+    - generic [ref=f10e169]:
+      - generic [ref=f10e170]:
+        - text: RAPORT
+        - generic [ref=f10e172]: ·
+        - text: ZESPÓŁ
+      - generic [ref=f10e173]:
+        - generic [ref=f10e174]:
+          - generic [ref=f10e175]: "04"
+          - text: Po wykonanej pracy
+        - heading [level=2] [ref=f10e176]:
+          - text: Od zdjęć z obiektu
+          - emphasis [ref=f10e177]: do sprawnego przekazania.
+        - paragraph [ref=f10e178]: Raport porządkuje zdjęcia, zakres i uwagi po usłudze. Następny krok to ułatwić zespołowi przekazanie tych informacji klientowi bez szukania ich w kilku rozmowach.
+        - link "Sprawdź przykładowy raport" [ref=f10e179] [cursor=pointer]:
+          - /url: http://before-after-reports.test/wzor-raportu-przed-po
+          - text: Sprawdź przykładowy raport
+          - generic [aria-hidden] [ref=f10e180]: ↗
+    - generic [ref=f10e181]:
+      - generic [ref=f10e182]:
+        - paragraph [ref=f10e183]: Zostań na liście
+        - heading [level=2] [ref=f10e185]:
+          - text: Chcesz sprawdzić
+          - emphasis [ref=f10e186]: ten format w pracy?
+        - paragraph [ref=f10e187]: Zostaw adres i wybierz typ swojej pracy. Damy znać, gdy zaczniemy zapraszać firmy do testów.
+        - paragraph [ref=f10e188]: Użyjemy adresu tylko w sprawie testów i startu projektu. Możesz poprosić o jego usunięcie.
+      - generic [ref=f10e190]:
+        - generic [aria-hidden] [ref=f10e191]:
+          - text: Nie wypełniaj tego pola
+          - textbox [ref=f10e192]
+        - generic [ref=f10e193]: Twój adres e-mail
+        - textbox "Twój adres e-mail" [ref=f10e194]:
+          - /placeholder: name@firma.pl
+        - generic [ref=f10e195]: Bez reklam i bez obietnic daty startu.
+        - generic [ref=f10e196]: Czym zajmuje się Twoja firma?
+        - combobox "Czym zajmuje się Twoja firma?" [ref=f10e197]:
+          - option "Wybierz obszar pracy" [disabled] [selected]
+          - option "Sprzątanie"
+          - option "Remonty i naprawy"
+          - option "Obsługa najmu / apartamentów"
+          - option "Inna usługa"
+        - generic [ref=f10e198]: Pomoże dopasować zakres rozmów o testach.
+        - generic [ref=f10e199]:
+          - checkbox "Zgadzam się na zapisanie adresu i kontakt w sprawie testów oraz startu projektu. Wiem, że mogę poprosić o usunięcie danych." [ref=f10e200]
+          - generic [ref=f10e201]: Zgadzam się na zapisanie adresu i kontakt w sprawie testów oraz startu projektu. Wiem, że mogę poprosić o usunięcie danych.
+        - button "Zapisz mnie na listę" [ref=f10e202] [cursor=pointer]:
+          - text: Zapisz mnie na listę
+          - generic [aria-hidden] [ref=f10e203]: ↗
+        - paragraph [ref=f10e204]:
+          - text: Szczegóły w
+          - link "informacji o prywatności" [ref=f10e205] [cursor=pointer]:
+            - /url: http://before-after-reports.test/polityka-prywatnosci
+          - text: .
+  - contentinfo [ref=f10e206]:
+    - generic [ref=f10e207]:
+      - link "RaportPo" [ref=f10e208] [cursor=pointer]:
+        - /url: http://before-after-reports.test
+      - paragraph [ref=f10e215]: Zdjęcia z pracy. Raport gotowy dla klienta.
+      - link "Lista wczesnego dostępu" [ref=f10e216] [cursor=pointer]:
+        - /url: http://before-after-reports.test#lista-testowa
+        - text: Lista wczesnego dostępu ↗
+    - generic [ref=f10e217]:
+      - generic [ref=f10e218]: Raporty zdjęciowe dla firm usługowych.
+      - link "Prywatność" [ref=f10e219] [cursor=pointer]:
+        - /url: http://before-after-reports.test/polityka-prywatnosci

@@ -1,0 +1,110 @@
+- generic [active] [ref=f4e1]:
+  - link "Skip to content" [ref=f4e2] [cursor=pointer]:
+    - /url: "#main"
+  - generic [ref=f4e3]: Product in preparation
+  - banner [ref=f4e6]:
+    - generic [ref=f4e7]:
+      - link "Klartfoto — home" [ref=f4e8] [cursor=pointer]:
+        - /url: /en
+        - generic [ref=f4e14]: Klartfoto
+      - generic [ref=f4e15]:
+        - group [ref=f4e16]:
+          - generic "Choose a language" [ref=f4e17] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f4e18]: EN
+        - group [ref=f4e19]:
+          - generic "Menu" [ref=f4e20] [cursor=pointer]:
+            - text: Menu
+            - generic [aria-hidden] [ref=f4e21]: +
+        - link "Early access" [ref=f4e22] [cursor=pointer]:
+          - /url: /en#signup
+          - text: Early access
+          - generic [aria-hidden] [ref=f4e23]: ↗
+  - main [ref=f4e24]:
+    - generic [ref=f4e26]:
+      - navigation "Main navigation" [ref=f4e27]:
+        - link "Klartfoto — home" [ref=f4e28] [cursor=pointer]:
+          - /url: /en
+        - generic [aria-hidden] [ref=f4e29]: /
+        - generic [ref=f4e30]: For cleaning businesses
+      - paragraph [ref=f4e31]: CLEANING BUSINESSES
+      - heading "Show customers what the clean included." [level=1] [ref=f4e33]
+      - paragraph [ref=f4e34]: A cleaning report can bring together photos from comparable viewpoints, the rooms included and a short note about the work, so customers understand what was done.
+      - generic [ref=f4e35]:
+        - link "Stay in the loop" [ref=f4e36] [cursor=pointer]:
+          - /url: /en#signup
+          - text: Stay in the loop
+          - generic [aria-hidden] [ref=f4e37]: ↗
+        - link "Report template" [ref=f4e38] [cursor=pointer]:
+          - /url: /en/before-after-report-template
+          - text: Report template
+          - generic [aria-hidden] [ref=f4e39]: ↗
+      - paragraph [ref=f4e40]: Klartfoto is in preparation. The example shows a proposed report format, not a finished system.
+    - generic [ref=f4e41]:
+      - generic [ref=f4e42]:
+        - generic [ref=f4e43]:
+          - generic [ref=f4e44]: "01"
+          - text: CLEANING BUSINESSES
+        - heading "What can a cleaning report include?" [level=2] [ref=f4e45]
+        - paragraph [ref=f4e46]: Choose only the details that fit the agreement, property and way you hand over the work.
+      - generic [ref=f4e47]:
+        - article [ref=f4e48]:
+          - generic [ref=f4e49]: "01"
+          - generic [ref=f4e50]:
+            - heading "Rooms and tasks" [level=3] [ref=f4e51]
+            - paragraph [ref=f4e52]: Label the kitchen, bathroom or shared spaces so the report is easy to follow.
+        - article [ref=f4e53]:
+          - generic [ref=f4e54]: "02"
+          - generic [ref=f4e55]:
+            - heading "Comparable before-and-after photos" [level=3] [ref=f4e56]
+            - paragraph [ref=f4e57]: Photograph the same area from a similar viewpoint when possible.
+        - article [ref=f4e58]:
+          - generic [ref=f4e59]: "03"
+          - generic [ref=f4e60]:
+            - heading "Exceptions to mention" [level=3] [ref=f4e61]
+            - paragraph [ref=f4e62]: Note damage, obstacles or work outside the agreed scope.
+        - article [ref=f4e63]:
+          - generic [ref=f4e64]: "04"
+          - generic [ref=f4e65]:
+            - heading "A short customer handover" [level=3] [ref=f4e66]
+            - paragraph [ref=f4e67]: Explain the essentials without turning the report into a long work diary.
+    - generic [ref=f4e68]:
+      - generic [ref=f4e69]:
+        - generic [ref=f4e70]:
+          - generic [ref=f4e71]: "02"
+          - text: CLEANING REPORT EXAMPLE
+        - heading "From a finished visit to a clear update." [level=2] [ref=f4e72]
+        - paragraph [ref=f4e73]: A sample kitchen task could show the counter and sink before and after, followed by a few relevant checklist items and a short note about the result.
+        - link "Open the printable template" [ref=f4e74] [cursor=pointer]:
+          - /url: /en/before-after-report-template
+          - text: Open the printable template
+          - generic [aria-hidden] [ref=f4e75]: ↗
+      - generic [ref=f4e76]:
+        - generic [ref=f4e77]: Illustrative example · generated images
+        - img "Illustrative generated photo of a clean kitchen after cleaning." [ref=f4e78]
+        - generic [ref=f4e79]:
+          - generic [ref=f4e80]: CLEANING BUSINESSES
+          - generic [ref=f4e81]: R/01
+    - generic [ref=f4e82]:
+      - paragraph [ref=f4e83]:
+        - generic [ref=f4e84]: "03"
+        - text: Next step
+      - heading [level=2] [ref=f4e85]:
+        - text: Would a report like this
+        - emphasis [ref=f4e86]: help your cleaning business?
+      - paragraph [ref=f4e87]: Tell us what you need to include after a typical customer visit.
+      - link "Join the early-access list" [ref=f4e88] [cursor=pointer]:
+        - /url: /en#signup
+        - text: Join the early-access list
+        - generic [aria-hidden] [ref=f4e89]: ↗
+  - contentinfo [ref=f4e90]:
+    - generic [ref=f4e91]:
+      - link "Klartfoto" [ref=f4e92] [cursor=pointer]:
+        - /url: /en
+      - paragraph [ref=f4e99]: Show the work. Share the result.
+      - link "Join the interest list" [ref=f4e100] [cursor=pointer]:
+        - /url: /en#signup
+        - text: Join the interest list ↗
+    - generic [ref=f4e101]:
+      - generic [ref=f4e102]: Photo reports for service businesses.
+      - link "Privacy" [ref=f4e103] [cursor=pointer]:
+        - /url: /en/privacy

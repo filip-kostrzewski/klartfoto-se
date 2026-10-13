@@ -1,0 +1,238 @@
+- generic [active] [ref=f2e1]:
+  - link "Hoppa till innehållet" [ref=f2e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=f2e3]:
+    - generic [ref=f2e4]:
+      - link "Klartfoto – startsida" [ref=f2e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f2e11]: Klartfoto
+      - navigation "Huvudmeny" [ref=f2e12]:
+        - link "För vilka företag" [ref=f2e13] [cursor=pointer]:
+          - /url: /#for-who
+        - link "Rapportmall" [ref=f2e14] [cursor=pointer]:
+          - /url: /rapportmall-fore-efter
+        - link "Så kan det fungera" [ref=f2e15] [cursor=pointer]:
+          - /url: /#how-it-works
+      - generic [ref=f2e16]:
+        - group [ref=f2e17]:
+          - generic "Välj språk" [ref=f2e18] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f2e19]: SV
+            - generic [ref=f2e20]: Språk
+        - link "Anmäl intresse" [ref=f2e21] [cursor=pointer]:
+          - /url: /#signup
+          - text: Anmäl intresse
+          - generic [aria-hidden] [ref=f2e22]: ↗
+  - main [ref=f2e23]:
+    - generic [ref=f2e24]:
+      - generic [ref=f2e25]:
+        - generic [ref=f2e26]:
+          - paragraph [ref=f2e27]: Produkt under utveckling
+          - heading "Visa jobbet. Dela resultatet." [level=1] [ref=f2e29]: Visa jobbet.Dela resultatet.
+          - paragraph [ref=f2e30]: Ett enklare sätt för serviceföretag att samla före- och efterbilder, korta arbetsnoteringar och en rapport som kunden kan ta till sig.
+          - generic [ref=f2e31]:
+            - link "Anmäl intresse för test" [ref=f2e32] [cursor=pointer]:
+              - /url: "#signup"
+              - text: Anmäl intresse för test
+              - generic [aria-hidden] [ref=f2e33]: ↗
+            - link "Se ett exempel" [ref=f2e34] [cursor=pointer]:
+              - /url: "#sample-report"
+              - text: Se ett exempel
+              - generic [aria-hidden] [ref=f2e35]: ↓
+          - paragraph [ref=f2e36]: Vi hör av oss när testperioden öppnar.
+          - generic "För serviceföretag" [ref=f2e37]:
+            - generic [ref=f2e38]:
+              - generic [aria-hidden] [ref=f2e39]: "01"
+              - text: Tydligt för kunden
+            - generic [ref=f2e40]:
+              - generic [aria-hidden] [ref=f2e41]: "02"
+              - text: Byggt kring utfört arbete
+        - generic [ref=f2e42]:
+          - generic [ref=f2e43]:
+            - generic [ref=f2e44]: Illustrativt exempel · genererade bilder
+            - generic [ref=f2e47]:
+              - img "Illustrativt foto av samma kök efter rengöring." [ref=f2e48]
+              - generic [ref=f2e51]: Före
+              - generic [ref=f2e52]: Efter
+              - slider "Dra för att jämföra före- och efterbilder" [ref=f2e53]: "54"
+              - generic [ref=f2e54]: Till vänster visas 54 procent av bilden före arbetet och till höger bilden efter arbetet.
+            - generic [ref=f2e55]:
+              - generic [ref=f2e56]: Samma vy
+              - generic [ref=f2e57]: Kök · bänk och diskho
+          - generic [ref=f2e58]:
+            - generic [ref=f2e63]:
+              - generic [ref=f2e64]: Utdrag ur en exempelrapport
+              - strong [ref=f2e65]: Bilder + kort notering
+              - generic [ref=f2e66]: Exempel på rapportens upplägg
+            - generic [aria-hidden] [ref=f2e67]: ↗
+          - generic [aria-hidden] [ref=f2e68]: R/01
+      - generic [ref=f2e69]:
+        - generic [ref=f2e70]: RAPPORT OM UTFÖRT ARBETE
+        - generic [ref=f2e71]: FÖR SERVICEFÖRETAG
+    - generic [ref=f2e72]:
+      - generic [ref=f2e73]:
+        - generic [ref=f2e74]: "01"
+        - text: Varför en rapport?
+      - generic [ref=f2e75]:
+        - heading [level=2] [ref=f2e76]:
+          - text: Kunden ser mer
+          - emphasis [ref=f2e77]: än bara ”klart”.
+        - paragraph [ref=f2e79]: Efter ett besök vill kunden ofta veta vad som faktiskt blev gjort. En fotorapport kan samla förändringen, arbetsomfattningen och en kort förklaring – utan att bilderna försvinner bland meddelanden.
+      - generic [ref=f2e80]:
+        - article [ref=f2e81]:
+          - text: "01"
+          - heading "Bilder som visar arbetet" [level=3] [ref=f2e82]
+          - paragraph [ref=f2e83]: Före och efter från en jämförbar vinkel, märkta med rum eller arbetsmoment.
+        - article [ref=f2e84]:
+          - text: "02"
+          - heading "En kort lista över uppgifter" [level=3] [ref=f2e85]
+          - paragraph [ref=f2e86]: Checklistor anpassade efter tjänsten, i stället för ett enda stelt formulär.
+        - article [ref=f2e87]:
+          - text: "03"
+          - heading "En tydlig överlämning" [level=3] [ref=f2e88]
+          - paragraph [ref=f2e89]: En rapport som kunden enkelt kan gå igenom när besöket eller arbetsmomentet är klart.
+    - generic [ref=f2e90]:
+      - generic [ref=f2e91]:
+        - generic [ref=f2e92]:
+          - generic [ref=f2e93]: "02"
+          - text: Utformat kring olika arbeten
+        - paragraph [ref=f2e94]: Olika uppdrag behöver olika checklistor. Välj det arbetssätt som ligger närmast din tjänst.
+      - generic [ref=f2e95]:
+        - link "01 STÄD Städrapport till kunden Rum, före- och efterbilder samt en kort notering efter besöket." [ref=f2e96] [cursor=pointer]:
+          - /url: /for-stadforetag
+          - generic [ref=f2e97]: "01"
+          - generic [ref=f2e98]:
+            - generic [ref=f2e99]: STÄD
+            - strong [ref=f2e100]: Städrapport till kunden
+            - generic [ref=f2e101]: Rum, före- och efterbilder samt en kort notering efter besöket.
+          - generic [aria-hidden] [ref=f2e102]: ↗
+        - link "02 RENOVERING OCH SERVICE Fotodokumentation av renovering Arbetsmoment, plats, framsteg och punkter för avstämning." [ref=f2e103] [cursor=pointer]:
+          - /url: /for-hantverkare
+          - generic [ref=f2e104]: "02"
+          - generic [ref=f2e105]:
+            - generic [ref=f2e106]: RENOVERING OCH SERVICE
+            - strong [ref=f2e107]: Fotodokumentation av renovering
+            - generic [ref=f2e108]: Arbetsmoment, plats, framsteg och punkter för avstämning.
+          - generic [aria-hidden] [ref=f2e109]: ↗
+        - link "03 UTHYRNING OCH BOENDE Rapport inför nästa gäst Rummens skick, utrustning och noteringar till värden." [ref=f2e110] [cursor=pointer]:
+          - /url: /for-uthyrare
+          - generic [ref=f2e111]: "03"
+          - generic [ref=f2e112]:
+            - generic [ref=f2e113]: UTHYRNING OCH BOENDE
+            - strong [ref=f2e114]: Rapport inför nästa gäst
+            - generic [ref=f2e115]: Rummens skick, utrustning och noteringar till värden.
+          - generic [aria-hidden] [ref=f2e116]: ↗
+    - generic [ref=f2e117]:
+      - generic [ref=f2e118]:
+        - generic [ref=f2e119]:
+          - generic [ref=f2e120]:
+            - generic [ref=f2e121]: "03"
+            - text: Se formatet
+          - heading [level=2] [ref=f2e122]:
+            - text: En rapport att
+            - emphasis [ref=f2e123]: överblicka direkt.
+        - link "Öppna rapportmallen" [ref=f2e124] [cursor=pointer]:
+          - /url: /rapportmall-fore-efter
+          - text: Öppna rapportmallen
+          - generic [aria-hidden] [ref=f2e125]: ↗
+      - generic [ref=f2e126]:
+        - generic [ref=f2e127]:
+          - paragraph [ref=f2e128]:
+            - generic [aria-hidden] [ref=f2e129]: ✳
+            - text: Illustrativt exempel · genererade bilder
+          - paragraph [ref=f2e130]: Exemplet visar hur ett foto kan stå tillsammans med en plats, en checklista och en kort notering.
+          - list [ref=f2e131]:
+            - listitem [ref=f2e132]:
+              - generic [aria-hidden] [ref=f2e133]: ↳
+              - text: En plats eller ett arbetsmoment
+            - listitem [ref=f2e134]:
+              - generic [aria-hidden] [ref=f2e135]: ↳
+              - text: Före- och efterbilder
+            - listitem [ref=f2e136]:
+              - generic [aria-hidden] [ref=f2e137]: ↳
+              - text: En kort upplysning till mottagaren
+          - link "Visa hela exemplet" [ref=f2e138] [cursor=pointer]:
+            - /url: /rapportmall-fore-efter
+            - text: Visa hela exemplet
+            - generic [aria-hidden] [ref=f2e139]: ↗
+        - generic "Utdrag ur en illustrativ rapport" [ref=f2e140]:
+          - generic [ref=f2e142]:
+            - text: EXEMPELRAPPORT / ILLUSTRATIVA UPPGIFTER
+            - heading "Förbereda ett rum" [level=3] [ref=f2e143]
+          - generic [ref=f2e149]:
+            - generic [ref=f2e150]:
+              - generic [ref=f2e151]: OBJEKT
+              - strong [ref=f2e152]: Exempelbostad
+            - generic [ref=f2e153]:
+              - generic [ref=f2e154]: PLATS
+              - strong [ref=f2e155]: Kök
+            - generic [ref=f2e156]:
+              - generic [ref=f2e157]: STATUS
+              - strong [ref=f2e158]: Exempel
+          - generic [ref=f2e160]:
+            - generic [ref=f2e161]: Före
+            - generic [ref=f2e163]: Efter
+            - generic [ref=f2e165]:
+              - text: NOTERING
+              - paragraph [ref=f2e166]: "Exempel på upplägg: bilder tillsammans med en kort beskrivning av arbetet."
+          - generic [ref=f2e167]:
+            - generic [ref=f2e168]: Demorapport · illustrativa uppgifter
+            - generic [aria-hidden] [ref=f2e169]: R/01
+    - generic [ref=f2e170]:
+      - generic [ref=f2e171]: ARBETE · TEAM
+      - generic [ref=f2e172]:
+        - generic [ref=f2e173]:
+          - generic [ref=f2e174]: "04"
+          - text: Efter utfört arbete
+        - heading [level=2] [ref=f2e175]:
+          - text: Från bilder på plats
+          - emphasis [ref=f2e176]: till en smidig överlämning.
+        - paragraph [ref=f2e177]: En rapport samlar bilder, arbetsomfattning och noteringar efter tjänsten. Nästa steg är att göra det enklare för teamet att dela informationen med kunden.
+        - link "Se exempelrapporten" [ref=f2e178] [cursor=pointer]:
+          - /url: /rapportmall-fore-efter
+          - text: Se exempelrapporten
+          - generic [aria-hidden] [ref=f2e179]: ↗
+    - generic [ref=f2e180]:
+      - generic [ref=f2e181]:
+        - paragraph [ref=f2e182]: Håll dig uppdaterad
+        - heading [level=2] [ref=f2e184]:
+          - text: Vill du prova
+          - emphasis [ref=f2e185]: formatet i arbetet?
+        - paragraph [ref=f2e186]: Lämna din e-post och välj typ av arbete. Vi hör av oss när vi börjar bjuda in företag till tester.
+        - paragraph [ref=f2e187]: Vi använder adressen för information om tester och projektstart. Du kan när som helst be oss ta bort den.
+      - generic [ref=f2e189]:
+        - textbox [ref=f2e191]
+        - generic [ref=f2e192]: Din e-postadress
+        - textbox "Din e-postadress" [ref=f2e193]:
+          - /placeholder: namn@foretag.se
+        - generic [ref=f2e194]: Vi mejlar om tester och projektstart.
+        - generic [ref=f2e195]: Vad arbetar ditt företag med?
+        - combobox "Vad arbetar ditt företag med?" [ref=f2e196]:
+          - option "Välj arbetsområde" [disabled] [selected]
+          - option "Städning"
+          - option "Renovering och service"
+          - option "Uthyrning och boende"
+          - option "Annan tjänst"
+        - generic [ref=f2e197]: Hjälper oss att anpassa samtalen om tester.
+        - generic [ref=f2e198]:
+          - checkbox "Jag samtycker till att adressen sparas och att ni kontaktar mig om tester och projektstart. Jag vet att jag kan be om att uppgifterna tas bort." [ref=f2e199]
+          - generic [ref=f2e200]: Jag samtycker till att adressen sparas och att ni kontaktar mig om tester och projektstart. Jag vet att jag kan be om att uppgifterna tas bort.
+        - button "Anmäl mitt intresse" [ref=f2e201] [cursor=pointer]:
+          - text: Anmäl mitt intresse
+          - generic [aria-hidden] [ref=f2e202]: ↗
+        - paragraph [ref=f2e203]:
+          - text: "Läs integritetsinformationen:"
+          - link "Integritet" [ref=f2e204] [cursor=pointer]:
+            - /url: /integritet
+          - text: .
+  - contentinfo [ref=f2e205]:
+    - generic [ref=f2e206]:
+      - link "Klartfoto" [ref=f2e207] [cursor=pointer]:
+        - /url: /
+      - paragraph [ref=f2e214]: Visa jobbet. Dela resultatet.
+      - link "Anmäl intresse" [ref=f2e215] [cursor=pointer]:
+        - /url: /#signup
+        - text: Anmäl intresse ↗
+    - generic [ref=f2e216]:
+      - generic [ref=f2e217]: Fotodokumentation för serviceföretag.
+      - link "Integritet" [ref=f2e218] [cursor=pointer]:
+        - /url: /integritet

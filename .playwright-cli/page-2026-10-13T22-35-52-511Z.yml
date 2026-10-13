@@ -1,0 +1,125 @@
+- generic [ref=f3e1]:
+  - link "Hoppa till innehållet" [ref=f3e2] [cursor=pointer]:
+    - /url: "#main"
+  - generic [ref=f3e3]: Produkt under utveckling
+  - banner [ref=f3e6]:
+    - generic [ref=f3e7]:
+      - link "Klartfoto – startsida" [ref=f3e8] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f3e14]: Klartfoto
+      - generic [ref=f3e15]:
+        - group [ref=f3e16]:
+          - generic "Välj språk" [active] [ref=f3e17] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f3e18]: SV
+          - navigation "Välj språk" [ref=f3e104]:
+            - link "Svenska" [ref=f3e105] [cursor=pointer]:
+              - /url: /for-stadforetag
+            - link "English" [ref=f3e106] [cursor=pointer]:
+              - /url: /en/for-cleaning-companies
+            - link "Polski" [ref=f3e107] [cursor=pointer]:
+              - /url: /pl/dla-firm-sprzatajacych
+            - link "Deutsch" [ref=f3e108] [cursor=pointer]:
+              - /url: /de/fuer-reinigungsunternehmen
+            - link "Norsk bokmål" [ref=f3e109] [cursor=pointer]:
+              - /url: /nb/for-renholdsbedrifter
+            - link "Dansk" [ref=f3e110] [cursor=pointer]:
+              - /url: /da/for-rengoringsfirmaer
+            - link "Suomi" [ref=f3e111] [cursor=pointer]:
+              - /url: /fi/siivousyrityksille
+        - group [ref=f3e19]:
+          - generic "Meny" [ref=f3e20] [cursor=pointer]:
+            - text: Meny
+            - generic [aria-hidden] [ref=f3e21]: +
+        - link "Anmäl intresse" [ref=f3e22] [cursor=pointer]:
+          - /url: /#signup
+          - text: Anmäl intresse
+          - generic [aria-hidden] [ref=f3e23]: ↗
+  - main [ref=f3e24]:
+    - generic [ref=f3e26]:
+      - navigation "Huvudmeny" [ref=f3e27]:
+        - link "Klartfoto – startsida" [ref=f3e28] [cursor=pointer]:
+          - /url: /
+        - generic [aria-hidden] [ref=f3e29]: /
+        - generic [ref=f3e30]: För städföretag
+      - paragraph [ref=f3e31]: STÄDFÖRETAG
+      - heading "Visa kunden vad städningen omfattade." [level=1] [ref=f3e33]
+      - paragraph [ref=f3e34]: En städrapport kan samla bilder från jämförbara vinklar, rum som ingick och en kort notering om arbetet – så kunden förstår vad som blev gjort.
+      - generic [ref=f3e35]:
+        - link "Håll dig uppdaterad" [ref=f3e36] [cursor=pointer]:
+          - /url: /#signup
+          - text: Håll dig uppdaterad
+          - generic [aria-hidden] [ref=f3e37]: ↗
+        - link "Rapportmall" [ref=f3e38] [cursor=pointer]:
+          - /url: /rapportmall-fore-efter
+          - text: Rapportmall
+          - generic [aria-hidden] [ref=f3e39]: ↗
+      - paragraph [ref=f3e40]: Få en tydlig överblick över utförda moment efter varje kundbesök.
+    - generic [ref=f3e41]:
+      - generic [ref=f3e42]:
+        - generic [ref=f3e43]:
+          - generic [ref=f3e44]: "01"
+          - text: STÄDFÖRETAG
+        - heading "Vad kan en städrapport innehålla?" [level=2] [ref=f3e45]
+        - paragraph [ref=f3e46]: Välj bara punkter som passar avtalet, objektet och hur arbetet överlämnas till kunden.
+      - generic [ref=f3e47]:
+        - article [ref=f3e48]:
+          - generic [ref=f3e49]: "01"
+          - generic [ref=f3e50]:
+            - heading "Rum och arbetsmoment" [level=3] [ref=f3e51]
+            - paragraph [ref=f3e52]: Märk kök, badrum eller gemensamma ytor så att rapporten blir lätt att följa.
+        - article [ref=f3e53]:
+          - generic [ref=f3e54]: "02"
+          - generic [ref=f3e55]:
+            - heading "Jämförbara före- och efterbilder" [level=3] [ref=f3e56]
+            - paragraph [ref=f3e57]: Fotografera samma yta från ungefär samma plats när det är möjligt.
+        - article [ref=f3e58]:
+          - generic [ref=f3e59]: "03"
+          - generic [ref=f3e60]:
+            - heading "Avvikelser att känna till" [level=3] [ref=f3e61]
+            - paragraph [ref=f3e62]: Notera skador, hinder eller sådant som inte ingick i uppdraget.
+        - article [ref=f3e63]:
+          - generic [ref=f3e64]: "04"
+          - generic [ref=f3e65]:
+            - heading "Kort överlämning till kunden" [level=3] [ref=f3e66]
+            - paragraph [ref=f3e67]: Beskriv det viktigaste utan att göra rapporten till en lång arbetsdagbok.
+    - generic [ref=f3e68]:
+      - generic [ref=f3e69]:
+        - generic [ref=f3e70]:
+          - generic [ref=f3e71]: "02"
+          - text: EXEMPEL PÅ STÄDRAPPORT
+        - heading "Från avslutat besök till tydlig återkoppling." [level=2] [ref=f3e72]
+        - paragraph [ref=f3e73]: Ett tänkt köksmoment kan visa bänk och diskho före och efter arbetet, följt av några relevanta punkter och en kort kommentar om resultatet.
+        - link "Öppna den utskrivbara mallen" [ref=f3e74] [cursor=pointer]:
+          - /url: /rapportmall-fore-efter
+          - text: Öppna den utskrivbara mallen
+          - generic [aria-hidden] [ref=f3e75]: ↗
+      - generic [ref=f3e76]:
+        - generic [ref=f3e77]: Illustrativt exempel · genererade bilder
+        - img "Illustrativt genererat foto av ett rent kök efter städning." [ref=f3e78]
+        - generic [ref=f3e79]:
+          - generic [ref=f3e80]: STÄDFÖRETAG
+          - generic [ref=f3e81]: R/01
+    - generic [ref=f3e82]:
+      - paragraph [ref=f3e83]:
+        - generic [ref=f3e84]: "03"
+        - text: Nästa steg
+      - heading [level=2] [ref=f3e85]:
+        - text: Är en sådan rapport
+        - emphasis [ref=f3e86]: relevant för ditt städföretag?
+      - paragraph [ref=f3e87]: Berätta vilka delar som behövs efter ett vanligt kundbesök.
+      - link "Anmäl intresse för test" [ref=f3e88] [cursor=pointer]:
+        - /url: /#signup
+        - text: Anmäl intresse för test
+        - generic [aria-hidden] [ref=f3e89]: ↗
+  - contentinfo [ref=f3e90]:
+    - generic [ref=f3e91]:
+      - link "Klartfoto" [ref=f3e92] [cursor=pointer]:
+        - /url: /
+      - paragraph [ref=f3e99]: Visa jobbet. Dela resultatet.
+      - link "Anmäl intresse" [ref=f3e100] [cursor=pointer]:
+        - /url: /#signup
+        - text: Anmäl intresse ↗
+    - generic [ref=f3e101]:
+      - generic [ref=f3e102]: Fotodokumentation för serviceföretag.
+      - link "Integritet" [ref=f3e103] [cursor=pointer]:
+        - /url: /integritet

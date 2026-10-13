@@ -1,0 +1,102 @@
+- generic [active] [ref=f42e1]:
+  - link "Hoppa till innehållet" [ref=f42e2] [cursor=pointer]:
+    - /url: "#main"
+  - generic [ref=f42e3]: Produkt under utveckling
+  - banner [ref=f42e6]:
+    - generic [ref=f42e7]:
+      - link "Klartfoto – startsida" [ref=f42e8] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f42e14]: Klartfoto
+      - generic [ref=f42e15]:
+        - group [ref=f42e16]:
+          - generic "Välj språk" [ref=f42e17] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f42e18]: SV
+        - group [ref=f42e19]:
+          - generic "Meny" [ref=f42e20] [cursor=pointer]:
+            - text: Meny
+            - generic [aria-hidden] [ref=f42e21]: +
+        - link "Anmäl intresse" [ref=f42e22] [cursor=pointer]:
+          - /url: /#signup
+          - text: Anmäl intresse
+          - generic [aria-hidden] [ref=f42e23]: ↗
+  - main [ref=f42e24]:
+    - generic [ref=f42e26]:
+      - navigation "Huvudmeny" [ref=f42e27]:
+        - link "Klartfoto – startsida" [ref=f42e28] [cursor=pointer]:
+          - /url: /
+        - generic [aria-hidden] [ref=f42e29]: /
+        - generic [ref=f42e30]: Rapportmall
+      - paragraph [ref=f42e31]: MATERIAL ATT ANVÄNDA · FÖRE OCH EFTER
+      - heading "Mall för en rapport med före- och efterbilder." [level=1] [ref=f42e33]
+      - paragraph [ref=f42e34]: Ett exempel på hur serviceföretag kan samla bilder, plats, en kort checklista och en notering. Uppgifter och foton är illustrativa.
+      - generic [ref=f42e35]:
+        - button "Skriv ut / spara som PDF" [ref=f42e36] [cursor=pointer]:
+          - text: Skriv ut / spara som PDF
+          - generic [aria-hidden] [ref=f42e37]: ↗
+        - link "Anmäl intresse" [ref=f42e38] [cursor=pointer]:
+          - /url: /#signup
+          - text: Anmäl intresse
+          - generic [aria-hidden] [ref=f42e39]: ↗
+      - paragraph [ref=f42e40]: Välj ”Spara som PDF” i utskriftsdialogen.
+    - generic [ref=f42e41]:
+      - article [ref=f42e42]:
+        - generic [ref=f42e43]:
+          - generic [ref=f42e44]:
+            - paragraph [ref=f42e45]: RAPPORTMALL · ILLUSTRATIVA UPPGIFTER
+            - heading "Rapport om utfört arbete" [level=2] [ref=f42e46]
+            - paragraph [ref=f42e47]: Före- och efterbilder · exempelversion
+          - generic [aria-hidden] [ref=f42e48]: R/01
+        - generic [ref=f42e49]:
+          - generic [ref=f42e50]:
+            - generic [ref=f42e51]: OBJEKT
+            - strong [ref=f42e52]: Exempelbostad
+          - generic [ref=f42e53]:
+            - generic [ref=f42e54]: PLATS
+            - strong [ref=f42e55]: Kök
+          - generic [ref=f42e56]:
+            - generic [ref=f42e57]: DATUM
+            - strong [ref=f42e58]: Illustrativt exempel
+        - generic [ref=f42e59]: Illustrativt exempel · genererade bilder · inga kunduppgifter
+        - generic [ref=f42e60]:
+          - figure "01 / FÖRE Före arbetet" [ref=f42e61]:
+            - img "Genererad bild av exempelköket före rengöring." [ref=f42e62]
+            - generic [ref=f42e63]:
+              - generic [ref=f42e64]: 01 / FÖRE
+              - generic [ref=f42e65]: Före arbetet
+          - figure "02 / EFTER Efter arbetet" [ref=f42e66]:
+            - img "Genererad bild av samma kök efter rengöring." [ref=f42e67]
+            - generic [ref=f42e68]:
+              - generic [ref=f42e69]: 02 / EFTER
+              - generic [ref=f42e70]: Efter arbetet
+        - generic [ref=f42e71]:
+          - generic [ref=f42e72]:
+            - heading "Exempel på checklista" [level=3] [ref=f42e73]
+            - list [ref=f42e74]:
+              - listitem [ref=f42e75]:
+                - generic [aria-hidden] [ref=f42e76]: ✓
+                - text: Bänken avtorkad
+              - listitem [ref=f42e77]:
+                - generic [aria-hidden] [ref=f42e78]: ✓
+                - text: Diskhon rengjord och torr
+              - listitem [ref=f42e79]:
+                - generic [aria-hidden] [ref=f42e80]: ✓
+                - text: Spishällen avtorkad
+          - generic [ref=f42e81]:
+            - heading "Notering" [level=3] [ref=f42e82]
+            - paragraph [ref=f42e83]: "Exempel på upplägg: kort beskrivning av arbetet eller information till rapportens mottagare."
+        - generic [ref=f42e84]:
+          - generic [ref=f42e85]: Klartfoto · demonstrationsexempel
+          - generic [ref=f42e86]: Rapport med före- och efterbilder
+      - paragraph [ref=f42e87]: Bilderna visar samma genererade kök i två skick. Rapporten är enbart ett exempel på formatet.
+  - contentinfo [ref=f42e88]:
+    - generic [ref=f42e89]:
+      - link "Klartfoto" [ref=f42e90] [cursor=pointer]:
+        - /url: /
+      - paragraph [ref=f42e97]: Visa jobbet. Dela resultatet.
+      - link "Anmäl intresse" [ref=f42e98] [cursor=pointer]:
+        - /url: /#signup
+        - text: Anmäl intresse ↗
+    - generic [ref=f42e99]:
+      - generic [ref=f42e100]: Fotodokumentation för serviceföretag.
+      - link "Integritet" [ref=f42e101] [cursor=pointer]:
+        - /url: /integritet

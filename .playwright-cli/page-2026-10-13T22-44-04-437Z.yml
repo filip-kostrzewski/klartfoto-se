@@ -1,0 +1,234 @@
+- generic [active] [ref=f45e1]:
+  - link "Skip to content" [ref=f45e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=f45e3]:
+    - generic [ref=f45e4]:
+      - link "Klartfoto — home" [ref=f45e5] [cursor=pointer]:
+        - /url: /en
+        - generic [ref=f45e11]: Klartfoto
+      - generic [ref=f45e12]:
+        - group [ref=f45e13]:
+          - generic "Choose a language" [ref=f45e14] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f45e15]: EN
+        - group [ref=f45e16]:
+          - generic "Menu" [ref=f45e17] [cursor=pointer]:
+            - text: Menu
+            - generic [aria-hidden] [ref=f45e18]: +
+        - link "Early access" [ref=f45e19] [cursor=pointer]:
+          - /url: /en#signup
+          - text: Early access
+          - generic [aria-hidden] [ref=f45e20]: ↗
+  - main [ref=f45e21]:
+    - generic [ref=f45e22]:
+      - generic [ref=f45e23]:
+        - generic [ref=f45e24]:
+          - paragraph [ref=f45e25]: Product in preparation
+          - heading "Show the work. Share the result." [level=1] [ref=f45e27]: Show the work.Share the result.
+          - paragraph [ref=f45e28]: A simpler way for service businesses to bring together before-and-after photos, brief work notes and a report customers can follow.
+          - generic [ref=f45e29]:
+            - link "Join the early-access list" [ref=f45e30] [cursor=pointer]:
+              - /url: "#signup"
+              - text: Join the early-access list
+              - generic [aria-hidden] [ref=f45e31]: ↗
+            - link "See an example" [ref=f45e32] [cursor=pointer]:
+              - /url: "#sample-report"
+              - text: See an example
+              - generic [aria-hidden] [ref=f45e33]: ↓
+          - paragraph [ref=f45e34]: Signing up means interest in testing, not a purchase or a reservation.
+          - generic "For service businesses" [ref=f45e35]:
+            - generic [ref=f45e36]:
+              - generic [aria-hidden] [ref=f45e37]: "01"
+              - text: Clear for customers
+            - generic [ref=f45e38]:
+              - generic [aria-hidden] [ref=f45e39]: "02"
+              - text: Built around completed work
+        - generic [ref=f45e40]:
+          - generic [ref=f45e41]:
+            - generic [ref=f45e42]: Illustrative example · generated images
+            - generic [ref=f45e45]:
+              - img "Illustrative photo of the same kitchen after cleaning." [ref=f45e46]
+              - generic [ref=f45e49]: Before
+              - generic [ref=f45e50]: After
+              - slider "Drag to compare before-and-after photos" [ref=f45e51]: "54"
+              - generic [ref=f45e52]: The left side shows 54 percent of the image before the work; the right side shows the image after the work.
+            - generic [ref=f45e53]:
+              - generic [ref=f45e54]: Same viewpoint
+              - generic [ref=f45e55]: Kitchen · counter and sink
+          - generic [ref=f45e56]:
+            - generic [ref=f45e61]:
+              - generic [ref=f45e62]: A sample report excerpt
+              - strong [ref=f45e63]: Photos + a short note
+              - generic [ref=f45e64]: Example report layout
+            - generic [aria-hidden] [ref=f45e65]: ↗
+          - generic [aria-hidden] [ref=f45e66]: R/01
+      - generic [ref=f45e67]:
+        - generic [ref=f45e68]: REPORT OF COMPLETED WORK
+        - generic [ref=f45e69]: FOR SERVICE BUSINESSES
+    - generic [ref=f45e70]:
+      - generic [ref=f45e71]:
+        - generic [ref=f45e72]: "01"
+        - text: Why make a report?
+      - generic [ref=f45e73]:
+        - heading [level=2] [ref=f45e74]:
+          - text: Customers see more
+          - emphasis [ref=f45e75]: than “all done”.
+        - paragraph [ref=f45e77]: After a visit, customers often want to know what was actually completed. A photo report can connect the visible result with the scope of work and a short explanation, without photos getting lost in a chat.
+      - generic [ref=f45e78]:
+        - article [ref=f45e79]:
+          - generic [ref=f45e80]: "01"
+          - heading "Photos that show the work" [level=3] [ref=f45e81]
+          - paragraph [ref=f45e82]: Before and after from a comparable viewpoint, labelled by room or task.
+        - article [ref=f45e83]:
+          - generic [ref=f45e84]: "02"
+          - heading "A short task list" [level=3] [ref=f45e85]
+          - paragraph [ref=f45e86]: Checklists suited to the type of service instead of one rigid form.
+        - article [ref=f45e87]:
+          - generic [ref=f45e88]: "03"
+          - heading "A clear handover" [level=3] [ref=f45e89]
+          - paragraph [ref=f45e90]: A report customers can review when the visit or stage of work is complete.
+    - generic [ref=f45e91]:
+      - generic [ref=f45e92]:
+        - generic [ref=f45e93]:
+          - generic [ref=f45e94]: "02"
+          - text: Designed around different kinds of work
+        - paragraph [ref=f45e95]: Different jobs need different checklists. Choose the workflow closest to your service.
+      - generic [ref=f45e96]:
+        - link "01 CLEANING A cleaning report for customers Rooms, before-and-after photos and a short note after a visit." [ref=f45e97] [cursor=pointer]:
+          - /url: /en/for-cleaning-companies
+          - generic [ref=f45e98]: "01"
+          - generic [ref=f45e99]:
+            - generic [ref=f45e100]: CLEANING
+            - strong [ref=f45e101]: A cleaning report for customers
+            - generic [ref=f45e102]: Rooms, before-and-after photos and a short note after a visit.
+          - generic [aria-hidden] [ref=f45e103]: ↗
+        - link "02 RENOVATION AND REPAIRS Photo documentation for renovation work Stage, location, progress and items to review." [ref=f45e104] [cursor=pointer]:
+          - /url: /en/for-contractors
+          - generic [ref=f45e105]: "02"
+          - generic [ref=f45e106]:
+            - generic [ref=f45e107]: RENOVATION AND REPAIRS
+            - strong [ref=f45e108]: Photo documentation for renovation work
+            - generic [ref=f45e109]: Stage, location, progress and items to review.
+          - generic [aria-hidden] [ref=f45e110]: ↗
+        - link "03 RENTALS AND PROPERTY A report before the next guest Room condition, supplies and notes for the host." [ref=f45e111] [cursor=pointer]:
+          - /url: /en/for-rental-managers
+          - generic [ref=f45e112]: "03"
+          - generic [ref=f45e113]:
+            - generic [ref=f45e114]: RENTALS AND PROPERTY
+            - strong [ref=f45e115]: A report before the next guest
+            - generic [ref=f45e116]: Room condition, supplies and notes for the host.
+          - generic [aria-hidden] [ref=f45e117]: ↗
+    - generic [ref=f45e118]:
+      - generic [ref=f45e119]:
+        - generic [ref=f45e120]:
+          - generic [ref=f45e121]:
+            - generic [ref=f45e122]: "03"
+            - text: See the format
+          - heading [level=2] [ref=f45e123]:
+            - text: A report you can
+            - emphasis [ref=f45e124]: scan at a glance.
+        - link "Open the report template" [ref=f45e125] [cursor=pointer]:
+          - /url: /en/before-after-report-template
+          - text: Open the report template
+          - generic [aria-hidden] [ref=f45e126]: ↗
+      - generic [ref=f45e127]:
+        - generic [ref=f45e128]:
+          - paragraph [ref=f45e129]:
+            - generic [aria-hidden] [ref=f45e130]: ✳
+            - text: Illustrative example · generated images
+          - paragraph [ref=f45e131]: This example shows how a photo can sit alongside a location, a checklist and one short note.
+          - list [ref=f45e132]:
+            - listitem [ref=f45e133]:
+              - generic [aria-hidden] [ref=f45e134]: ↳
+              - text: One location or stage of work
+            - listitem [ref=f45e135]:
+              - generic [aria-hidden] [ref=f45e136]: ↳
+              - text: Before-and-after photos
+            - listitem [ref=f45e137]:
+              - generic [aria-hidden] [ref=f45e138]: ↳
+              - text: A short note for the recipient
+          - link "View the full example" [ref=f45e139] [cursor=pointer]:
+            - /url: /en/before-after-report-template
+            - text: View the full example
+            - generic [aria-hidden] [ref=f45e140]: ↗
+        - generic "Excerpt from an illustrative report" [ref=f45e141]:
+          - generic [ref=f45e143]:
+            - text: SAMPLE REPORT / ILLUSTRATIVE DETAILS
+            - heading "Preparing a room" [level=3] [ref=f45e144]
+          - generic [ref=f45e150]:
+            - generic [ref=f45e151]:
+              - generic [ref=f45e152]: PROPERTY
+              - strong [ref=f45e153]: Example apartment
+            - generic [ref=f45e154]:
+              - generic [ref=f45e155]: LOCATION
+              - strong [ref=f45e156]: Kitchen
+            - generic [ref=f45e157]:
+              - generic [ref=f45e158]: STATUS
+              - strong [ref=f45e159]: Example
+          - generic [ref=f45e161]:
+            - generic [ref=f45e162]: Before
+            - generic [ref=f45e164]: After
+            - generic [ref=f45e166]:
+              - text: NOTE
+              - paragraph [ref=f45e167]: "Example layout: photos alongside a short description of the work completed."
+          - generic [ref=f45e168]:
+            - generic [ref=f45e169]: Demonstration report · illustrative details
+            - generic [aria-hidden] [ref=f45e170]: R/01
+    - generic [ref=f45e171]:
+      - generic [ref=f45e172]: WORK · TEAM
+      - generic [ref=f45e173]:
+        - generic [ref=f45e174]:
+          - generic [ref=f45e175]: "04"
+          - text: After the work is done
+        - heading [level=2] [ref=f45e176]:
+          - text: From photos on site
+          - emphasis [ref=f45e177]: to a smoother handover.
+        - paragraph [ref=f45e178]: A report brings together photos, scope and notes after a service. The next step is to help a team pass that information to the customer without searching through several conversations.
+        - link "View the sample report" [ref=f45e179] [cursor=pointer]:
+          - /url: /en/before-after-report-template
+          - text: View the sample report
+          - generic [aria-hidden] [ref=f45e180]: ↗
+    - generic [ref=f45e181]:
+      - generic [ref=f45e182]:
+        - paragraph [ref=f45e183]: Stay in the loop
+        - heading [level=2] [ref=f45e185]:
+          - text: Would you try
+          - emphasis [ref=f45e186]: this format at work?
+        - paragraph [ref=f45e187]: Leave your email and choose your type of work. We will get in touch when we start inviting businesses to test.
+        - paragraph [ref=f45e188]: We will use your address for updates about testing and the project launch. You can ask us to delete it at any time.
+      - generic [ref=f45e190]:
+        - textbox [ref=f45e192]
+        - generic [ref=f45e193]: Your email address
+        - textbox "Your email address" [ref=f45e194]:
+          - /placeholder: name@company.com
+        - generic [ref=f45e195]: We will email you about testing and launch updates.
+        - generic [ref=f45e196]: What does your business do?
+        - combobox "What does your business do?" [ref=f45e197]:
+          - option "Choose a work area" [disabled] [selected]
+          - option "Cleaning"
+          - option "Renovation and repairs"
+          - option "Rental and property services"
+          - option "Another service"
+        - generic [ref=f45e198]: Helps us shape conversations about testing.
+        - generic [ref=f45e199]:
+          - checkbox "I agree to have my address stored and to be contacted about testing and the project launch. I know I can ask to have my details removed." [ref=f45e200]
+          - generic [ref=f45e201]: I agree to have my address stored and to be contacted about testing and the project launch. I know I can ask to have my details removed.
+        - button "Join the interest list" [ref=f45e202] [cursor=pointer]:
+          - text: Join the interest list
+          - generic [aria-hidden] [ref=f45e203]: ↗
+        - paragraph [ref=f45e204]:
+          - text: "Read the privacy information:"
+          - link "Privacy" [ref=f45e205] [cursor=pointer]:
+            - /url: /en/privacy
+          - text: .
+  - contentinfo [ref=f45e206]:
+    - generic [ref=f45e207]:
+      - link "Klartfoto" [ref=f45e208] [cursor=pointer]:
+        - /url: /en
+      - paragraph [ref=f45e215]: Show the work. Share the result.
+      - link "Join the interest list" [ref=f45e216] [cursor=pointer]:
+        - /url: /en#signup
+        - text: Join the interest list ↗
+    - generic [ref=f45e217]:
+      - generic [ref=f45e218]: Photo reports for service businesses.
+      - link "Privacy" [ref=f45e219] [cursor=pointer]:
+        - /url: /en/privacy
