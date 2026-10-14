@@ -2,7 +2,8 @@
 
 return [
     'brand' => env('MARKETING_BRAND', 'Klartfoto'),
-    'base_url' => rtrim((string) env('SEO_BASE_URL', env('APP_URL', 'http://localhost')), '/'),
+    'base_url' => rtrim((string) env('APP_URL', 'https://klartfoto.se'), '/'),
+    // Production indexing follows APP_ENV. This flag cannot turn it off.
     'indexing_enabled' => filter_var(env('SEO_INDEXABLE', false), FILTER_VALIDATE_BOOL),
     'waitlist_enabled' => filter_var(env('EARLY_ACCESS_ENABLED', false), FILTER_VALIDATE_BOOL),
     'email_confirmation' => filter_var(env('EARLY_ACCESS_CONFIRMATION', false), FILTER_VALIDATE_BOOL),

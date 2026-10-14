@@ -4,9 +4,12 @@ namespace App;
 
 class SiteSeo
 {
+    public const PUBLIC_BASE_URL = 'https://klartfoto.se';
+
     public static function baseUrl(): string
     {
-        return rtrim((string) config('marketing.base_url', config('app.url')), '/');
+        return self::publishableBaseUrl((string) config('app.url', self::PUBLIC_BASE_URL))
+            ?? self::PUBLIC_BASE_URL;
     }
 
     public static function canonical(string $path): string
@@ -19,14 +22,37 @@ class SiteSeo
 
     public static function isIndexable(): bool
     {
-        $baseUrl = self::baseUrl();
-        $host = parse_url($baseUrl, PHP_URL_HOST);
-
         return app()->environment('production')
-            && (bool) config('marketing.indexing_enabled')
-            && parse_url($baseUrl, PHP_URL_SCHEME) === 'https'
-            && is_string($host)
-            && ! preg_match('/(^localhost$|^127\.|\.test$|\.local$)/i', $host);
+            && self::publishableBaseUrl(self::baseUrl()) !== null;
+    }
+
+    /**
+     * Accept only an https origin whose host can be published.
+     * Local hosts are rejected so a development APP_URL cannot leak into canonicals.
+     */
+    private static function publishableBaseUrl(string $url): ?string
+    {
+        $parts = parse_url(trim($url));
+
+        if (! is_array($parts)) {
+            return null;
+        }
+
+        $scheme = strtolower((string) ($parts['scheme'] ?? ''));
+        $host = strtolower((string) ($parts['host'] ?? ''));
+
+        if ($scheme !== 'https' || $host === '' || self::isLocalHost($host)) {
+            return null;
+        }
+
+        $port = isset($parts['port']) ? ':'.$parts['port'] : '';
+
+        return 'https://'.$host.$port;
+    }
+
+    private static function isLocalHost(string $host): bool
+    {
+        return (bool) preg_match('/(^localhost$|^127\.|\.local$|\.test$)/i', $host);
     }
 
     public static function waitlistIsOpen(): bool

@@ -1,6 +1,6 @@
 # SEO i mapa adresów
 
-Strona jest przeznaczona dla firm szukających praktycznego sposobu na dokumentowanie wykonanej usługi i przekazywanie klientowi raportu. Głównym rynkiem jest Szwecja, a szwedzka wersja jest dostępna pod ścieżką główną. Obecnie serwis zawiera pełne teksty po szwedzku, angielsku, polsku, niemiecku, norwesku bokmål, duńsku i fińsku. Domena `klartfoto.se` została kupiona, ale strona nie została opublikowana; lokalny canonical pozostaje pod adresem `.test`. Formularz służy do kontaktu w sprawie Klartfoto; treści mają opisywać wartość raportu bez sugerowania, że istnieją konta lub działająca aplikacja. Nie zakładamy wolumenów wyszukiwań ani pozycji w Google.
+Strona jest przeznaczona dla firm szukających praktycznego sposobu na dokumentowanie wykonanej usługi i przekazywanie klientowi raportu. Głównym rynkiem jest Szwecja, a szwedzka wersja jest dostępna pod ścieżką główną. Obecnie serwis zawiera pełne teksty po szwedzku, angielsku, polsku, niemiecku, norwesku bokmål, duńsku i fińsku. Domena `klartfoto.se` została kupiona. Adresy kanoniczne pochodzą z `APP_URL`, a host lokalny jest zastępowany przez `https://klartfoto.se`. Formularz służy do kontaktu w sprawie Klartfoto; treści mają opisywać wartość raportu bez sugerowania, że istnieją konta lub działająca aplikacja. Nie zakładamy wolumenów wyszukiwań ani pozycji w Google.
 
 ## Szwedzkie intencje wyszukiwania
 
@@ -45,9 +45,9 @@ Endpointy POST nie są publicznymi stronami i nie trafiają do mapy witryny. Pop
 
 ## Canonical, hreflang i indeksowanie
 
-Każda wersja językowa ma osobny adres, canonical wskazujący na samą siebie i wzajemne alternatywy dla `sv`, `en`, `pl`, `de`, `nb`, `da` i `fi`, w tym dla bieżącej strony. `x-default` wskazuje odpowiednik szwedzki. Canonicale i hreflangi korzystają z skonfigurowanego `SEO_BASE_URL`, a nie z hosta przesłanego w żądaniu. Dokument zawiera poprawny język HTML, Open Graph i schemat `WebSite`. Nie ma przekierowania według IP ani języka przeglądarki; odwiedzający wybiera wersję w przełączniku.
+Każda wersja językowa ma osobny adres, canonical wskazujący na samą siebie i wzajemne alternatywy dla `sv`, `en`, `pl`, `de`, `nb`, `da` i `fi`, w tym dla bieżącej strony. `x-default` wskazuje odpowiednik szwedzki. Canonicale i hreflangi korzystają z `config('app.url')`, a nie z hosta przesłanego w żądaniu. Gdy ten adres jest pusty albo wskazuje host lokalny, używany jest `https://klartfoto.se`. Dokument zawiera poprawny język HTML, Open Graph i schemat `WebSite`. Nie ma przekierowania według IP ani języka przeglądarki; odwiedzający wybiera wersję w przełączniku.
 
-Indeksowanie wymaga jednocześnie `APP_ENV=production`, `SEO_INDEXABLE=true` oraz bazowego adresu HTTPS, który nie wskazuje na localhost, `.test` ani `.local`. Lokalna ścieżka robots blokuje indeksowanie, a mapa witryny zwraca 404. Prywatność ma `noindex,nofollow` i nie trafia do sitemap.xml.
+Indeksowanie jest włączone przy `APP_ENV=production`. Flaga `SEO_INDEXABLE` nie wyłącza go. Lokalna ścieżka robots blokuje indeksowanie, a mapa witryny zwraca 404 poza produkcją. Prywatność ma `noindex,nofollow` i nie trafia do sitemap.xml. Produkcyjny robots zezwala na indeksowanie i podaje bezwzględny adres sitemap.xml.
 
 Produkcyjna mapa witryny ma 35 adresów: stronę główną, sprzątanie, remonty, najem i wzór raportu w siedmiu językach. Pomija prywatność i endpointy POST. Nie dodaje `lastmod`, jeśli nie ma wiarygodnego źródła zmian treści. Robots dopuszcza indeksowanie tylko po spełnieniu warunków produkcyjnych i podaje skonfigurowany adres sitemap.xml. Nie dodawać statycznego `public/robots.txt`, który zasłoniłby trasę Laravel.
 
@@ -68,8 +68,8 @@ Każda strona ma własny zlokalizowany title, description i H1, canonical, metad
 ## Lista przed publikacją
 
 - [ ] Potwierdzić pisownię i prawa do marki, kontakt ds. prywatności i hosting; przygotować kupioną domenę `klartfoto.se` do publikacji.
-- [ ] Ustawić HTTPS dla `APP_URL` i `SEO_BASE_URL`, wyłącznie z kanonicznym hostem i bez ścieżki aplikacji.
-- [ ] Ustawić `APP_ENV=production` i `SEO_INDEXABLE=true`; sprawdzić indeksowanie stron oraz noindex dla prywatności.
+- [ ] Ustawić `APP_URL=https://klartfoto.se`, wyłącznie z kanonicznym hostem i bez ścieżki aplikacji. Host lokalny jest ignorowany.
+- [ ] Ustawić `APP_ENV=production`; sprawdzić indeksowanie stron oraz noindex dla prywatności.
 - [ ] Zweryfikować unikalny title, description i H1, self-canonical oraz status 200 na każdej stronie w siedmiu językach.
 - [ ] Sprawdzić wzajemne hreflangi z linkiem do samej siebie, zgodne `x-default`, cele przełącznika języka i brak automatycznych przekierowań.
 - [ ] Potwierdzić prawdziwe 404 zamiast miękkiego 404 dla nieznanych adresów.

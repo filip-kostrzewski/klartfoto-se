@@ -16,7 +16,8 @@ class MarketingSiteTest extends TestCase
             ->assertSee('<html lang="sv">', false)
             ->assertSee('Visa jobbet.', false)
             ->assertSee('content="sv_SE"', false)
-            ->assertSee('http://klartfoto.test/', false);
+            ->assertSee('https://klartfoto.se/', false)
+            ->assertDontSee('klartfoto.test', false);
     }
 
     public function test_each_of_the_42_localized_pages_has_a_unique_language_title_and_self_canonical(): void
@@ -165,7 +166,7 @@ class MarketingSiteTest extends TestCase
 
     public function test_canonical_and_hreflang_stay_on_configured_domain_for_untrusted_host(): void
     {
-        config(['marketing.base_url' => 'https://klartfoto.example']);
+        config(['app.url' => 'https://klartfoto.example']);
 
         $html = $this->get('https://untrusted.example/en/for-cleaning-companies')->assertOk()->getContent();
 
@@ -184,19 +185,64 @@ class MarketingSiteTest extends TestCase
     {
         app()->detectEnvironment(fn () => 'production');
         config([
-            'marketing.base_url' => 'https://klartfoto.example',
-            'marketing.indexing_enabled' => true,
+            'app.url' => 'https://klartfoto.example',
+            'marketing.indexing_enabled' => false,
         ]);
 
         $response = $this->get('/sitemap.xml')->assertOk()->assertHeader('content-type', 'application/xml; charset=UTF-8');
         $xml = $response->getContent();
 
         $this->assertSame(35, substr_count($xml, '<url>'));
+        $this->assertStringContainsString('<loc>https://klartfoto.example/</loc>', $xml);
         $this->assertStringContainsString('https://klartfoto.example/for-stadforetag', $xml);
         $this->assertStringContainsString('https://klartfoto.example/en/for-cleaning-companies', $xml);
         $this->assertStringContainsString('https://klartfoto.example/pl/dla-firm-sprzatajacych', $xml);
         $this->assertStringNotContainsString('integritet', $xml);
         $this->assertStringNotContainsString('datenschutz', $xml);
         $this->assertStringNotContainsString('<lastmod>', $xml);
+        $this->assertDoesNotMatchRegularExpression('#<loc>(?!https://)#', $xml);
+
+        $this->get('/robots.txt')->assertOk()->assertSee('Sitemap: https://klartfoto.example/sitemap.xml', false);
+    }
+
+    public function test_production_replaces_a_local_base_url_and_allows_indexing(): void
+    {
+        app()->detectEnvironment(fn () => 'production');
+        config([
+            'app.url' => 'http://klartfoto.test',
+            'marketing.base_url' => 'http://klartfoto.test',
+            'marketing.indexing_enabled' => false,
+        ]);
+
+        $html = $this->get('/')->assertOk()->getContent();
+        $schema = $this->structuredData($html);
+
+        $this->assertSame('https://klartfoto.se/', $schema['@graph'][0]['url']);
+        $this->assertStringContainsString('rel="canonical" href="https://klartfoto.se/"', $html);
+        $this->assertStringContainsString('name="robots" content="index,follow,max-image-preview:large"', $html);
+        $this->assertStringNotContainsString('klartfoto.test', $html);
+
+        $this->get('/integritet')->assertOk()
+            ->assertSee('name="robots" content="noindex,nofollow"', false);
+
+        $this->get('/robots.txt')->assertOk()->assertSee("User-agent: *\nAllow: /\n\nSitemap: https://klartfoto.se/sitemap.xml", false);
+
+        $sitemap = $this->get('/sitemap.xml')->assertOk()->getContent();
+        $this->assertStringContainsString('<loc>https://klartfoto.se/</loc>', $sitemap);
+        $this->assertStringNotContainsString('klartfoto.test', $sitemap);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function structuredData(string $html): array
+    {
+        $this->assertSame(1, preg_match('/<script type="application\/ld\+json">(.*?)<\/script>/s', $html, $matches));
+
+        $decoded = json_decode($matches[1], true);
+
+        $this->assertIsArray($decoded);
+
+        return $decoded;
     }
 }

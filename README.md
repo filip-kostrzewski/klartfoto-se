@@ -33,9 +33,9 @@ Szwedzka strona główna jest pod `/`. Pozostałe wersje korzystają z prefiksó
 
 ## Przygotowanie strony do wdrożenia
 
-Przed wdrożeniem skonfigurować zakupioną domenę `klartfoto.se`, HTTPS dla `APP_URL` i `SEO_BASE_URL`, `DATA_CONTROLLER_NAME`, `DATA_CONTROLLER_EMAIL` oraz rzeczywisty `DATA_HOSTING_PROVIDER`. Przed ustawieniem `DATA_RETENTION_PURGE_ENABLED=true` sprawdzić codzienny harmonogram Laravel. Ustawić `EARLY_ACCESS_ENABLED=true` tylko po sprawdzeniu informacji o prywatności, kanału odpowiedzi na zgłoszenia i procesu usuwania danych. Nie włączać wysyłki potwierdzeń bez skonfigurowania i zweryfikowania poczty.
+Przed wdrożeniem skonfigurować zakupioną domenę `klartfoto.se`, `APP_URL=https://klartfoto.se`, `DATA_CONTROLLER_NAME`, `DATA_CONTROLLER_EMAIL` oraz rzeczywisty `DATA_HOSTING_PROVIDER`. Przed ustawieniem `DATA_RETENTION_PURGE_ENABLED=true` sprawdzić codzienny harmonogram Laravel. Ustawić `EARLY_ACCESS_ENABLED=true` tylko po sprawdzeniu informacji o prywatności, kanału odpowiedzi na zgłoszenia i procesu usuwania danych. Nie włączać wysyłki potwierdzeń bez skonfigurowania i zweryfikowania poczty.
 
-Indeksowanie wymaga `APP_ENV=production`, `SEO_INDEXABLE=true` i bazowego adresu HTTPS poza localhost oraz domenami lokalnymi. Lokalna trasa robots blokuje indeksowanie, a trasa sitemap zwraca 404. Na wdrożonej stronie sprawdzić wszystkie języki, formularz, robots, sitemapę i prawdziwe 404.
+Indeksowanie włącza się przy `APP_ENV=production`. Adresy kanoniczne, JSON-LD, robots i sitemap biorą bazę z `config('app.url')`. Pusty adres albo host lokalny jest zastępowany przez `https://klartfoto.se`. Poza produkcją robots blokuje indeksowanie, a sitemap zwraca 404. Na wdrożonej stronie sprawdzić wszystkie języki, formularz, robots, sitemapę i prawdziwe 404.
 
 Globalny Nginx Herd może zachować status 404 dla dokładnej ścieżki `/robots.txt`, mimo treści zwracanej przez Laravel. Nie zmieniać globalnej konfiguracji Herd; sprawdzić trasę testami aplikacji lub przez `php artisan serve`, a status HTTP zweryfikować na serwerze witryny.
 
