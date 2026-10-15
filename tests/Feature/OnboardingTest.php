@@ -92,6 +92,66 @@ class OnboardingTest extends TestCase
             ->assertDontSee('Visa Kom igång', false);
     }
 
+    public function test_finishing_the_last_step_shows_every_step_done_before_the_list_hides(): void
+    {
+        $owner = User::factory()->create();
+        $member = User::factory()->memberOf($owner->company)->create();
+        $assignment = Assignment::factory()->for($owner)->create();
+        $assignment->photos()->create([
+            'phase' => PhotoPhase::Before,
+            'path' => 'photos/fore.jpg',
+            'sort_order' => 1,
+        ]);
+        $owner->company->invitations()->create([
+            'email' => 'kollega@glans.se',
+            'token' => str_repeat('b', 48),
+            'invited_by' => $owner->id,
+            'expires_at' => now()->addDay(),
+        ]);
+
+        $this->actingAs($owner)->from('/uppdrag')->post(route('assignments.share', $assignment), [
+            'checklist' => '1',
+        ])->assertRedirect('/uppdrag')
+            ->assertSessionHas('toast', 'Klart! Du är igång.');
+
+        $done = $this->actingAs($owner)->get('/uppdrag')->assertOk();
+        $done->assertSee('Klart! Du är igång.', false)
+            ->assertSee('data-onboarding-done', false)
+            ->assertSee('data-onboarding-close', false)
+            ->assertSeeInOrder(['Skapa första uppdraget', 'Klar'], false)
+            ->assertSeeInOrder(['Ladda upp bilder', 'Klar'], false)
+            ->assertSeeInOrder(['Dela rapportlänken', 'Klar'], false)
+            ->assertSeeInOrder(['Bjud in en teammedlem', 'Klar'], false);
+
+        $this->actingAs($member)->get('/uppdrag')
+            ->assertOk()
+            ->assertDontSee('<h2>Kom igång</h2>', false);
+
+        $this->actingAs($owner)->get('/uppdrag')
+            ->assertOk()
+            ->assertDontSee('<h2>Kom igång</h2>', false)
+            ->assertDontSee('Klart! Du är igång.', false);
+    }
+
+    public function test_an_invitation_that_finishes_the_checklist_returns_to_the_done_list(): void
+    {
+        $owner = User::factory()->create();
+        $assignment = Assignment::factory()->for($owner)->create();
+        $assignment->photos()->create([
+            'phase' => PhotoPhase::Before,
+            'path' => 'photos/fore.jpg',
+            'sort_order' => 1,
+        ]);
+        $assignment->forceFill(['link_copied_at' => now()])->save();
+
+        $this->actingAs($owner)->post('/installningar/inbjudningar', [
+            'email' => 'kollega@glans.se',
+        ])->assertRedirect('/uppdrag')
+            ->assertSessionHas('toast', 'Klart! Du är igång.');
+
+        $this->assertDatabaseHas('company_invitations', ['email' => 'kollega@glans.se']);
+    }
+
     public function test_the_share_step_copies_the_latest_report_link(): void
     {
         $owner = User::factory()->create();

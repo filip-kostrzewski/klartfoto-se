@@ -48,6 +48,20 @@ document.querySelectorAll('[data-toast-close]').forEach((button) => {
     });
 });
 
+document.querySelectorAll('[data-onboarding-done]').forEach((section) => {
+    const hide = () => {
+        section.remove();
+    };
+    const timer = window.setTimeout(hide, 6000);
+
+    section.querySelectorAll('[data-onboarding-close]').forEach((button) => {
+        button.addEventListener('click', () => {
+            window.clearTimeout(timer);
+            hide();
+        });
+    });
+});
+
 document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
     const input = picker.querySelector('input[type="file"]');
     const list = picker.querySelector('[data-photo-list]');

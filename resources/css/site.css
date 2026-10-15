@@ -3176,6 +3176,11 @@ select {
     font-size: 1.25rem;
 }
 
+.onboarding-done {
+    margin: 0;
+    font-weight: 700;
+}
+
 .onboarding-list {
     display: flex;
     flex-direction: column;
@@ -3211,7 +3216,8 @@ select {
     margin: 0;
 }
 
-.onboarding > form .button {
+.onboarding > form .button,
+.onboarding > .button {
     width: 100%;
 }
 

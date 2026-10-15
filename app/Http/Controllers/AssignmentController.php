@@ -7,9 +7,8 @@ use App\Http\Requests\StoreAssignmentPhotoRequest;
 use App\Http\Requests\StoreAssignmentRequest;
 use App\Models\Assignment;
 use App\Models\AssignmentPhoto;
-use App\Models\Company;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
+use App\OnboardingChecklist;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -20,7 +19,7 @@ use Illuminate\View\View;
 
 class AssignmentController extends Controller
 {
-    public function index(): View
+    public function index(OnboardingChecklist $checklist): View
     {
         $user = request()->user();
         abort_if($user === null, 403);
@@ -33,11 +32,16 @@ class AssignmentController extends Controller
             ->orderByDesc('performed_on')
             ->orderByDesc('id')
             ->get();
-        $onboardingSteps = $this->onboardingSteps($user, $company, $assignments);
+        $onboardingSteps = $checklist->steps($user, $company, $assignments);
         $onboardingComplete = collect($onboardingSteps)->every(
             fn (array $step): bool => $step['done'] === true,
         );
         $dismissed = $user->onboarding_dismissed_at !== null;
+        $celebrate = (int) session('onboarding_celebrate') === $user->id;
+
+        if ($celebrate) {
+            session()->forget('onboarding_celebrate');
+        }
 
         return view('assignments.index', [
             'assignments' => $assignments,
@@ -45,8 +49,9 @@ class AssignmentController extends Controller
             'canManageJobs' => $company->canManageJobs(),
             'companyName' => $company->name,
             'trialEndsAt' => $company->trial_ends_at,
-            'showOnboarding' => ! $dismissed && ! $onboardingComplete,
-            'showOnboardingRestore' => $dismissed && ! $onboardingComplete,
+            'showOnboarding' => $celebrate || (! $dismissed && ! $onboardingComplete),
+            'showOnboardingRestore' => ! $celebrate && $dismissed && ! $onboardingComplete,
+            'onboardingCelebrate' => $celebrate,
             'onboardingSteps' => $onboardingSteps,
         ]);
     }
@@ -61,13 +66,16 @@ class AssignmentController extends Controller
         ]);
     }
 
-    public function store(StoreAssignmentRequest $request, StoreAssignmentPhotos $photos): RedirectResponse
+    public function store(StoreAssignmentRequest $request, StoreAssignmentPhotos $photos, OnboardingChecklist $checklist): RedirectResponse
     {
         if (! Gate::allows('create', Assignment::class)) {
             return back()->withInput()->withErrors([
                 'trial' => 'Provperioden är slut. Du kan fortfarande öppna rapporter som redan är skapade.',
             ]);
         }
+
+        $user = $request->user();
+        $wasComplete = $user instanceof User && $checklist->isComplete($user);
 
         $assignment = DB::transaction(function () use ($request, $photos): Assignment {
             $assignment = $request->user()->assignments()->create($request->safe()->only([
@@ -84,6 +92,12 @@ class AssignmentController extends Controller
 
             return $assignment;
         });
+
+        if ($user instanceof User && $checklist->finishedDuring($user, $wasComplete)) {
+            return redirect()
+                ->route('assignments.index')
+                ->with('toast', OnboardingChecklist::COMPLETED_MESSAGE);
+        }
 
         return redirect()
             ->route('assignments.show', $assignment)
@@ -102,15 +116,18 @@ class AssignmentController extends Controller
         ]);
     }
 
-    public function storePhotos(StoreAssignmentPhotoRequest $request, Assignment $assignment, StoreAssignmentPhotos $photos): RedirectResponse
+    public function storePhotos(StoreAssignmentPhotoRequest $request, Assignment $assignment, StoreAssignmentPhotos $photos, OnboardingChecklist $checklist): RedirectResponse
     {
         Gate::authorize('update', $assignment);
 
-        if (! $request->user()->canManageJobs()) {
+        $user = $request->user();
+        if (! $user instanceof User || ! $user->canManageJobs()) {
             return back()->withErrors([
                 'trial' => 'Provperioden är slut. Du kan fortfarande öppna rapporter som redan är skapade.',
             ]);
         }
+
+        $wasComplete = $checklist->isComplete($user);
 
         DB::transaction(function () use ($request, $assignment, $photos): void {
             $photos->handle(
@@ -119,6 +136,12 @@ class AssignmentController extends Controller
                 $this->uploadedFiles($request, 'after_photos'),
             );
         });
+
+        if ($checklist->finishedDuring($user, $wasComplete)) {
+            return redirect()
+                ->route('assignments.index')
+                ->with('toast', OnboardingChecklist::COMPLETED_MESSAGE);
+        }
 
         return redirect()
             ->route('assignments.show', $assignment)
@@ -138,10 +161,19 @@ class AssignmentController extends Controller
             ->with('toast', 'Bilden är borttagen.');
     }
 
-    public function share(Request $request, Assignment $assignment): RedirectResponse
+    public function share(Request $request, Assignment $assignment, OnboardingChecklist $checklist): RedirectResponse
     {
         Gate::authorize('view', $assignment);
+
+        $user = $request->user();
+        $wasComplete = $user instanceof User && $checklist->isComplete($user);
         $assignment->markLinkCopied();
+
+        if ($user instanceof User && $checklist->finishedDuring($user, $wasComplete)) {
+            return redirect()
+                ->route('assignments.index')
+                ->with('toast', OnboardingChecklist::COMPLETED_MESSAGE);
+        }
 
         $redirect = back();
 
@@ -168,61 +200,6 @@ class AssignmentController extends Controller
         $user->forceFill(['onboarding_dismissed_at' => null])->save();
 
         return redirect()->route('assignments.index');
-    }
-
-    /**
-     * @param  Collection<int, Assignment>  $assignments
-     * @return list<array{label: string, done: bool, url: string|null, copyUrl: string|null, shareAction: string|null}>
-     */
-    private function onboardingSteps(User $user, Company $company, Collection $assignments): array
-    {
-        $photoJob = $assignments->first(
-            fn (Assignment $assignment): bool => (int) $assignment->photos_count === 0,
-        ) ?? $assignments->first();
-        $latestJob = $assignments->first();
-        $hasTeammate = $company->users()->whereKeyNot($user->id)->exists()
-            || $company->invitations()->pending()->exists();
-
-        return [
-            [
-                'label' => 'Skapa första uppdraget',
-                'done' => $assignments->isNotEmpty(),
-                'url' => route('assignments.create', absolute: false),
-                'copyUrl' => null,
-                'shareAction' => null,
-            ],
-            [
-                'label' => 'Ladda upp bilder',
-                'done' => $assignments->contains(
-                    fn (Assignment $assignment): bool => $assignment->photos_count > 0,
-                ),
-                'url' => $photoJob instanceof Assignment
-                    ? route('assignments.show', $photoJob, false)
-                    : route('assignments.create', absolute: false),
-                'copyUrl' => null,
-                'shareAction' => null,
-            ],
-            [
-                'label' => 'Dela rapportlänken',
-                'done' => $assignments->contains(
-                    fn (Assignment $assignment): bool => $assignment->link_copied_at !== null,
-                ),
-                'url' => $latestJob instanceof Assignment ? null : route('assignments.create', absolute: false),
-                'copyUrl' => $latestJob instanceof Assignment
-                    ? route('reports.show', ['token' => $latestJob->public_token])
-                    : null,
-                'shareAction' => $latestJob instanceof Assignment
-                    ? route('assignments.share', $latestJob, false)
-                    : null,
-            ],
-            [
-                'label' => 'Bjud in en teammedlem',
-                'done' => $hasTeammate,
-                'url' => $user->isOwner() ? route('settings.edit', absolute: false).'#medlemmar' : null,
-                'copyUrl' => null,
-                'shareAction' => null,
-            ],
-        ];
     }
 
     /**

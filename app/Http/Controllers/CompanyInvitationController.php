@@ -9,6 +9,7 @@ use App\Models\Company;
 use App\Models\CompanyInvitation;
 use App\Models\User;
 use App\Notifications\CompanyInvitationNotification;
+use App\OnboardingChecklist;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,10 +22,11 @@ use Throwable;
 
 class CompanyInvitationController extends Controller
 {
-    public function store(StoreCompanyInvitationRequest $request): RedirectResponse
+    public function store(StoreCompanyInvitationRequest $request, OnboardingChecklist $checklist): RedirectResponse
     {
         $owner = $request->user();
         abort_if($owner === null, 403);
+        $wasComplete = $checklist->isComplete($owner);
         $email = Str::lower($request->string('email')->toString());
 
         if (User::query()->where('email', $email)->exists()) {
@@ -69,6 +71,8 @@ class CompanyInvitationController extends Controller
             return $invitation;
         });
 
+        $finished = $checklist->finishedDuring($owner, $wasComplete);
+
         try {
             Notification::route('mail', $email)->notifyNow(new CompanyInvitationNotification($invitation));
         } catch (Throwable $exception) {
@@ -78,6 +82,12 @@ class CompanyInvitationController extends Controller
             return back()->withErrors([
                 'email' => 'Inbjudan är sparad, men mejlet till '.$email.' kunde inte skickas. Försök igen om en stund.',
             ]);
+        }
+
+        if ($finished) {
+            return redirect()
+                ->route('assignments.index')
+                ->with('toast', OnboardingChecklist::COMPLETED_MESSAGE);
         }
 
         return back()->with('status', 'Inbjudan är skickad till '.$email.'.');
