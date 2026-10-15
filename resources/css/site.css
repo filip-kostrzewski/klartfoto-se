@@ -2977,6 +2977,19 @@ select {
     text-transform: uppercase;
 }
 
+.photo-delete {
+    margin: 8px 0 0;
+}
+
+.photo-delete button {
+    min-height: 44px;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: var(--white);
+    font-weight: 700;
+}
+
 .report-body {
     margin: 0;
     background: var(--paper);
@@ -3183,9 +3196,19 @@ select {
     background: var(--white);
 }
 
-.onboarding-list a {
+.onboarding-list a,
+.onboarding-list button {
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
     color: var(--ink);
     font-weight: 700;
+    text-align: left;
+}
+
+.onboarding-list form {
+    margin: 0;
 }
 
 .onboarding > form .button {

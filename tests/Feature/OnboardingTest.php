@@ -27,7 +27,8 @@ class OnboardingTest extends TestCase
             ->assertSee('href="/uppdrag/nytt"', false)
             ->assertSee('href="/installningar#medlemmar"', false)
             ->assertSee('Dölj', false)
-            ->assertDontSee('>Klar<', false);
+            ->assertDontSee('>Klar<', false)
+            ->assertDontSee('data-copy-report', false);
         $this->assertLessThan(
             strpos($empty->getContent(), 'Nytt uppdrag'),
             strpos($empty->getContent(), 'Kom igång'),
@@ -43,7 +44,9 @@ class OnboardingTest extends TestCase
         $withJob = $this->actingAs($owner)->get('/uppdrag')->assertOk();
         $withJob->assertSee('Skapa första uppdraget', false)
             ->assertSee('Klar', false)
-            ->assertSee('href="'.route('assignments.show', $assignment, false).'"', false);
+            ->assertSee('href="'.route('assignments.show', $assignment, false).'"', false)
+            ->assertSee('data-copy-report="'.route('reports.show', ['token' => $assignment->public_token]).'"', false)
+            ->assertSee('name="checklist"', false);
         $this->assertLessThan(
             strpos($withJob->getContent(), 'class="job-list"'),
             strpos($withJob->getContent(), 'Kom igång'),
@@ -63,7 +66,10 @@ class OnboardingTest extends TestCase
             ->assertSeeInOrder(['Ladda upp bilder', 'Klar'], false)
             ->assertSee('Dela rapportlänken', false);
 
-        $this->actingAs($owner)->post(route('assignments.share', $assignment))->assertRedirect();
+        $this->actingAs($owner)->post(route('assignments.share', $assignment), [
+            'checklist' => '1',
+        ])->assertRedirect('/uppdrag')
+            ->assertSessionHas('toast', 'Länken är kopierad.');
         $this->assertNotNull($assignment->fresh()->report_shared_at);
 
         $this->actingAs($owner)->get('/uppdrag')
@@ -82,6 +88,37 @@ class OnboardingTest extends TestCase
             ->assertOk()
             ->assertDontSee('Kom igång', false)
             ->assertDontSee('Dölj', false);
+    }
+
+    public function test_the_share_step_copies_the_latest_report_link(): void
+    {
+        $owner = User::factory()->create();
+        $older = Assignment::factory()->for($owner)->create([
+            'customer_name' => 'Äldre kund',
+            'performed_on' => '2026-10-01',
+        ]);
+        $newer = Assignment::factory()->for($owner)->create([
+            'customer_name' => 'Senaste kund',
+            'performed_on' => '2026-10-15',
+        ]);
+
+        $this->actingAs($owner)->get('/uppdrag')
+            ->assertOk()
+            ->assertSee('data-copy-report="'.route('reports.show', ['token' => $newer->public_token]).'"', false)
+            ->assertDontSee(route('reports.show', ['token' => $older->public_token]), false);
+
+        $this->actingAs($owner)->from('/uppdrag')->post(route('assignments.share', $newer), [
+            'checklist' => '1',
+        ])->assertRedirect('/uppdrag')
+            ->assertSessionHas('toast', 'Länken är kopierad.');
+
+        $this->assertNotNull($newer->fresh()->report_shared_at);
+        $this->assertNull($older->fresh()->report_shared_at);
+
+        $this->actingAs($owner)->get('/uppdrag')
+            ->assertOk()
+            ->assertSee('Länken är kopierad.', false)
+            ->assertSeeInOrder(['Dela rapportlänken', 'Klar'], false);
     }
 
     public function test_opening_the_public_report_marks_the_share_step_done(): void

@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/uppdrag/kom-igang/dolj', [AssignmentController::class, 'dismissOnboarding'])->name('onboarding.dismiss');
     Route::get('/uppdrag/{assignment}', [AssignmentController::class, 'show'])->name('assignments.show');
     Route::post('/uppdrag/{assignment}/foton', [AssignmentController::class, 'storePhotos'])->name('assignments.photos.store');
+    Route::delete('/uppdrag/{assignment}/foton/{photo}', [AssignmentController::class, 'destroyPhoto'])->name('assignments.photos.destroy');
     Route::post('/uppdrag/{assignment}/delning', [AssignmentController::class, 'share'])->name('assignments.share');
     Route::get('/installningar', [CompanySettingsController::class, 'edit'])->name('settings.edit');
     Route::put('/installningar/profil', [CompanySettingsController::class, 'updateProfile'])->name('settings.profile.update');

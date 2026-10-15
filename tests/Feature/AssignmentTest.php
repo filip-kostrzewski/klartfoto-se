@@ -6,6 +6,8 @@ use App\Models\Assignment;
 use App\Models\User;
 use App\PhotoPhase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AssignmentTest extends TestCase
@@ -123,5 +125,72 @@ class AssignmentTest extends TestCase
             ->assertSessionHasErrors('trial');
 
         $this->assertDatabaseCount('assignments', 0);
+    }
+
+    public function test_owner_and_member_can_delete_a_photo_from_the_job_and_the_report(): void
+    {
+        Storage::fake('local');
+        $owner = User::factory()->create();
+        $member = User::factory()->memberOf($owner->company)->create();
+        $other = User::factory()->create();
+
+        $this->actingAs($owner)->post('/uppdrag', [
+            'customer_name' => 'Anna Andersson',
+            'address' => 'Storgatan 1, 111 22 Stockholm',
+            'performed_on' => '2026-10-01',
+            'before_photos' => [UploadedFile::fake()->image('fore.jpg', 40, 40)],
+            'after_photos' => [UploadedFile::fake()->image('efter.jpg', 40, 40)],
+        ])->assertRedirect();
+
+        $assignment = Assignment::query()->firstOrFail();
+        $before = $assignment->photos()->where('phase', PhotoPhase::Before)->firstOrFail();
+        $after = $assignment->photos()->where('phase', PhotoPhase::After)->firstOrFail();
+        Storage::disk('local')->assertExists($before->path);
+
+        $this->post('/logout')->assertRedirect('/login');
+
+        $this->delete(route('assignments.photos.destroy', [$assignment, $before]))
+            ->assertRedirect(route('login'));
+        $this->assertModelExists($before);
+
+        $this->actingAs($member)->get(route('assignments.show', $assignment))
+            ->assertOk()
+            ->assertSee('Ta bort', false)
+            ->assertSee('Vill du ta bort den här bilden?', false)
+            ->assertSee('aria-label="Ta bort förebilden"', false)
+            ->assertSee('aria-label="Ta bort efterbilden"', false);
+
+        $this->get('/r/'.$assignment->public_token)
+            ->assertOk()
+            ->assertDontSee('Ta bort', false);
+
+        $this->actingAs($other)->delete(route('assignments.photos.destroy', [$assignment, $before]))
+            ->assertNotFound();
+        $this->assertModelExists($before);
+
+        $foreign = Assignment::factory()->for($owner)->create();
+        $this->actingAs($member)->delete(route('assignments.photos.destroy', [$foreign, $before]))
+            ->assertNotFound();
+        $this->assertModelExists($before);
+
+        $this->actingAs($member)->delete(route('assignments.photos.destroy', [$assignment, $before]))
+            ->assertRedirect(route('assignments.show', $assignment))
+            ->assertSessionHas('toast', 'Bilden är borttagen.');
+
+        Storage::disk('local')->assertMissing($before->path);
+        $this->assertModelMissing($before);
+        $this->assertModelExists($after);
+
+        $this->actingAs($owner)->get(route('assignments.show', $assignment))
+            ->assertOk()
+            ->assertSee('Bilden är borttagen.', false)
+            ->assertDontSee('/foton/'.$before->id, false)
+            ->assertSee('Ta bort', false);
+
+        $this->get('/r/'.$assignment->public_token)
+            ->assertOk()
+            ->assertDontSee('/foton/'.$before->id, false)
+            ->assertSee('/foton/'.$after->id, false)
+            ->assertDontSee('Ta bort', false);
     }
 }

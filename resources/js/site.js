@@ -121,6 +121,55 @@ document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
     });
 });
 
+const copyText = async (value) => {
+    if (navigator.clipboard) {
+        try {
+            await navigator.clipboard.writeText(value);
+
+            return true;
+        } catch (error) {
+            // The page can still fall back to a hidden field.
+        }
+    }
+
+    const field = document.createElement('textarea');
+    field.value = value;
+    field.setAttribute('readonly', '');
+    field.style.position = 'fixed';
+    field.style.left = '-9999px';
+    document.body.append(field);
+    field.select();
+
+    let copied = false;
+
+    try {
+        copied = document.execCommand('copy');
+    } catch (error) {
+        copied = false;
+    }
+
+    field.remove();
+
+    return copied;
+};
+
+document.querySelectorAll('[data-copy-report]').forEach((button) => {
+    button.addEventListener('click', async (event) => {
+        const form = button.closest('form');
+        const url = button.dataset.copyReport;
+
+        if (! form || ! url) {
+            return;
+        }
+
+        event.preventDefault();
+
+        if (await copyText(url)) {
+            form.submit();
+        }
+    });
+});
+
 document.querySelectorAll('[data-share-url]').forEach((button) => {
     button.addEventListener('click', async (event) => {
         event.preventDefault();

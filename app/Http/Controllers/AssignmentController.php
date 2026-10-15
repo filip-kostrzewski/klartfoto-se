@@ -6,13 +6,16 @@ use App\Actions\StoreAssignmentPhotos;
 use App\Http\Requests\StoreAssignmentPhotoRequest;
 use App\Http\Requests\StoreAssignmentRequest;
 use App\Models\Assignment;
+use App\Models\AssignmentPhoto;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class AssignmentController extends Controller
@@ -122,12 +125,31 @@ class AssignmentController extends Controller
             ->with('toast', 'Bilderna är uppladdade.');
     }
 
-    public function share(Assignment $assignment): RedirectResponse
+    public function destroyPhoto(Assignment $assignment, AssignmentPhoto $photo): RedirectResponse
+    {
+        Gate::authorize('update', $assignment);
+        abort_unless($photo->assignment_id === $assignment->id, 404);
+
+        Storage::disk('local')->delete($photo->path);
+        $photo->delete();
+
+        return redirect()
+            ->route('assignments.show', $assignment)
+            ->with('toast', 'Bilden är borttagen.');
+    }
+
+    public function share(Request $request, Assignment $assignment): RedirectResponse
     {
         Gate::authorize('view', $assignment);
         $assignment->markReportShared();
 
-        return back();
+        $redirect = back();
+
+        if ($request->boolean('checklist')) {
+            $redirect = $redirect->with('toast', 'Länken är kopierad.');
+        }
+
+        return $redirect;
     }
 
     public function dismissOnboarding(): RedirectResponse
@@ -141,16 +163,14 @@ class AssignmentController extends Controller
 
     /**
      * @param  Collection<int, Assignment>  $assignments
-     * @return list<array{label: string, done: bool, url: string|null}>
+     * @return list<array{label: string, done: bool, url: string|null, copyUrl: string|null, shareAction: string|null}>
      */
     private function onboardingSteps(User $user, Company $company, Collection $assignments): array
     {
         $photoJob = $assignments->first(
             fn (Assignment $assignment): bool => (int) $assignment->photos_count === 0,
         ) ?? $assignments->first();
-        $shareJob = $assignments->first(
-            fn (Assignment $assignment): bool => $assignment->report_shared_at === null,
-        ) ?? $assignments->first();
+        $latestJob = $assignments->first();
         $hasTeammate = $company->users()->whereKeyNot($user->id)->exists()
             || $company->invitations()->pending()->exists();
 
@@ -159,6 +179,8 @@ class AssignmentController extends Controller
                 'label' => 'Skapa första uppdraget',
                 'done' => $assignments->isNotEmpty(),
                 'url' => route('assignments.create', absolute: false),
+                'copyUrl' => null,
+                'shareAction' => null,
             ],
             [
                 'label' => 'Ladda upp bilder',
@@ -168,20 +190,28 @@ class AssignmentController extends Controller
                 'url' => $photoJob instanceof Assignment
                     ? route('assignments.show', $photoJob, false)
                     : route('assignments.create', absolute: false),
+                'copyUrl' => null,
+                'shareAction' => null,
             ],
             [
                 'label' => 'Dela rapportlänken',
                 'done' => $assignments->contains(
                     fn (Assignment $assignment): bool => $assignment->report_shared_at !== null,
                 ),
-                'url' => $shareJob instanceof Assignment
-                    ? route('assignments.show', $shareJob, false)
-                    : route('assignments.create', absolute: false),
+                'url' => $latestJob instanceof Assignment ? null : route('assignments.create', absolute: false),
+                'copyUrl' => $latestJob instanceof Assignment
+                    ? route('reports.show', ['token' => $latestJob->public_token])
+                    : null,
+                'shareAction' => $latestJob instanceof Assignment
+                    ? route('assignments.share', $latestJob, false)
+                    : null,
             ],
             [
                 'label' => 'Bjud in en teammedlem',
                 'done' => $hasTeammate,
                 'url' => $user->isOwner() ? route('settings.edit', absolute: false).'#medlemmar' : null,
+                'copyUrl' => null,
+                'shareAction' => null,
             ],
         ];
     }

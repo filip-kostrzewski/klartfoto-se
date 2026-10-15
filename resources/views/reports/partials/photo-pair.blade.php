@@ -6,6 +6,13 @@
             <p class="missing-photo">Ingen förebild</p>
         @endif
         <figcaption>Före</figcaption>
+        @if (($canDeletePhotos ?? false) && $pair['before'])
+            <form class="photo-delete" method="post" action="{{ route('assignments.photos.destroy', [$assignment, $pair['before']], false) }}" onsubmit="return confirm('Vill du ta bort den här bilden?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" aria-label="Ta bort förebilden">Ta bort</button>
+            </form>
+        @endif
     </figure>
     <figure>
         @if ($pair['after'])
@@ -14,5 +21,12 @@
             <p class="missing-photo">Ingen efterbild</p>
         @endif
         <figcaption>Efter</figcaption>
+        @if (($canDeletePhotos ?? false) && $pair['after'])
+            <form class="photo-delete" method="post" action="{{ route('assignments.photos.destroy', [$assignment, $pair['after']], false) }}" onsubmit="return confirm('Vill du ta bort den här bilden?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" aria-label="Ta bort efterbilden">Ta bort</button>
+            </form>
+        @endif
     </figure>
 </section>

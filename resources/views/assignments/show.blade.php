@@ -28,7 +28,7 @@
         @endif
 
         @forelse ($assignment->photoPairs() as $pair)
-            @include('reports.partials.photo-pair', ['pair' => $pair, 'assignment' => $assignment])
+            @include('reports.partials.photo-pair', ['pair' => $pair, 'assignment' => $assignment, 'canDeletePhotos' => true])
         @empty
             <p class="empty-note">Inga bilder ännu.</p>
         @endforelse

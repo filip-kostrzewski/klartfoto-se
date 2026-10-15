@@ -50,7 +50,8 @@ class PublicReportTest extends TestCase
             ->assertSee('1 oktober 2026', false)
             ->assertSee('Anna Andersson', false)
             ->assertSee('/r/'.$assignment->public_token.'/foton/'.$photos[0]->id, false)
-            ->assertSee('/r/'.$assignment->public_token.'/foton/'.$photos[1]->id, false);
+            ->assertSee('/r/'.$assignment->public_token.'/foton/'.$photos[1]->id, false)
+            ->assertDontSee('Ta bort', false);
 
         $this->get('/r/'.$assignment->public_token.'/foton/'.$photos[0]->id)
             ->assertOk()
