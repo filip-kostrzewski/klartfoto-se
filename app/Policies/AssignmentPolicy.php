@@ -20,7 +20,7 @@ class AssignmentPolicy
 
     public function create(User $user): bool
     {
-        return $user->onTrial();
+        return $user->canManageJobs();
     }
 
     public function update(User $user, Assignment $assignment): Response

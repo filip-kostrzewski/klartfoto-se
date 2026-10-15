@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\BillingController;
 use App\Http\Controllers\CompanyInvitationController;
 use App\Http\Controllers\CompanySettingsController;
 use App\Http\Controllers\EarlyAccessController;
@@ -39,6 +40,13 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/uppdrag/{assignment}', [AssignmentController::class, 'show'])->name('assignments.show');
     Route::post('/uppdrag/{assignment}/foton', [AssignmentController::class, 'storePhotos'])->name('assignments.photos.store');
     Route::get('/installningar', [CompanySettingsController::class, 'edit'])->name('settings.edit');
+    Route::get('/installningar/abonnemang', [BillingController::class, 'show'])->name('settings.billing');
+    Route::post('/installningar/abonnemang', [BillingController::class, 'checkout'])
+        ->middleware('throttle:10,1')
+        ->name('settings.billing.checkout');
+    Route::post('/installningar/abonnemang/portal', [BillingController::class, 'portal'])
+        ->middleware('throttle:10,1')
+        ->name('settings.billing.portal');
     Route::post('/installningar/logotyp', [CompanySettingsController::class, 'storeLogo'])
         ->middleware('throttle:10,1')
         ->name('settings.logo.store');

@@ -6,6 +6,7 @@
     <section class="app-card">
         <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> {{ $company->name }}</p>
         <h1>Inställningar</h1>
+        <p class="auth-switch"><a href="{{ route('settings.billing', absolute: false) }}">Abonnemang</a></p>
 
         @if (session('status'))
             <div class="form-status form-status-success" role="status">{{ session('status') }}</div>

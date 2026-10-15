@@ -11,4 +11,6 @@ return [
     'logo_max_edge' => 800,
     'start_seat_limit' => 1,
     'team_seat_limit' => 10,
+    'stripe_price_start' => env('STRIPE_PRICE_START'),
+    'stripe_price_team' => env('STRIPE_PRICE_TEAM'),
 ];

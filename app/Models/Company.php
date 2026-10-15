@@ -3,17 +3,20 @@
 namespace App\Models;
 
 use App\CompanyPlan;
+use App\CompanyRole;
 use Database\Factories\CompanyFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Cashier\Billable;
+use Laravel\Cashier\Subscription;
 
 #[Fillable(['name', 'plan', 'trial_ends_at', 'logo_path'])]
 class Company extends Model
 {
     /** @use HasFactory<CompanyFactory> */
-    use HasFactory;
+    use Billable, HasFactory;
 
     /**
      * @return array<string, string>
@@ -41,9 +44,52 @@ class Company extends Model
         return $this->hasMany(Assignment::class);
     }
 
-    public function onTrial(): bool
+    public function stripeEmail(): ?string
     {
-        return $this->trial_ends_at?->isFuture() ?? false;
+        return $this->users()->where('role', CompanyRole::Owner)->value('email');
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function stripePreferredLocales(): array
+    {
+        return ['sv'];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function stripeAddress(): array
+    {
+        if (! config('cashier.tax_enabled')) {
+            return [];
+        }
+
+        return ['country' => 'SE'];
+    }
+
+    public function trialDaysLeft(): int
+    {
+        if ($this->trial_ends_at === null || ! $this->trial_ends_at->isFuture()) {
+            return 0;
+        }
+
+        $seconds = now()->diffInSeconds($this->trial_ends_at, true);
+
+        return max(1, (int) ceil($seconds / 86400));
+    }
+
+    public function canManageJobs(): bool
+    {
+        return $this->onGenericTrial() || $this->subscribed('default');
+    }
+
+    public function billingIsReady(): bool
+    {
+        return filled(config('cashier.secret'))
+            && filled(config('klartfoto.stripe_price_start'))
+            && filled(config('klartfoto.stripe_price_team'));
     }
 
     public function allowsTeamFeatures(): bool
@@ -56,5 +102,36 @@ class Company extends Model
         return $this->allowsTeamFeatures()
             ? (int) config('klartfoto.team_seat_limit', 10)
             : (int) config('klartfoto.start_seat_limit', 1);
+    }
+
+    public function syncPlanFromSubscription(): void
+    {
+        if (blank(config('cashier.secret'))) {
+            return;
+        }
+
+        $subscription = $this->subscription('default');
+
+        if (! $subscription instanceof Subscription) {
+            return;
+        }
+
+        if (! $subscription->valid()) {
+            $this->forceFill(['plan' => CompanyPlan::Start])->save();
+
+            return;
+        }
+
+        $plan = match ($subscription->stripe_price) {
+            config('klartfoto.stripe_price_team') => CompanyPlan::Team,
+            config('klartfoto.stripe_price_start') => CompanyPlan::Start,
+            default => null,
+        };
+
+        if ($plan === null) {
+            return;
+        }
+
+        $this->forceFill(['plan' => $plan])->save();
     }
 }

@@ -29,6 +29,7 @@ class AssignmentController extends Controller
                 ->orderByDesc('id')
                 ->get(),
             'onTrial' => $company->onTrial(),
+            'canManageJobs' => $company->canManageJobs(),
             'companyName' => $company->name,
             'trialEndsAt' => $company->trial_ends_at,
         ]);
@@ -40,7 +41,7 @@ class AssignmentController extends Controller
         abort_if($user === null, 403);
 
         return view('assignments.create', [
-            'onTrial' => $user->onTrial(),
+            'canManageJobs' => $user->canManageJobs(),
         ]);
     }
 
@@ -79,7 +80,7 @@ class AssignmentController extends Controller
         return view('assignments.show', [
             'assignment' => $assignment,
             'reportUrl' => route('reports.show', ['token' => $assignment->public_token]),
-            'onTrial' => request()->user()?->onTrial() ?? false,
+            'canManageJobs' => request()->user()?->canManageJobs() ?? false,
         ]);
     }
 
@@ -87,7 +88,7 @@ class AssignmentController extends Controller
     {
         Gate::authorize('update', $assignment);
 
-        if (! $request->user()->onTrial()) {
+        if (! $request->user()->canManageJobs()) {
             return back()->withErrors([
                 'trial' => 'Provperioden är slut. Du kan fortfarande öppna rapporter som redan är skapade.',
             ]);

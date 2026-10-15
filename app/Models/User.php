@@ -55,6 +55,13 @@ class User extends Authenticatable
         return $this->company?->onTrial() ?? false;
     }
 
+    public function canManageJobs(): bool
+    {
+        $this->loadMissing('company');
+
+        return $this->company?->canManageJobs() ?? false;
+    }
+
     public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void
     {
         $this->notify(new SwedishResetPassword($token));

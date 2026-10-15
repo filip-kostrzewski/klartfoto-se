@@ -37,7 +37,7 @@
             </div>
         @endif
 
-        @if ($onTrial)
+        @if ($canManageJobs)
             <form class="app-form" method="post" action="{{ route('assignments.photos.store', $assignment, false) }}" enctype="multipart/form-data">
                 @csrf
                 <label for="before_photos">Fler förebilder</label>

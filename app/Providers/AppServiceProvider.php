@@ -2,9 +2,13 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\EnsureStripeWebhookIsConfigured;
+use App\Models\Company;
 use App\SiteSeo;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Cashier\Cashier;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +25,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Cashier::useCustomerModel(Company::class);
+
+        $this->app->booted(function (): void {
+            $this->app->booted(function (): void {
+                Route::getRoutes()->getByName('cashier.webhook')?->middleware(EnsureStripeWebhookIsConfigured::class);
+            });
+        });
+
         $baseUrl = SiteSeo::baseUrl();
 
         $config = [

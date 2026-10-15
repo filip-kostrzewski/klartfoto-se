@@ -8,11 +8,11 @@
         <h1>Uppdrag</h1>
         @if ($onTrial && $trialEndsAt)
             <p class="auth-lead">Provperioden gäller till {{ $trialEndsAt->locale('sv')->translatedFormat('j F Y') }}. Inget kort behövs.</p>
-        @else
+        @elseif (! $canManageJobs)
             <p class="form-status form-status-error" role="status">Provperioden är slut. Du kan fortfarande öppna rapporter som redan är skapade.</p>
         @endif
 
-        @if ($onTrial)
+        @if ($canManageJobs)
             <a class="button button-lime" href="{{ route('assignments.create', absolute: false) }}">Nytt uppdrag</a>
         @endif
 

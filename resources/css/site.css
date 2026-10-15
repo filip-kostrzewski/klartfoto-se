@@ -3016,4 +3016,38 @@ select {
     .customer-report-meta {
         grid-template-columns: 1fr 1fr;
     }
+
+    .plan-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.plan-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.plan-card {
+    gap: 8px;
+    margin: 0;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+}
+
+.plan-card h2 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.plan-card p {
+    margin: 0;
+}
+
+.plan-card .button,
+.plan-card .app-form .button,
+.plan-grid + .app-form .button {
+    width: 100%;
 }

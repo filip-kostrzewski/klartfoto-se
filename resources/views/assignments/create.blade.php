@@ -18,7 +18,7 @@
             </div>
         @endif
 
-        @if ($onTrial)
+        @if ($canManageJobs)
             <form class="app-form" method="post" action="{{ route('assignments.store', absolute: false) }}" enctype="multipart/form-data">
                 @csrf
                 <label for="customer_name">Kundens namn</label>
