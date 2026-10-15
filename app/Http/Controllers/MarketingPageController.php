@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 
 class MarketingPageController extends Controller
 {
-    private const INDEXABLE_PAGES = ['home', 'cleaning', 'renovation', 'property', 'report'];
+    private const INDEXABLE_PAGES = ['home', 'cleaning', 'renovation', 'property', 'report', 'privacy'];
 
     public function home(): View
     {
@@ -60,7 +60,7 @@ class MarketingPageController extends Controller
 
         $urls = [];
 
-        foreach (array_keys(config('marketing.locales')) as $locale) {
+        foreach (config('marketing.indexable_locales', []) as $locale) {
             foreach (self::INDEXABLE_PAGES as $page) {
                 $urls[] = LocalizedUrl::route($page, $locale);
             }
@@ -94,7 +94,9 @@ class MarketingPageController extends Controller
         $contentKey = $industryKey === null ? $pageKey : "industries.{$industryKey}";
         $content = trans("marketing.{$contentKey}");
         $canonical = LocalizedUrl::route($pageKey, app()->getLocale());
-        $indexable = $pageKey !== 'privacy' && SiteSeo::isIndexable() && in_array($pageKey, self::INDEXABLE_PAGES, true);
+        $indexable = $this->localeIsIndexable()
+            && SiteSeo::isIndexable()
+            && in_array($pageKey, self::INDEXABLE_PAGES, true);
         $breadcrumb = $content['breadcrumb'] ?? $content['h1'] ?? $content['title'];
         $schema = SiteSeo::structuredData(
             $canonical,
@@ -105,13 +107,37 @@ class MarketingPageController extends Controller
         );
         $page = $this->pageData($content, $pageKey, $canonical, $indexable, $schema);
         $page['alternates'] = LocalizedUrl::alternates($pageKey);
-
-        return view($view, [
+        $data = [
             'page' => $page,
             'copy' => trans('marketing'),
             'locale' => app()->getLocale(),
             'language_options' => config('marketing.locales'),
-        ]);
+        ];
+
+        if ($pageKey === 'report') {
+            [$data['companyLogoUrl'], $data['companyLogoAlt']] = $this->sampleReportLogo();
+        }
+
+        return view($view, $data);
+    }
+
+    /**
+     * @return array{0: string, 1: string}
+     */
+    private function sampleReportLogo(): array
+    {
+        $company = request()->user()?->company;
+
+        if ($company !== null && filled($company->logo_path) && $company->allowsTeamFeatures()) {
+            return [route('settings.logo', absolute: false), $company->name];
+        }
+
+        return [asset('images/demo/company-logo.svg'), (string) trans('marketing.report.logo_alt')];
+    }
+
+    private function localeIsIndexable(): bool
+    {
+        return in_array(app()->getLocale(), config('marketing.indexable_locales', []), true);
     }
 
     /**
@@ -130,6 +156,7 @@ class MarketingPageController extends Controller
         $content['description'] = str_replace(':brand', $brand, (string) $content['description']);
         $content['canonical'] = $canonical;
         $content['is_indexable'] = $indexable;
+        $content['robots'] = $this->robotsDirective($indexable);
         $content['schema'] = $schema;
         $content['route_key'] = $pageKey;
         $content['locale'] = $locale;
@@ -140,5 +167,16 @@ class MarketingPageController extends Controller
         $content['waitlist_open'] = SiteSeo::waitlistIsOpen();
 
         return $content;
+    }
+
+    private function robotsDirective(bool $indexable): string
+    {
+        if (! $this->localeIsIndexable()) {
+            return 'noindex,follow';
+        }
+
+        return $indexable
+            ? 'index,follow,max-image-preview:large'
+            : 'noindex,nofollow';
     }
 }

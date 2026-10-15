@@ -31,6 +31,7 @@ class AssignmentTest extends TestCase
         $assignment = Assignment::query()->first();
         $this->assertNotNull($assignment);
         $this->assertSame($user->id, $assignment->user_id);
+        $this->assertSame($user->company_id, $assignment->company_id);
         $this->assertSame('Anna Andersson', $assignment->customer_name);
         $this->assertSame('Storgatan 1, 111 22 Stockholm', $assignment->address);
         $this->assertSame('2026-10-01', $assignment->performed_on->toDateString());

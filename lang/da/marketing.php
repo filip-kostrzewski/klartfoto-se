@@ -143,6 +143,7 @@ return [
         'print' => 'Print / gem som PDF', 'signup' => 'Vis interesse', 'print_note' => 'Vælg ”Gem som PDF” i udskriftsdialogen.',
         'report_overline' => 'RAPPORTSKABELON · ILLUSTRATIVE OPLYSNINGER', 'report_title' => 'Rapport om udført arbejde', 'subtitle' => 'Før- og efterbilleder · eksempelversion',
         'object' => 'BOLIG', 'object_value' => 'Eksempelbolig', 'place' => 'STED', 'place_value' => 'Køkken', 'date' => 'DATO', 'date_value' => 'Illustrativt eksempel',
+        'logo_alt' => 'Logo · tegning',
         'disclaimer' => 'Tegning · ikke et foto · ingen kundeoplysninger', 'before_caption' => '01 / FØR', 'before_description' => 'Tilstand før arbejdet',
         'after_caption' => '02 / EFTER', 'after_description' => 'Tilstand efter arbejdet', 'before_alt' => 'Genereret billede af eksempel-køkkenet før rengøring.', 'after_alt' => 'Genereret billede af det samme køkken efter rengøring.',
         'checklist_title' => 'Eksempel på tjekliste', 'checklist' => ['Bordpladen tørret af', 'Vasken rengjort og tørret', 'Kogepladen tørret af'],

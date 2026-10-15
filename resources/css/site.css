@@ -1637,9 +1637,21 @@ select {
     display: flex;
     align-items: start;
     justify-content: space-between;
+    flex-wrap: wrap;
     gap: 20px;
     padding-bottom: 22px;
     border-bottom: 1px solid var(--line);
+}
+
+.report-logo,
+.customer-report-logo,
+.settings-logo {
+    display: block;
+    width: auto;
+    max-width: 180px;
+    max-height: 64px;
+    height: auto;
+    object-fit: contain;
 }
 
 .printable-header h2 {
@@ -2697,6 +2709,8 @@ select {
 .app-nav {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
     gap: 16px;
 }
 
@@ -2899,6 +2913,51 @@ select {
 .customer-report-header p,
 .customer-report-footer {
     margin: 8px 0 0;
+}
+
+.customer-report-logo {
+    margin-bottom: 16px;
+}
+
+.settings-block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 8px;
+}
+
+.settings-block h2,
+.settings-block h3 {
+    margin: 8px 0 0;
+    font-size: 1.25rem;
+}
+
+.member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.member-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    background: var(--white);
+}
+
+.member-list button {
+    align-self: flex-start;
+    min-height: 44px;
+    margin-top: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    background: var(--white);
+    font: inherit;
 }
 
 .customer-report-meta {

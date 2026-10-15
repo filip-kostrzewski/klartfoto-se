@@ -143,6 +143,7 @@ return [
         'print' => 'Tulosta / tallenna PDF:nä', 'signup' => 'Ilmoita kiinnostuksesi', 'print_note' => 'Valitse tulostusikkunassa ”Tallenna PDF:nä”.',
         'report_overline' => 'RAPORTTIPOHJA · HAVAINNOLLISTAVAT TIEDOT', 'report_title' => 'Raportti tehdystä työstä', 'subtitle' => 'Ennen ja jälkeen -kuvat · esimerkkiversio',
         'object' => 'KOHDE', 'object_value' => 'Esimerkkiasunto', 'place' => 'PAIKKA', 'place_value' => 'Keittiö', 'date' => 'PÄIVÄMÄÄRÄ', 'date_value' => 'Havainnollistava esimerkki',
+        'logo_alt' => 'Logo · piirros',
         'disclaimer' => 'Piirros · ei valokuva · ei asiakastietoja', 'before_caption' => '01 / ENNEN', 'before_description' => 'Tilanne ennen työtä',
         'after_caption' => '02 / JÄLKEEN', 'after_description' => 'Tilanne työn jälkeen', 'before_alt' => 'Tekoälyllä luotu kuva esimerkkikeittiöstä ennen siivousta.', 'after_alt' => 'Tekoälyllä luotu kuva samasta keittiöstä siivouksen jälkeen.',
         'checklist_title' => 'Esimerkki tarkistuslistasta', 'checklist' => ['Työtaso pyyhitty', 'Allas pesty ja kuivattu', 'Liesitaso pyyhitty'],

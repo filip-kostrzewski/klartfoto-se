@@ -20,6 +20,7 @@
     <section class="printable-section section-pad" id="printable-report">
         <article class="printable-report">
             <header class="printable-header">
+                <img class="report-logo" src="{{ $companyLogoUrl }}" alt="{{ $companyLogoAlt }}" width="160" height="64">
                 <div>
                     <p class="report-overline">{{ $page['report_overline'] }}</p>
                     <h2>{{ $page['report_title'] }}</h2>

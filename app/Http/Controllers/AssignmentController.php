@@ -19,13 +19,18 @@ class AssignmentController extends Controller
         $user = request()->user();
         abort_if($user === null, 403);
 
+        $company = $user->company;
+        abort_if($company === null, 403);
+
         return view('assignments.index', [
-            'assignments' => $user->assignments()
+            'assignments' => $company->assignments()
                 ->withCount('photos')
                 ->orderByDesc('performed_on')
                 ->orderByDesc('id')
                 ->get(),
-            'onTrial' => $user->onTrial(),
+            'onTrial' => $company->onTrial(),
+            'companyName' => $company->name,
+            'trialEndsAt' => $company->trial_ends_at,
         ]);
     }
 

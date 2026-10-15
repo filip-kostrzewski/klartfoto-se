@@ -25,6 +25,7 @@
         @auth
             <nav class="app-nav" aria-label="Konto">
                 <a href="{{ route('assignments.index', absolute: false) }}">Uppdrag</a>
+                <a href="{{ route('settings.edit', absolute: false) }}">Inställningar</a>
                 <form method="post" action="{{ route('logout', absolute: false) }}">
                     @csrf
                     <button type="submit">Logga ut</button>

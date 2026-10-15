@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\CompanyRole;
 use App\Models\User;
 use App\Notifications\SwedishResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,8 +33,11 @@ class RegistrationTest extends TestCase
         $user = User::query()->where('email', 'anna@glans.se')->first();
         $this->assertNotNull($user);
         $this->assertSame('Glans Städ AB', $user->name);
+        $this->assertSame(CompanyRole::Owner, $user->role);
+        $this->assertSame('Glans Städ AB', $user->company?->name);
         $this->assertTrue(Hash::check('hemligt-losen', $user->password));
         $this->assertSame('2026-11-14 12:00:00', $user->trial_ends_at?->format('Y-m-d H:i:s'));
+        $this->assertSame('2026-11-14 12:00:00', $user->company?->trial_ends_at?->format('Y-m-d H:i:s'));
     }
 
     public function test_fixed_trial_end_overrides_the_default_number_of_days(): void

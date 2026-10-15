@@ -143,6 +143,7 @@ return [
         'print' => 'Skriv ut / lagre som PDF', 'signup' => 'Meld interesse', 'print_note' => 'Velg «Lagre som PDF» i utskriftsdialogen.',
         'report_overline' => 'RAPPORTMAL · ILLUSTRERENDE OPPLYSNINGER', 'report_title' => 'Rapport om utført arbeid', 'subtitle' => 'Før- og etterbilder · eksempelversjon',
         'object' => 'OBJEKT', 'object_value' => 'Eksempelbolig', 'place' => 'STED', 'place_value' => 'Kjøkken', 'date' => 'DATO', 'date_value' => 'Illustrerende eksempel',
+        'logo_alt' => 'Logo · tegning',
         'disclaimer' => 'Tegning · ikke et foto · ingen kundeopplysninger', 'before_caption' => '01 / FØR', 'before_description' => 'Tilstand før arbeidet',
         'after_caption' => '02 / ETTER', 'after_description' => 'Tilstand etter arbeidet', 'before_alt' => 'Generert bilde av eksempelkjøkkenet før rengjøring.', 'after_alt' => 'Generert bilde av det samme kjøkkenet etter rengjøring.',
         'checklist_title' => 'Eksempel på sjekkliste', 'checklist' => ['Benken tørket av', 'Vasken rengjort og tørket', 'Koketoppen tørket av'],

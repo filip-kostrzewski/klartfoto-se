@@ -17,7 +17,7 @@ class LoginController extends Controller
     public function create(): View
     {
         return view('auth.login', [
-            'googleEnabled' => filled(config('services.google.client_id')),
+            'googleEnabled' => GoogleAuthController::configured(),
         ]);
     }
 

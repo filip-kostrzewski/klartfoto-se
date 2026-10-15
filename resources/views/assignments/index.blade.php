@@ -4,10 +4,10 @@
 
 @section('content')
     <section class="app-card">
-        <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> {{ auth()->user()->name }}</p>
+        <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> {{ $companyName }}</p>
         <h1>Uppdrag</h1>
-        @if ($onTrial && auth()->user()->trial_ends_at)
-            <p class="auth-lead">Provperioden gäller till {{ auth()->user()->trial_ends_at->locale('sv')->translatedFormat('j F Y') }}. Inget kort behövs.</p>
+        @if ($onTrial && $trialEndsAt)
+            <p class="auth-lead">Provperioden gäller till {{ $trialEndsAt->locale('sv')->translatedFormat('j F Y') }}. Inget kort behövs.</p>
         @else
             <p class="form-status form-status-error" role="status">Provperioden är slut. Du kan fortfarande öppna rapporter som redan är skapade.</p>
         @endif

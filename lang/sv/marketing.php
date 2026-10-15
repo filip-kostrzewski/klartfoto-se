@@ -163,6 +163,7 @@ return [
         'report_overline' => 'RAPPORTMALL · ILLUSTRATIVA UPPGIFTER', 'report_title' => 'Rapport om utfört arbete',
         'subtitle' => 'Före- och efterbilder · exempelversion', 'object' => 'OBJEKT', 'object_value' => 'Exempelbostad',
         'place' => 'PLATS', 'place_value' => 'Kök', 'date' => 'DATUM', 'date_value' => 'Illustrativt exempel',
+        'logo_alt' => 'Logotyp · teckning',
         'disclaimer' => 'Teckning · inte ett foto · inga kunduppgifter',
         'before_caption' => '01 / FÖRE', 'before_description' => 'Före arbetet',
         'after_caption' => '02 / EFTER', 'after_description' => 'Efter arbetet',

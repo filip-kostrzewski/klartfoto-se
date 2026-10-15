@@ -143,6 +143,7 @@ return [
         'print' => 'Drukuj / zapisz jako PDF', 'signup' => 'Dołącz', 'print_note' => 'W oknie drukowania wybierz „Zapisz jako PDF”.',
         'report_overline' => 'WZÓR RAPORTU · DANE POGLĄDOWE', 'report_title' => 'Raport z wykonanej pracy', 'subtitle' => 'Zdjęcia przed i po · wersja przykładowa',
         'object' => 'OBIEKT', 'object_value' => 'Mieszkanie pokazowe', 'place' => 'MIEJSCE', 'place_value' => 'Kuchnia', 'date' => 'DATA', 'date_value' => 'Przykład poglądowy',
+        'logo_alt' => 'Logo · rysunek',
         'disclaimer' => 'Rysunek · to nie zdjęcie · brak danych klienta', 'before_caption' => '01 / PRZED', 'before_description' => 'Stan przed pracą',
         'after_caption' => '02 / PO', 'after_description' => 'Stan po pracy', 'before_alt' => 'Wygenerowane zdjęcie przykładowej kuchni przed sprzątaniem.', 'after_alt' => 'Wygenerowane zdjęcie tej samej kuchni po sprzątaniu.',
         'checklist_title' => 'Przykładowa checklista', 'checklist' => ['Blat wytarty', 'Zlew umyty i osuszony', 'Płyta kuchenna przetarta'],

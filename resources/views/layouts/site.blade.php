@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#111715">
     <title>{{ $page['title'] }}</title>
     <meta name="description" content="{{ $page['description'] }}">
-    <meta name="robots" content="{{ $page['is_indexable'] ? 'index,follow,max-image-preview:large' : 'noindex,nofollow' }}">
+    <meta name="robots" content="{{ $page['robots'] ?? ($page['is_indexable'] ? 'index,follow,max-image-preview:large' : 'noindex,nofollow') }}">
     <link rel="canonical" href="{{ $page['canonical'] }}">
     @foreach (($page['alternates'] ?? []) as $hreflang => $url)
         <link rel="alternate" hreflang="{{ $hreflang }}" href="{{ $url }}">

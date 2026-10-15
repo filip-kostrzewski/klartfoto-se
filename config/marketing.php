@@ -12,6 +12,7 @@ return [
     'data_hosting_provider' => env('DATA_HOSTING_PROVIDER'),
     'retention_purge_enabled' => filter_var(env('DATA_RETENTION_PURGE_ENABLED', false), FILTER_VALIDATE_BOOL),
     'default_locale' => 'sv',
+    'indexable_locales' => ['sv', 'pl'],
     'locales' => [
         'sv' => ['name' => 'Svenska', 'hreflang' => 'sv', 'og' => 'sv_SE', 'schema' => 'sv-SE'],
         'en' => ['name' => 'English', 'hreflang' => 'en', 'og' => 'en_US', 'schema' => 'en-US'],

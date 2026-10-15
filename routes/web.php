@@ -6,6 +6,8 @@ use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\CompanyInvitationController;
+use App\Http\Controllers\CompanySettingsController;
 use App\Http\Controllers\EarlyAccessController;
 use App\Http\Controllers\MarketingPageController;
 use App\Http\Controllers\PublicReportController;
@@ -36,11 +38,33 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/uppdrag', [AssignmentController::class, 'store'])->name('assignments.store');
     Route::get('/uppdrag/{assignment}', [AssignmentController::class, 'show'])->name('assignments.show');
     Route::post('/uppdrag/{assignment}/foton', [AssignmentController::class, 'storePhotos'])->name('assignments.photos.store');
+    Route::get('/installningar', [CompanySettingsController::class, 'edit'])->name('settings.edit');
+    Route::post('/installningar/logotyp', [CompanySettingsController::class, 'storeLogo'])
+        ->middleware('throttle:10,1')
+        ->name('settings.logo.store');
+    Route::delete('/installningar/logotyp', [CompanySettingsController::class, 'destroyLogo'])->name('settings.logo.destroy');
+    Route::get('/installningar/logotyp', [CompanySettingsController::class, 'logo'])->name('settings.logo');
+    Route::post('/installningar/inbjudningar', [CompanyInvitationController::class, 'store'])
+        ->middleware('throttle:10,1')
+        ->name('invitations.store');
+    Route::delete('/installningar/inbjudningar/{invitation}', [CompanyInvitationController::class, 'destroy'])->name('invitations.destroy');
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 });
 
-Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
+Route::get('/inbjudan/{token}', [CompanyInvitationController::class, 'create'])
+    ->where('token', '[A-Za-z0-9]{32,80}')
+    ->name('invitations.accept');
+Route::post('/inbjudan/{token}', [CompanyInvitationController::class, 'storeAcceptance'])
+    ->where('token', '[A-Za-z0-9]{32,80}')
+    ->middleware('throttle:10,1')
+    ->name('invitations.accept.store');
+
+Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
+
+Route::get('/r/{token}/logotyp', [PublicReportController::class, 'logo'])
+    ->where('token', '[A-Za-z0-9]{32,80}')
+    ->name('reports.logo');
 
 Route::get('/r/{token}/foton/{photo}', [PublicReportController::class, 'photo'])
     ->where('token', '[A-Za-z0-9]{32,80}')

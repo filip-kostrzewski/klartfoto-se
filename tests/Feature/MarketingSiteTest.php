@@ -63,8 +63,12 @@ class MarketingSiteTest extends TestCase
 
                 $this->assertStringNotContainsString('<div class="announcement"', $html);
 
-                if ($pageKey === 'privacy') {
-                    $this->assertStringContainsString('name="robots" content="noindex,nofollow"', $html);
+                if (in_array($locale, config('marketing.indexable_locales'), true)) {
+                    if ($pageKey === 'privacy') {
+                        $this->assertStringContainsString('name="robots" content="noindex,nofollow"', $html);
+                    }
+                } else {
+                    $this->assertStringContainsString('name="robots" content="noindex,follow"', $html);
                 }
             }
         }
@@ -229,7 +233,7 @@ class MarketingSiteTest extends TestCase
         $this->get('/sitemap.xml')->assertNotFound();
     }
 
-    public function test_production_sitemap_lists_35_localized_indexable_urls_without_privacy_or_lastmod(): void
+    public function test_production_sitemap_lists_swedish_and_polish_urls_including_privacy(): void
     {
         app()->detectEnvironment(fn () => 'production');
         config([
@@ -240,13 +244,18 @@ class MarketingSiteTest extends TestCase
         $response = $this->get('/sitemap.xml')->assertOk()->assertHeader('content-type', 'application/xml; charset=UTF-8');
         $xml = $response->getContent();
 
-        $this->assertSame(35, substr_count($xml, '<url>'));
+        $this->assertSame(12, substr_count($xml, '<url>'));
         $this->assertStringContainsString('<loc>https://klartfoto.example/</loc>', $xml);
         $this->assertStringContainsString('<loc>https://klartfoto.example/exempel-rapport</loc>', $xml);
+        $this->assertStringContainsString('<loc>https://klartfoto.example/integritetspolicy</loc>', $xml);
         $this->assertStringContainsString('https://klartfoto.example/for-stadforetag', $xml);
-        $this->assertStringContainsString('https://klartfoto.example/en/for-cleaning-companies', $xml);
-        $this->assertStringContainsString('https://klartfoto.example/pl/dla-firm-sprzatajacych', $xml);
-        $this->assertStringNotContainsString('integritet', $xml);
+        $this->assertStringContainsString('<loc>https://klartfoto.example/pl/dla-firm-sprzatajacych</loc>', $xml);
+        $this->assertStringContainsString('<loc>https://klartfoto.example/pl/polityka-prywatnosci</loc>', $xml);
+        $this->assertStringNotContainsString('/en/', $xml);
+        $this->assertStringNotContainsString('/de/', $xml);
+        $this->assertStringNotContainsString('/nb/', $xml);
+        $this->assertStringNotContainsString('/da/', $xml);
+        $this->assertStringNotContainsString('/fi/', $xml);
         $this->assertStringNotContainsString('datenschutz', $xml);
         $this->assertStringNotContainsString('<lastmod>', $xml);
         $this->assertDoesNotMatchRegularExpression('#<loc>(?!https://)#', $xml);
@@ -273,7 +282,11 @@ class MarketingSiteTest extends TestCase
 
         $this->get('/integritet')->assertStatus(301)->assertRedirect('/integritetspolicy');
         $this->get('/integritetspolicy')->assertOk()
-            ->assertSee('name="robots" content="noindex,nofollow"', false);
+            ->assertSee('name="robots" content="index,follow,max-image-preview:large"', false);
+        $this->get('/en/privacy')->assertOk()
+            ->assertSee('name="robots" content="noindex,follow"', false);
+        $this->get('/pl/polityka-prywatnosci')->assertOk()
+            ->assertSee('name="robots" content="index,follow,max-image-preview:large"', false);
 
         $this->get('/robots.txt')->assertOk()->assertSee("User-agent: *\nAllow: /\n\nSitemap: https://klartfoto.se/sitemap.xml", false);
 

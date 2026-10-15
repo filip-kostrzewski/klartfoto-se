@@ -30,7 +30,7 @@ class AssignmentPolicy
 
     private function owns(User $user, Assignment $assignment): Response
     {
-        return $user->id === $assignment->user_id
+        return $user->company_id !== null && $user->company_id === $assignment->company_id
             ? Response::allow()
             : Response::denyAsNotFound();
     }

@@ -8,4 +8,7 @@ return [
         : null,
     'pricing_visible' => filter_var(env('KLARTFOTO_PRICING_VISIBLE', true), FILTER_VALIDATE_BOOL),
     'photo_max_edge' => 1600,
+    'logo_max_edge' => 800,
+    'start_seat_limit' => 1,
+    'team_seat_limit' => 10,
 ];

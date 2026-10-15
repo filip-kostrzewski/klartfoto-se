@@ -160,6 +160,7 @@ return [
         'report_overline' => 'REPORT TEMPLATE · ILLUSTRATIVE DETAILS', 'report_title' => 'Completed work report',
         'subtitle' => 'Before-and-after photos · sample version', 'object' => 'PROPERTY', 'object_value' => 'Example apartment',
         'place' => 'LOCATION', 'place_value' => 'Kitchen', 'date' => 'DATE', 'date_value' => 'Illustrative example',
+        'logo_alt' => 'Logo · drawing',
         'disclaimer' => 'Drawn example · not a photograph · no customer details',
         'before_caption' => '01 / BEFORE', 'before_description' => 'Condition before work',
         'after_caption' => '02 / AFTER', 'after_description' => 'Condition after work',

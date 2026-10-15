@@ -143,6 +143,7 @@ return [
         'print' => 'Drucken / als PDF speichern', 'signup' => 'Kontakt aufnehmen', 'print_note' => 'Wählen Sie im Druckdialog „Als PDF speichern“.',
         'report_overline' => 'BERICHTSVORLAGE · ANSCHAULICHE ANGABEN', 'report_title' => 'Bericht über erledigte Arbeit', 'subtitle' => 'Vorher-Nachher-Fotos · Beispielversion',
         'object' => 'OBJEKT', 'object_value' => 'Beispielwohnung', 'place' => 'ORT', 'place_value' => 'Küche', 'date' => 'DATUM', 'date_value' => 'Anschauliches Beispiel',
+        'logo_alt' => 'Logo · Zeichnung',
         'disclaimer' => 'Zeichnung · kein Foto · keine Kundendaten', 'before_caption' => '01 / VORHER', 'before_description' => 'Zustand vor der Arbeit',
         'after_caption' => '02 / NACHHER', 'after_description' => 'Zustand nach der Arbeit',
         'before_alt' => 'Generiertes Foto der Beispielküche vor der Reinigung.', 'after_alt' => 'Generiertes Foto derselben Küche nach der Reinigung.',

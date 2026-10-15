@@ -23,6 +23,10 @@ class Assignment extends Model
             if (! is_string($assignment->public_token) || $assignment->public_token === '') {
                 $assignment->public_token = Str::random(48);
             }
+
+            if ($assignment->company_id === null && $assignment->user_id !== null) {
+                $assignment->company_id = User::query()->whereKey($assignment->user_id)->value('company_id');
+            }
         });
     }
 
@@ -39,6 +43,11 @@ class Assignment extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 
     public function photos(): HasMany
