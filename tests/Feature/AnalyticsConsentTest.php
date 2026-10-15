@@ -84,17 +84,32 @@ class AnalyticsConsentTest extends TestCase
         config(['services.google_analytics.measurement_id' => 'G-TEST1234']);
 
         $home = $this->get('/')->assertOk()->getContent();
-        $consent = strpos($home, "analytics_storage: 'denied'");
-        $tag = strpos($home, 'https://www.googletagmanager.com/gtag/js?id=G-TEST1234');
+        $consent = strpos($home, "gtag('consent', 'default'");
 
         $this->assertNotFalse($consent);
-        $this->assertNotFalse($tag);
-        $this->assertLessThan($tag, $consent);
+        $this->assertStringContainsString("analytics_storage: 'denied'", $home);
         $this->assertStringContainsString("ad_storage: 'denied'", $home);
         $this->assertStringContainsString("ad_user_data: 'denied'", $home);
         $this->assertStringContainsString("ad_personalization: 'denied'", $home);
-        $this->assertStringContainsString("gtag('config'", $home);
+        $this->assertStringContainsString('wait_for_update: 500', $home);
         $this->assertStringContainsString('G-TEST1234', $home);
+        $this->assertStringNotContainsString('src="https://www.googletagmanager.com/gtag/js?id=G-TEST1234"', $home);
+
+        $granted = $this->withUnencryptedCookie('klartfoto_cookie_consent', 'granted')
+            ->get('/')
+            ->assertOk()
+            ->getContent();
+        $grantedConsent = strpos($granted, "gtag('consent', 'default'");
+        $grantedTag = strpos($granted, 'src="https://www.googletagmanager.com/gtag/js?id=G-TEST1234"');
+
+        $this->assertNotFalse($grantedConsent);
+        $this->assertNotFalse($grantedTag);
+        $this->assertLessThan($grantedTag, $grantedConsent);
+
+        $this->withUnencryptedCookie('klartfoto_cookie_consent', 'denied')
+            ->get('/')
+            ->assertOk()
+            ->assertDontSee('src="https://www.googletagmanager.com/gtag/js?id=G-TEST1234"', false);
 
         $this->get('/login')
             ->assertOk()
@@ -111,7 +126,8 @@ class AnalyticsConsentTest extends TestCase
 
         $this->actingAs($user)->get('/')
             ->assertOk()
-            ->assertSee('https://www.googletagmanager.com/gtag/js?id=G-TEST1234', false);
+            ->assertSee('G-TEST1234', false)
+            ->assertDontSee('src="https://www.googletagmanager.com/gtag/js?id=G-TEST1234"', false);
 
         $assignment = Assignment::factory()->for($user)->create();
 
@@ -119,6 +135,25 @@ class AnalyticsConsentTest extends TestCase
             ->assertOk()
             ->assertDontSee('googletagmanager.com', false)
             ->assertDontSee('Cookie-inställningar', false);
+    }
+
+    public function test_the_public_measurement_id_is_the_default_and_stays_unloaded_until_consent(): void
+    {
+        $services = file_get_contents(config_path('services.php'));
+        $composer = file_get_contents(base_path('composer.json'));
+        $this->assertIsString($services);
+        $this->assertIsString($composer);
+        $this->assertStringContainsString("env('GA_MEASUREMENT_ID', 'G-4T7EVVZLB2')", $services);
+        $this->assertStringContainsString('config:cache', $composer);
+
+        config(['services.google_analytics.measurement_id' => 'G-4T7EVVZLB2']);
+
+        $home = $this->get('/')->assertOk()->getContent();
+
+        $this->assertStringContainsString('G-4T7EVVZLB2', $home);
+        $this->assertStringContainsString("analytics_storage: 'denied'", $home);
+        $this->assertStringNotContainsString('src="https://www.googletagmanager.com/gtag/js?id=G-4T7EVVZLB2"', $home);
+        $this->assertStringContainsString('klartfotoLoadAnalytics', $home);
     }
 
     public function test_a_malformed_measurement_id_does_not_load_the_tag(): void

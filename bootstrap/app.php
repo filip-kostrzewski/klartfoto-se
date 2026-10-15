@@ -1,5 +1,6 @@
 <?php
 
+use App\GoogleAnalytics;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -13,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->encryptCookies(except: [
+            GoogleAnalytics::CONSENT_COOKIE,
+        ]);
         $middleware->appendToGroup('web', SetLocale::class);
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(fn () => route('assignments.index'));

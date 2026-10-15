@@ -1,7 +1,11 @@
-@php($measurementId = \App\GoogleAnalytics::measurementId())
+@php
+    $measurementId = \App\GoogleAnalytics::measurementId();
+    $analyticsAllowed = is_string($measurementId) && request()->cookie(\App\GoogleAnalytics::CONSENT_COOKIE) === 'granted';
+@endphp
 <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    window.klartfotoAnalyticsId = @json($measurementId);
     gtag('consent', 'default', {
         analytics_storage: 'denied',
         ad_storage: 'denied',
@@ -27,8 +31,26 @@
 </script>
 @if (is_string($measurementId))
     <script>
+        window.klartfotoLoadAnalytics = function () {
+            if (document.querySelector('script[data-klartfoto-analytics]')) {
+                return;
+            }
+
+            gtag('js', new Date());
+            gtag('config', @json($measurementId));
+
+            var script = document.createElement('script');
+            script.async = true;
+            script.setAttribute('data-klartfoto-analytics', @json($measurementId));
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(@json($measurementId));
+            document.head.appendChild(script);
+        };
+    </script>
+@endif
+@if ($analyticsAllowed)
+    <script>
         gtag('js', new Date());
         gtag('config', @json($measurementId));
     </script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ $measurementId }}"></script>
+    <script async data-klartfoto-analytics src="https://www.googletagmanager.com/gtag/js?id={{ $measurementId }}"></script>
 @endif

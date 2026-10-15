@@ -34,6 +34,11 @@
                 ad_personalization: 'denied'
             });
         };
+        var loadAnalytics = function () {
+            if (typeof window.klartfotoLoadAnalytics === 'function') {
+                window.klartfotoLoadAnalytics();
+            }
+        };
         var clearAnalytics = function () {
             document.cookie.split(';').forEach(function (part) {
                 var cookieName = part.split('=')[0].trim();
@@ -63,16 +68,22 @@
         document.querySelectorAll('[data-cookie-choice]').forEach(function (button) {
             button.addEventListener('click', function () {
                 var value = button.getAttribute('data-cookie-choice') === 'granted' ? 'granted' : 'denied';
-                write(value);
-                apply(value);
+            write(value);
+            apply(value);
 
-                if (value === 'denied') {
-                    clearAnalytics();
-                }
+            if (value === 'granted') {
+                loadAnalytics();
+            } else {
+                clearAnalytics();
+            }
 
-                hide();
+            hide();
             });
         });
+
+        if (read() === 'granted') {
+            loadAnalytics();
+        }
 
         document.querySelectorAll('[data-cookie-settings]').forEach(function (button) {
             button.addEventListener('click', function () {
