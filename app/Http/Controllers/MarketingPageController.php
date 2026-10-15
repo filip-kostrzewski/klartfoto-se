@@ -74,9 +74,9 @@ class MarketingPageController extends Controller
     public function robots(): Response
     {
         if (! SiteSeo::isIndexable()) {
-            $contents = "User-agent: *\nDisallow: /\nDisallow: /r/\n";
+            $contents = "User-agent: *\nDisallow: /\n";
         } else {
-            $contents = "User-agent: *\nAllow: /\nDisallow: /r/\n\nSitemap: ".SiteSeo::canonical('/sitemap.xml')."\n";
+            $contents = "User-agent: *\nAllow: /\n\nSitemap: ".SiteSeo::canonical('/sitemap.xml')."\n";
         }
 
         return new Response($contents, 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
