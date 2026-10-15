@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 1024" role="img" aria-label="Teckning av ett kök efter städning">
+  <rect width="768" height="1024" fill="#f3f7ea"/>
+  <rect x="36" y="36" width="696" height="952" fill="#fffefb" stroke="#1a2420" stroke-width="8"/>
+  <rect x="78" y="110" width="250" height="150" fill="#d7ff68" stroke="#1a2420" stroke-width="6"/>
+  <path d="M90 180h220M200 120v130" fill="none" stroke="#1a2420" stroke-width="4"/>
+  <rect x="360" y="110" width="330" height="70" fill="#f7f3e8" stroke="#1a2420" stroke-width="6"/>
+  <rect x="360" y="190" width="330" height="70" fill="#f7f3e8" stroke="#1a2420" stroke-width="6"/>
+  <rect x="78" y="300" width="612" height="28" fill="#efe8d8" stroke="#1a2420" stroke-width="6"/>
+  <rect x="110" y="360" width="250" height="170" fill="#fff" stroke="#1a2420" stroke-width="6"/>
+  <ellipse cx="530" cy="450" rx="130" ry="70" fill="#d5e8ef" stroke="#1a2420" stroke-width="6"/>
+  <path d="M500 430c18 16 28 16 48 0" fill="none" stroke="#1a2420" stroke-width="5" stroke-linecap="round"/>
+  <path d="M150 700h180M150 740h140" fill="none" stroke="#c5cbb8" stroke-width="6" stroke-linecap="round"/>
+  <path d="M560 690l18 18 36-44" fill="none" stroke="#567216" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="610" cy="760" r="8" fill="#d7ff68" stroke="#1a2420" stroke-width="4"/>
+  <text x="78" y="930" fill="#1a2420" font-family="Georgia, serif" font-size="42">Efter · teckning</text>
+</svg>

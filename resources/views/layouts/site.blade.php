@@ -43,6 +43,9 @@
                 <a href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#for-who">{{ $copy['nav']['who'] }}</a>
                 <a href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $copy['nav']['report'] }}</a>
                 <a href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#how-it-works">{{ $copy['nav']['how'] }}</a>
+                @if (config('klartfoto.pricing_visible'))
+                    <a href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#priser">{{ $copy['nav']['pricing'] }}</a>
+                @endif
             </nav>
 
             <div class="header-actions">
@@ -68,13 +71,16 @@
                         <a href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#for-who">{{ $copy['nav']['who'] }}</a>
                         <a href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $copy['nav']['report'] }}</a>
                         <a href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#how-it-works">{{ $copy['nav']['how'] }}</a>
-                        <a class="mobile-menu-signup" href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#signup">
-                            {{ $copy['nav']['signup'] }} <span aria-hidden="true">↗</span>
+                        @if (config('klartfoto.pricing_visible'))
+                            <a href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#priser">{{ $copy['nav']['pricing'] }}</a>
+                        @endif
+                        <a class="mobile-menu-signup" href="/register">
+                            {{ $copy['nav']['start'] }} <span aria-hidden="true">↗</span>
                         </a>
                     </nav>
                 </details>
-                <a class="button button-small button-lime" href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#signup">
-                    {{ $copy['nav']['signup'] }} <span aria-hidden="true">↗</span>
+                <a class="button button-small button-lime" href="/register">
+                    {{ $copy['nav']['start'] }} <span aria-hidden="true">↗</span>
                 </a>
             </div>
         </div>
@@ -97,8 +103,9 @@
                 <span class="brand-name">{{ $page['brand'] }}</span>
             </a>
             <p>{{ $copy['nav']['footer_slogan'] }}</p>
-            <a class="footer-cta" href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#signup">{{ $copy['nav']['footer_cta'] }} <span aria-hidden="true">↗</span></a>
+            <a class="footer-cta" href="/register">{{ $copy['nav']['footer_cta'] }} <span aria-hidden="true">↗</span></a>
         </div>
+        <p class="footer-legal">Prodi Digital AB, org.nr 559214-9370, Tegelbrukets väg 41, 195 59 Märsta</p>
         <div class="footer-bottom">
             <span>{{ $copy['nav']['footer_tagline'] }}</span>
             <a href="{{ \App\LocalizedUrl::route('privacy', $locale, false) }}">{{ $copy['nav']['privacy'] }}</a>

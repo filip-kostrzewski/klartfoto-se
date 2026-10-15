@@ -27,8 +27,8 @@ return [
             'cleaning' => 'for-stadforetag',
             'renovation' => 'for-hantverkare',
             'property' => 'for-uthyrare',
-            'report' => 'rapportmall-fore-efter',
-            'privacy' => 'integritet',
+            'report' => 'exempel-rapport',
+            'privacy' => 'integritetspolicy',
             'signup' => 'kontakt',
         ],
         'en' => [

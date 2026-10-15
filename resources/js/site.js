@@ -41,3 +41,36 @@ if (focusStatus && window.location.hash === '#signup') {
         focusSummary();
     }
 }
+
+document.querySelectorAll('[data-share-url]').forEach((button) => {
+    button.addEventListener('click', async () => {
+        const url = button.dataset.shareUrl;
+        const original = button.textContent;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({ title: 'Städrapport', url });
+                return;
+            } catch (error) {
+                if (error && error.name === 'AbortError') {
+                    return;
+                }
+            }
+        }
+
+        try {
+            await navigator.clipboard.writeText(url);
+            button.textContent = 'Länken är kopierad';
+            window.setTimeout(() => {
+                button.textContent = original;
+            }, 2000);
+        } catch (error) {
+            const input = document.querySelector('#share-link');
+
+            if (input instanceof HTMLInputElement) {
+                input.focus();
+                input.select();
+            }
+        }
+    });
+});

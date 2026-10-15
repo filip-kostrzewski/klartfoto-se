@@ -1,9 +1,59 @@
 <?php
 
+use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\EarlyAccessController;
 use App\Http\Controllers\MarketingPageController;
+use App\Http\Controllers\PublicReportController;
 use App\LocalizedUrl;
 use Illuminate\Support\Facades\Route;
+
+Route::middleware('guest')->group(function (): void {
+    Route::get('/register', [RegisterController::class, 'create'])->name('register');
+    Route::post('/register', [RegisterController::class, 'store'])->middleware('throttle:10,1');
+
+    Route::get('/login', [LoginController::class, 'create'])->name('login');
+    Route::post('/login', [LoginController::class, 'store'])->middleware('throttle:30,1');
+
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'create'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'store'])
+        ->middleware('throttle:5,1')
+        ->name('password.email');
+
+    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'create'])->name('password.reset');
+    Route::post('/reset-password', [ResetPasswordController::class, 'store'])
+        ->middleware('throttle:5,1')
+        ->name('password.update');
+});
+
+Route::middleware('auth')->group(function (): void {
+    Route::get('/uppdrag', [AssignmentController::class, 'index'])->name('assignments.index');
+    Route::get('/uppdrag/nytt', [AssignmentController::class, 'create'])->name('assignments.create');
+    Route::post('/uppdrag', [AssignmentController::class, 'store'])->name('assignments.store');
+    Route::get('/uppdrag/{assignment}', [AssignmentController::class, 'show'])->name('assignments.show');
+    Route::post('/uppdrag/{assignment}/foton', [AssignmentController::class, 'storePhotos'])->name('assignments.photos.store');
+    Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+});
+
+Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
+
+Route::get('/r/{token}/foton/{photo}', [PublicReportController::class, 'photo'])
+    ->where('token', '[A-Za-z0-9]{32,80}')
+    ->name('reports.photos.show');
+
+Route::get('/r/{token}', [PublicReportController::class, 'show'])
+    ->where('token', '[A-Za-z0-9]{32,80}')
+    ->name('reports.show');
+
+Route::permanentRedirect('/integritet', '/integritetspolicy');
+Route::permanentRedirect('/rapportmall-fore-efter', '/exempel-rapport');
+Route::permanentRedirect('/sv/integritet', '/integritetspolicy');
+Route::permanentRedirect('/sv/rapportmall-fore-efter', '/exempel-rapport');
 
 $pageActions = [
     'home' => 'home',

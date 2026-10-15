@@ -2587,3 +2587,374 @@ select {
         height: 75mm;
     }
 }
+
+.footer-legal {
+    margin: 18px 0 0;
+    color: rgba(255, 255, 255, .72);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.pricing-section {
+    background: var(--white);
+}
+
+.pricing-heading h2 {
+    max-width: 16ch;
+    margin: 18px 0 28px;
+    font-family: var(--serif);
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 500;
+    letter-spacing: -.04em;
+    line-height: .95;
+}
+
+.pricing-heading em {
+    font-style: italic;
+}
+
+.pricing-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.pricing-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 22px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+}
+
+.pricing-card-team {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--white);
+}
+
+.pricing-card h3 {
+    margin: 0;
+    font-size: 14px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.pricing-price {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1;
+}
+
+.pricing-price span {
+    display: block;
+    margin-top: 8px;
+    font-family: var(--sans);
+    font-size: 13px;
+    letter-spacing: 0;
+}
+
+.pricing-card ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pricing-card li {
+    padding: 8px 0;
+    border-top: 1px solid var(--line);
+}
+
+.pricing-card-team li {
+    border-top-color: rgba(255, 255, 255, .16);
+}
+
+.pricing-note {
+    margin: 22px 0 16px;
+    font-size: 16px;
+}
+
+.pricing-section .button {
+    width: 100%;
+}
+
+.app-body {
+    background: var(--paper);
+    color: var(--ink);
+}
+
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+    background: var(--ink);
+    color: var(--white);
+}
+
+.app-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.app-nav a,
+.app-nav button {
+    border: 0;
+    background: transparent;
+    color: var(--white);
+    font: inherit;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.app-main {
+    width: min(100% - 32px, 720px);
+    margin: 0 auto;
+    padding: 24px 0 48px;
+}
+
+.app-body .eyebrow {
+    color: #3f4d2a;
+}
+
+.app-body .eyebrow-mark {
+    background: #3f4d2a;
+}
+
+.auth-card,
+.app-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.auth-card h1,
+.app-card h1,
+.customer-report h1 {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2rem, 8vw, 3.2rem);
+    font-weight: 500;
+    letter-spacing: -.04em;
+    line-height: 1;
+}
+
+.auth-lead,
+.empty-note {
+    margin: 0;
+    color: #3c4438;
+}
+
+.app-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.app-form label {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.app-form input[type="text"],
+.app-form input[type="email"],
+.app-form input[type="password"],
+.app-form input[type="date"],
+.share-box input {
+    width: 100%;
+    min-height: 52px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: var(--white);
+    color: var(--ink);
+    font-size: 16px;
+}
+
+.app-form input[type="file"] {
+    width: 100%;
+    min-height: 64px;
+    padding: 16px;
+    border: 1px dashed #8b907f;
+    border-radius: 3px;
+    background: var(--white);
+    font-size: 16px;
+}
+
+.app-form .button,
+.share-box .button {
+    width: 100%;
+    margin-top: 12px;
+}
+
+.app-body .consent-label {
+    color: var(--ink);
+    font-size: 15px;
+}
+
+.app-body .form-status {
+    color: #24301c;
+    background: #edf3de;
+}
+
+.app-body .form-status-error {
+    color: #5c2418;
+    background: #ffe8e2;
+}
+
+.google-button {
+    width: 100%;
+    border-color: var(--ink);
+    color: var(--ink);
+}
+
+.auth-or {
+    margin: 0;
+    color: #667064;
+    font-size: 13px;
+    text-align: center;
+}
+
+.auth-switch {
+    margin: 0;
+}
+
+.auth-switch a,
+.customer-report a {
+    color: inherit;
+}
+
+.job-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.job-list a {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    background: var(--white);
+    text-decoration: none;
+}
+
+.share-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    background: var(--ink);
+    color: var(--white);
+}
+
+.owner-photos,
+.photo-pair {
+    display: grid;
+    gap: 12px;
+}
+
+.owner-photos figure,
+.photo-pair figure {
+    margin: 0;
+}
+
+.owner-photos img,
+.photo-pair img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    background: var(--white);
+}
+
+.owner-photos figcaption,
+.photo-pair figcaption {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.report-body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+}
+
+.customer-report {
+    width: min(100% - 32px, 880px);
+    margin: 0 auto;
+    padding: 28px 0 48px;
+}
+
+.customer-report-header p,
+.customer-report-footer {
+    margin: 8px 0 0;
+}
+
+.customer-report-meta {
+    display: grid;
+    gap: 12px;
+    margin: 24px 0;
+}
+
+.customer-report-meta div {
+    padding: 14px;
+    background: var(--white);
+}
+
+.customer-report-meta dt {
+    color: #667064;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.customer-report-meta dd {
+    margin: 4px 0 0;
+    font-size: 18px;
+}
+
+.missing-photo {
+    display: grid;
+    min-height: 180px;
+    place-items: center;
+    margin: 0;
+    background: var(--white);
+    color: #667064;
+}
+
+.field-hint {
+    margin: 0;
+    color: #667064;
+    font-size: 13px;
+}
+
+@media (min-width: 720px) {
+    .pricing-grid,
+    .photo-pair,
+    .owner-photos {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .pricing-section .button,
+    .app-form .button,
+    .share-box .button,
+    .google-button {
+        width: auto;
+    }
+
+    .customer-report-meta {
+        grid-template-columns: 1fr 1fr;
+    }
+}

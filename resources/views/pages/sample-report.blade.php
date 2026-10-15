@@ -11,7 +11,7 @@
             <p>{{ $page['intro'] }}</p>
             <div class="hero-actions">
                 <button class="button button-lime" type="button" data-print>{{ $page['print'] }} <span aria-hidden="true">↗</span></button>
-                <a class="button button-outline" href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#signup">{{ $page['signup'] }} <span aria-hidden="true">↗</span></a>
+                <a class="button button-outline" href="/register">{{ $copy['nav']['start'] }} <span aria-hidden="true">↗</span></a>
             </div>
             <p class="resource-note">{{ $page['print_note'] }}</p>
         </div>
@@ -35,11 +35,11 @@
             <div class="printable-disclaimer">{{ $page['disclaimer'] }}</div>
             <div class="printable-photos">
                 <figure>
-                    <img src="{{ asset('images/demo/kitchen-before-768.webp') }}" width="768" height="1024" alt="{{ $page['before_alt'] }}" loading="lazy" decoding="async">
+                    <img src="{{ asset('images/demo/kitchen-before.svg') }}" width="768" height="1024" alt="{{ $page['before_alt'] }}" loading="lazy" decoding="async">
                     <figcaption><span>{{ $page['before_caption'] }}</span><span>{{ $page['before_description'] }}</span></figcaption>
                 </figure>
                 <figure>
-                    <img src="{{ asset('images/demo/kitchen-after-768.webp') }}" width="768" height="1024" alt="{{ $page['after_alt'] }}" loading="lazy" decoding="async">
+                    <img src="{{ asset('images/demo/kitchen-after.svg') }}" width="768" height="1024" alt="{{ $page['after_alt'] }}" loading="lazy" decoding="async">
                     <figcaption><span>{{ $page['after_caption'] }}</span><span>{{ $page['after_description'] }}</span></figcaption>
                 </figure>
             </div>

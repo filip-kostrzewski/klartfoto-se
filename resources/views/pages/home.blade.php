@@ -11,8 +11,8 @@
                 <h1>{{ $home['h1_start'] }}<br><span>{{ $home['h1_emphasis'] }}</span></h1>
                 <p class="hero-lead">{{ $home['lead'] }}</p>
                 <div class="hero-actions">
-                    <a class="button button-lime" href="#signup">{{ $home['cta_primary'] }} <span aria-hidden="true">↗</span></a>
-                    <a class="button button-outline" href="#sample-report">{{ $home['cta_secondary'] }} <span aria-hidden="true">↓</span></a>
+                    <a class="button button-lime" href="/register">{{ $home['cta_primary'] }} <span aria-hidden="true">↗</span></a>
+                    <a class="button button-outline" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['cta_secondary'] }} <span aria-hidden="true">↗</span></a>
                 </div>
                 <p class="hero-footnote">{{ $home['footnote'] }}</p>
                 <div class="hero-trust" aria-label="{{ $home['scope_label'] }}">
@@ -30,9 +30,7 @@
                     <div class="photo-comparison" data-comparison style="--split: 54%;">
                         <img
                             class="comparison-image comparison-after"
-                            src="{{ asset('images/demo/kitchen-after-768.webp') }}"
-                            srcset="{{ asset('images/demo/kitchen-after-480.webp') }} 480w, {{ asset('images/demo/kitchen-after-768.webp') }} 768w"
-                            sizes="(max-width: 900px) calc(100vw - 40px), 43vw"
+                            src="{{ asset('images/demo/kitchen-after.svg') }}"
                             width="768"
                             height="1024"
                             alt="{{ $home['photo_alt'] }}"
@@ -41,9 +39,7 @@
                         <div class="comparison-before">
                             <img
                                 class="comparison-image"
-                                src="{{ asset('images/demo/kitchen-before-768.webp') }}"
-                                srcset="{{ asset('images/demo/kitchen-before-480.webp') }} 480w, {{ asset('images/demo/kitchen-before-768.webp') }} 768w"
-                                sizes="(max-width: 900px) calc(100vw - 40px), 43vw"
+                                src="{{ asset('images/demo/kitchen-before.svg') }}"
                                 width="768"
                                 height="1024"
                                 alt=""
@@ -168,11 +164,11 @@
                 </div>
                 <div class="report-photo-row">
                     <div class="report-photo report-photo-before">
-                        <img src="{{ asset('images/demo/kitchen-before-480.webp') }}" width="480" height="640" alt="" loading="lazy" decoding="async">
+                        <img src="{{ asset('images/demo/kitchen-before.svg') }}" width="480" height="640" alt="" loading="lazy" decoding="async">
                         <span>{{ $home['before'] }}</span>
                     </div>
                     <div class="report-photo report-photo-after">
-                        <img src="{{ asset('images/demo/kitchen-after-480.webp') }}" width="480" height="640" alt="" loading="lazy" decoding="async">
+                        <img src="{{ asset('images/demo/kitchen-after.svg') }}" width="480" height="640" alt="" loading="lazy" decoding="async">
                         <span>{{ $home['after'] }}</span>
                     </div>
                     <div class="report-note">
@@ -197,6 +193,8 @@
             <a class="text-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['future_link'] }} <span aria-hidden="true">↗</span></a>
         </div>
     </section>
+
+    <x-pricing-section :pricing="$home['pricing']" />
 
     <section class="signup-section section-pad" id="signup">
         <div class="signup-copy">

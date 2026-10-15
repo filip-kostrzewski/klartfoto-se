@@ -45,7 +45,7 @@
         </div>
         <div class="industry-example-visual">
             <span class="generated-label">{{ $copy['home']['photo_note'] }}</span>
-            <img src="{{ asset('images/demo/kitchen-after-768.webp') }}" width="768" height="1024" alt="{{ $page['image_alt'] }}" loading="lazy" decoding="async">
+            <img src="{{ asset('images/demo/kitchen-after.svg') }}" width="768" height="1024" alt="{{ $page['image_alt'] }}" loading="lazy" decoding="async">
             <div class="visual-caption"><span>{{ $page['eyebrow'] }}</span><span>R/01</span></div>
         </div>
     </section>

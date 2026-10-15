@@ -136,6 +136,7 @@ class MarketingPageController extends Controller
         $content['og_locale'] = $localeConfig['og'];
         $content['controller_name'] = config('marketing.data_controller');
         $content['contact_email'] = config('marketing.data_contact');
+        $content['policy_contact_email'] = config('klartfoto.contact_email');
         $content['waitlist_open'] = SiteSeo::waitlistIsOpen();
 
         return $content;

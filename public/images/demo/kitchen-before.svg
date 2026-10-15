@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 1024" role="img" aria-label="Teckning av ett kök före städning">
+  <rect width="768" height="1024" fill="#f6f1e4"/>
+  <rect x="36" y="36" width="696" height="952" fill="#fffdf8" stroke="#1a2420" stroke-width="8"/>
+  <rect x="78" y="110" width="250" height="150" fill="#d7e7c4" stroke="#1a2420" stroke-width="6"/>
+  <path d="M90 180h220M200 120v130" fill="none" stroke="#1a2420" stroke-width="4"/>
+  <rect x="360" y="110" width="330" height="70" fill="#f0d7a2" stroke="#1a2420" stroke-width="6"/>
+  <rect x="360" y="190" width="330" height="70" fill="#f0d7a2" stroke="#1a2420" stroke-width="6"/>
+  <rect x="78" y="300" width="612" height="28" fill="#c8b89a" stroke="#1a2420" stroke-width="6"/>
+  <rect x="110" y="360" width="250" height="170" fill="#e7d3b1" stroke="#1a2420" stroke-width="6"/>
+  <ellipse cx="530" cy="450" rx="130" ry="70" fill="#b7d0dc" stroke="#1a2420" stroke-width="6"/>
+  <circle cx="180" cy="620" r="46" fill="#e07a5f" stroke="#1a2420" stroke-width="6"/>
+  <circle cx="250" cy="690" r="30" fill="#e6c15a" stroke="#1a2420" stroke-width="6"/>
+  <rect x="300" y="640" width="90" height="18" rx="8" fill="#7a4b2a" transform="rotate(-18 345 649)"/>
+  <path d="M120 780c70-70 90 40 170-20 50-36 80 30 140-10" fill="none" stroke="#7a4b2a" stroke-width="8" stroke-linecap="round"/>
+  <ellipse cx="520" cy="760" rx="90" ry="36" fill="#c3b19a"/>
+  <path d="M470 820c30 20 70 18 110-8" fill="none" stroke="#1a2420" stroke-width="5" stroke-linecap="round"/>
+  <text x="78" y="930" fill="#1a2420" font-family="Georgia, serif" font-size="42">Före · teckning</text>
+</svg>

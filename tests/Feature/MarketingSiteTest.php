@@ -14,7 +14,8 @@ class MarketingSiteTest extends TestCase
 
         $response->assertOk()
             ->assertSee('<html lang="sv">', false)
-            ->assertSee('Visa jobbet.', false)
+            ->assertSee('Slipp reklamationer', false)
+            ->assertSee('bevisa varje städning med bilder', false)
             ->assertSee('content="sv_SE"', false)
             ->assertSee('https://klartfoto.se/', false)
             ->assertDontSee('klartfoto.test', false);
@@ -155,6 +156,53 @@ class MarketingSiteTest extends TestCase
         $this->get('/polityka-prywatnosci')->assertStatus(301)->assertRedirect('/pl/polityka-prywatnosci');
         $this->get('/sv')->assertStatus(301)->assertRedirect('/');
         $this->get('/sv/for-stadforetag')->assertStatus(301)->assertRedirect('/for-stadforetag');
+        $this->get('/rapportmall-fore-efter')->assertStatus(301)->assertRedirect('/exempel-rapport');
+    }
+
+    public function test_homepage_shows_prices_drawings_and_the_company_footer(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('id="priser"', false)
+            ->assertSee('href="/#priser"', false)
+            ->assertSee('290 kr/mån', false)
+            ->assertSee('590 kr/mån', false)
+            ->assertSee('1 användare', false)
+            ->assertSee('obegränsade rapporter', false)
+            ->assertSee('upp till 10 användare', false)
+            ->assertSee('egen logga i rapporten', false)
+            ->assertSee('30 dagar gratis utan kort. Ingen bindningstid.', false)
+            ->assertSee('Kom igång gratis', false)
+            ->assertSee('href="/register"', false)
+            ->assertSee('images/demo/kitchen-before.svg', false)
+            ->assertSee('images/demo/kitchen-after.svg', false)
+            ->assertDontSee('.webp', false)
+            ->assertSee('Prodi Digital AB, org.nr 559214-9370, Tegelbrukets väg 41, 195 59 Märsta', false)
+            ->assertSee('href="/integritetspolicy"', false);
+
+        $this->get('/exempel-rapport')
+            ->assertOk()
+            ->assertSee('images/demo/kitchen-before.svg', false)
+            ->assertSee('Teckning · inte ett foto', false)
+            ->assertDontSee('.webp', false);
+
+        config(['klartfoto.contact_email' => null]);
+        $this->get('/integritetspolicy')
+            ->assertOk()
+            ->assertSee('Prodi Digital AB', false)
+            ->assertSee('foton av kundens hem', false)
+            ->assertDontSee('mailto:', false);
+
+        config(['klartfoto.contact_email' => 'privacy@klartfoto.se']);
+        $this->get('/integritetspolicy')
+            ->assertOk()
+            ->assertSee('mailto:privacy@klartfoto.se', false);
+
+        config(['klartfoto.pricing_visible' => false]);
+        $this->get('/')
+            ->assertOk()
+            ->assertDontSee('id="priser"', false)
+            ->assertDontSee('290 kr/mån', false);
     }
 
     public function test_unknown_localized_slug_and_unknown_locale_are_real_404_responses(): void
@@ -194,6 +242,7 @@ class MarketingSiteTest extends TestCase
 
         $this->assertSame(35, substr_count($xml, '<url>'));
         $this->assertStringContainsString('<loc>https://klartfoto.example/</loc>', $xml);
+        $this->assertStringContainsString('<loc>https://klartfoto.example/exempel-rapport</loc>', $xml);
         $this->assertStringContainsString('https://klartfoto.example/for-stadforetag', $xml);
         $this->assertStringContainsString('https://klartfoto.example/en/for-cleaning-companies', $xml);
         $this->assertStringContainsString('https://klartfoto.example/pl/dla-firm-sprzatajacych', $xml);
@@ -222,7 +271,8 @@ class MarketingSiteTest extends TestCase
         $this->assertStringContainsString('name="robots" content="index,follow,max-image-preview:large"', $html);
         $this->assertStringNotContainsString('klartfoto.test', $html);
 
-        $this->get('/integritet')->assertOk()
+        $this->get('/integritet')->assertStatus(301)->assertRedirect('/integritetspolicy');
+        $this->get('/integritetspolicy')->assertOk()
             ->assertSee('name="robots" content="noindex,nofollow"', false);
 
         $this->get('/robots.txt')->assertOk()->assertSee("User-agent: *\nAllow: /\n\nSitemap: https://klartfoto.se/sitemap.xml", false);

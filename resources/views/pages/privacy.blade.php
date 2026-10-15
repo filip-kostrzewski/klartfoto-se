@@ -19,7 +19,14 @@
                 <h2>{{ $section['title'] }}</h2>
                 @foreach ($section['paragraphs'] as $paragraph)
                     @php
-                        if (str_contains($paragraph, ':controller') && (! $page['controller_name'] || ! $page['contact_email'])) {
+                        if (str_contains($paragraph, ':policy_email')) {
+                            if (! filled($page['policy_contact_email'] ?? null)) {
+                                $paragraph = null;
+                            } else {
+                                $escapedPolicyEmail = e($page['policy_contact_email']);
+                                $paragraph = str_replace(':policy_email', '<a href="mailto:'.$escapedPolicyEmail.'">'.$escapedPolicyEmail.'</a>', $paragraph);
+                            }
+                        } elseif (str_contains($paragraph, ':controller') && (! $page['controller_name'] || ! $page['contact_email'])) {
                             $paragraph = __('marketing.privacy.unconfigured_contact');
                         } else {
                             $paragraph = str_replace(':controller', e($page['controller_name'] ?? ''), $paragraph);
@@ -31,7 +38,9 @@
                             }
                         }
                     @endphp
-                    <p>{!! $paragraph !!}</p>
+                    @if (filled($paragraph))
+                        <p>{!! $paragraph !!}</p>
+                    @endif
                 @endforeach
             </section>
         @endforeach
