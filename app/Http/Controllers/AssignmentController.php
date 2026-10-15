@@ -22,16 +22,25 @@ class AssignmentController extends Controller
         $company = $user->company;
         abort_if($company === null, 403);
 
+        $assignments = $company->assignments()
+            ->withCount('photos')
+            ->orderByDesc('performed_on')
+            ->orderByDesc('id')
+            ->get();
+        $showOnboarding = $assignments->isEmpty();
+
         return view('assignments.index', [
-            'assignments' => $company->assignments()
-                ->withCount('photos')
-                ->orderByDesc('performed_on')
-                ->orderByDesc('id')
-                ->get(),
+            'assignments' => $assignments,
             'onTrial' => $company->onTrial(),
             'canManageJobs' => $company->canManageJobs(),
             'companyName' => $company->name,
             'trialEndsAt' => $company->trial_ends_at,
+            'showOnboarding' => $showOnboarding,
+            'hasLogo' => filled($company->logo_path),
+            'hasTeam' => $showOnboarding && (
+                $company->users()->count() > 1
+                || $company->invitations()->pending()->exists()
+            ),
         ]);
     }
 

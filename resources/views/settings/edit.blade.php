@@ -6,7 +6,6 @@
     <section class="app-card">
         <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> {{ $company->name }}</p>
         <h1>Inställningar</h1>
-        <p class="auth-switch"><a href="{{ route('settings.billing', absolute: false) }}">Abonnemang</a></p>
 
         @if (session('status'))
             <div class="form-status form-status-success" role="status">{{ session('status') }}</div>
@@ -22,7 +21,12 @@
             </div>
         @endif
 
-        <section class="settings-block">
+        <section class="settings-block" id="abonnemang">
+            <h2>Abonnemang</h2>
+            @include('settings.partials.subscription')
+        </section>
+
+        <section class="settings-block" id="logotyp">
             <h2>Logotyp</h2>
             <p class="auth-lead">Logotypen visas överst i kundens rapport och i exempelrapporten. PNG, JPEG eller SVG. Vi förminskar bilden och tar bort sådant som inte ska synas.</p>
             @if ($company->allowsTeamFeatures() && $company->logo_path)
@@ -47,7 +51,7 @@
             @endif
         </section>
 
-        <section class="settings-block">
+        <section class="settings-block" id="medlemmar">
             <h2>Medlemmar</h2>
             <p class="auth-lead">{{ $seatsUsed }} av {{ $seatLimit }} användare. @if ($company->onTrial())Under provperioden kan ni vara upp till 10.@else Start inkluderar 1 användare. Team inkluderar upp till 10.@endif</p>
             <ul class="member-list">

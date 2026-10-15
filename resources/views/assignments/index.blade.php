@@ -17,6 +17,28 @@
         @endif
 
         @if ($assignments->isEmpty())
+            @if ($showOnboarding)
+                <section class="onboarding" aria-label="Kom igång">
+                    <h2>Kom igång</h2>
+                    <ol class="onboarding-list">
+                        <li>
+                            <a href="{{ route('assignments.create', absolute: false) }}">Skapa första uppdraget</a>
+                        </li>
+                        <li>
+                            <a href="{{ route('settings.edit', absolute: false) }}#logotyp">Ladda upp logotyp</a>
+                            @if ($hasLogo)
+                                <span>Klar</span>
+                            @endif
+                        </li>
+                        <li>
+                            <a href="{{ route('settings.edit', absolute: false) }}#medlemmar">Bjud in teamet</a>
+                            @if ($hasTeam)
+                                <span>Klar</span>
+                            @endif
+                        </li>
+                    </ol>
+                </section>
+            @endif
             <p class="empty-note">Inga uppdrag ännu. Lägg till kunden, adressen och bilder från telefonen.</p>
         @else
             <ul class="job-list">

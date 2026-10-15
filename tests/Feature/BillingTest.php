@@ -46,7 +46,16 @@ class BillingTest extends TestCase
 
         $this->actingAs($user)->get('/installningar')
             ->assertOk()
-            ->assertSee('Abonnemang', false);
+            ->assertSee('Abonnemang', false)
+            ->assertSee('Nuvarande plan: Team', false)
+            ->assertSee('290 kr/mån exkl. moms', false)
+            ->assertSee('590 kr/mån exkl. moms', false)
+            ->assertSee('1 användare', false)
+            ->assertSee('Upp till 10 användare och egen logotyp', false)
+            ->assertSee('Ingen bindningstid', false)
+            ->assertSee('Betalning aktiveras snart', false)
+            ->assertSee('14 november 2026', false)
+            ->assertDontSee('Välj Start', false);
 
         $this->actingAs($user)->get('/installningar/abonnemang')
             ->assertOk()
@@ -54,6 +63,8 @@ class BillingTest extends TestCase
             ->assertSee('30 dagar kvar', false)
             ->assertSee('14 november 2026', false)
             ->assertSee('Nuvarande plan: Team', false)
+            ->assertSee('290 kr/mån exkl. moms', false)
+            ->assertSee('590 kr/mån exkl. moms', false)
             ->assertDontSee('Välj Start', false)
             ->assertDontSee('Betalningen är mottagen', false);
 

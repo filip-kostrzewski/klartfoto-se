@@ -26,6 +26,9 @@
             <label for="company_name">Företagsnamn</label>
             <input id="company_name" name="company_name" type="text" required maxlength="120" autocomplete="organization" value="{{ old('company_name') }}" aria-invalid="{{ $errors->has('company_name') ? 'true' : 'false' }}">
 
+            <label for="name">Ditt namn</label>
+            <input id="name" name="name" type="text" required maxlength="120" autocomplete="name" value="{{ old('name') }}" aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}">
+
             <label for="email">E-postadress</label>
             <input id="email" name="email" type="email" inputmode="email" autocomplete="email" required maxlength="254" value="{{ old('email') }}" aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}">
 

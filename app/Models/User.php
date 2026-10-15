@@ -4,7 +4,10 @@ namespace App\Models;
 
 use App\CompanyRole;
 use App\Notifications\SwedishResetPassword;
+use App\Notifications\SwedishVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,10 +18,10 @@ use Illuminate\Notifications\Notifiable;
 
 #[Fillable(['company_id', 'role', 'name', 'email', 'password', 'google_id', 'trial_ends_at', 'email_verified_at'])]
 #[Hidden(['password', 'remember_token', 'google_id'])]
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmailContract
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, MustVerifyEmail, Notifiable;
 
     /**
      * @return array<string, string>
@@ -65,5 +68,10 @@ class User extends Authenticatable
     public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void
     {
         $this->notify(new SwedishResetPassword($token));
+    }
+
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new SwedishVerifyEmail);
     }
 }

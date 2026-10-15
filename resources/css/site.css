@@ -3051,3 +3051,60 @@ select {
 .plan-grid + .app-form .button {
     width: 100%;
 }
+
+.verify-banner {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: var(--white);
+}
+
+.verify-banner p {
+    margin: 0;
+}
+
+.verify-banner .button,
+.onboarding-list .button {
+    width: 100%;
+}
+
+.onboarding {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 8px 0 16px;
+}
+
+.onboarding h2 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.onboarding-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.onboarding-list li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    align-items: center;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: var(--white);
+}
+
+.onboarding-list a {
+    color: var(--ink);
+    font-weight: 700;
+}

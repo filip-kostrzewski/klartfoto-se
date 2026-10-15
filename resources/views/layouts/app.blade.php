@@ -34,6 +34,7 @@
         @endauth
     </header>
     <main id="main" class="app-main">
+        @include('partials.verify-email')
         @yield('content')
     </main>
 </body>

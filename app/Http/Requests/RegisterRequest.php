@@ -20,6 +20,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'company_name' => ['required', 'string', 'max:120'],
+            'name' => ['required', 'string', 'max:120'],
             'email' => ['required', 'string', 'email', 'max:254', Rule::unique('users', 'email')],
             'password' => ['required', 'string', 'min:8', 'max:255', 'confirmed'],
             'privacy' => ['accepted'],
@@ -34,6 +35,8 @@ class RegisterRequest extends FormRequest
         return [
             'company_name.required' => 'Ange företagsnamnet.',
             'company_name.max' => 'Företagsnamnet får vara högst 120 tecken.',
+            'name.required' => 'Ange ditt namn.',
+            'name.max' => 'Namnet får vara högst 120 tecken.',
             'email.required' => 'Ange e-postadressen.',
             'email.email' => 'Skriv en giltig e-postadress.',
             'email.max' => 'E-postadressen får vara högst 254 tecken.',

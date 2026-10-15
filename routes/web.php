@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\LoginController;
@@ -57,7 +58,17 @@ Route::middleware('auth')->group(function (): void {
         ->name('invitations.store');
     Route::delete('/installningar/inbjudningar/{invitation}', [CompanyInvitationController::class, 'destroy'])->name('invitations.destroy');
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+    Route::post('/epost/skicka-igen', [EmailVerificationController::class, 'send'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+    Route::put('/epost', [EmailVerificationController::class, 'update'])
+        ->middleware('throttle:6,1')
+        ->name('verification.update');
 });
+
+Route::get('/epost/bekrafta/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware(['signed', 'throttle:6,1'])
+    ->name('verification.verify');
 
 Route::get('/inbjudan/{token}', [CompanyInvitationController::class, 'create'])
     ->where('token', '[A-Za-z0-9]{32,80}')

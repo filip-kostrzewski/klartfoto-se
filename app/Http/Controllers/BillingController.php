@@ -21,8 +21,6 @@ class BillingController extends Controller
             'company' => $company,
             'isOwner' => request()->user()?->isOwner() ?? false,
             'billingReady' => $company->billingIsReady(),
-            'trialDaysLeft' => $company->trialDaysLeft(),
-            'planLabel' => $company->plan === CompanyPlan::Team ? 'Team' : 'Start',
             'checkoutSuccess' => request()->query('checkout') === 'success',
         ]);
     }
