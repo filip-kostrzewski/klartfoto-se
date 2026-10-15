@@ -28,7 +28,11 @@ class RegistrationTest extends TestCase
             'privacy' => '1',
         ]);
 
-        $response->assertRedirect(route('assignments.index'));
+        $response->assertRedirect(route('assignments.index'))
+            ->assertSessionHas('toast', 'Välkommen! Ditt konto är skapat.');
+        $this->get('/uppdrag')
+            ->assertOk()
+            ->assertSee('Välkommen! Ditt konto är skapat.', false);
         $this->assertAuthenticated();
 
         $user = User::query()->where('email', 'anna@glans.se')->first();

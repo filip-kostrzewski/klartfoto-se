@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Assignment;
 use App\Models\User;
+use App\PhotoPhase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -38,9 +39,11 @@ class AssignmentTest extends TestCase
         $this->assertSame(48, strlen($assignment->public_token));
         $this->assertNotSame((string) $assignment->id, $assignment->public_token);
 
-        $response->assertRedirect(route('assignments.show', $assignment));
+        $response->assertRedirect(route('assignments.show', $assignment))
+            ->assertSessionHas('toast', 'Uppdraget är sparat.');
         $this->actingAs($user)->get(route('assignments.show', $assignment))
             ->assertOk()
+            ->assertSee('Uppdraget är sparat.', false)
             ->assertSee(route('reports.show', ['token' => $assignment->public_token]), false)
             ->assertSee('Anna Andersson', false);
     }
@@ -55,7 +58,37 @@ class AssignmentTest extends TestCase
             ->assertSee('capture', false)
             ->assertSee('multiple', false)
             ->assertSee('name="before_photos[]"', false)
-            ->assertSee('name="after_photos[]"', false);
+            ->assertSee('name="after_photos[]"', false)
+            ->assertSee('data-photo-picker', false)
+            ->assertSee('data-photo-count', false)
+            ->assertSee('data-photo-list', false);
+    }
+
+    public function test_job_and_report_list_before_photos_ahead_of_after_photos(): void
+    {
+        $user = User::factory()->create();
+        $assignment = Assignment::factory()->for($user)->create();
+        $assignment->photos()->create([
+            'phase' => PhotoPhase::After,
+            'path' => 'photos/efter.jpg',
+            'sort_order' => 1,
+        ]);
+        $assignment->photos()->create([
+            'phase' => PhotoPhase::Before,
+            'path' => 'photos/fore.jpg',
+            'sort_order' => 1,
+        ]);
+
+        $job = $this->actingAs($user)->get(route('assignments.show', $assignment))->assertOk()->getContent();
+        $report = $this->get('/r/'.$assignment->public_token)->assertOk()->getContent();
+
+        foreach ([$job, $report] as $html) {
+            $before = strpos($html, '<figcaption>Före</figcaption>');
+            $after = strpos($html, '<figcaption>Efter</figcaption>');
+            $this->assertNotFalse($before);
+            $this->assertNotFalse($after);
+            $this->assertLessThan($after, $before);
+        }
     }
 
     public function test_incomplete_job_is_rejected_in_swedish(): void

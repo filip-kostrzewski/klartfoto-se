@@ -42,6 +42,85 @@ if (focusStatus && window.location.hash === '#signup') {
     }
 }
 
+document.querySelectorAll('[data-toast-close]').forEach((button) => {
+    button.addEventListener('click', () => {
+        button.closest('[data-toast]')?.remove();
+    });
+});
+
+document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
+    const input = picker.querySelector('input[type="file"]');
+    const list = picker.querySelector('[data-photo-list]');
+    const count = picker.querySelector('[data-photo-count]');
+
+    if (! (input instanceof HTMLInputElement) || ! list || ! count || typeof DataTransfer !== 'function') {
+        return;
+    }
+
+    /** @type {File[]} */
+    const files = [];
+    /** @type {string[]} */
+    let previewUrls = [];
+    let writing = false;
+
+    const render = () => {
+        previewUrls.forEach((url) => URL.revokeObjectURL(url));
+        previewUrls = [];
+        list.replaceChildren();
+
+        files.forEach((file, index) => {
+            const item = document.createElement('li');
+            const image = document.createElement('img');
+            const url = URL.createObjectURL(file);
+            previewUrls.push(url);
+            image.src = url;
+            image.alt = 'Bild ' + (index + 1);
+
+            const remove = document.createElement('button');
+            remove.type = 'button';
+            remove.textContent = 'Ta bort';
+            remove.setAttribute('aria-label', 'Ta bort bild ' + (index + 1));
+            remove.addEventListener('click', () => {
+                files.splice(index, 1);
+                writeFiles();
+            });
+
+            item.append(image, remove);
+            list.append(item);
+        });
+
+        if (files.length === 0) {
+            count.hidden = true;
+            count.textContent = '';
+
+            return;
+        }
+
+        count.hidden = false;
+        count.textContent = files.length === 1 ? '1 bild vald' : files.length + ' bilder valda';
+    };
+
+    const writeFiles = () => {
+        const transfer = new DataTransfer();
+        files.forEach((file) => transfer.items.add(file));
+        writing = true;
+        input.files = transfer.files;
+        writing = false;
+        render();
+    };
+
+    input.addEventListener('change', () => {
+        if (writing) {
+            return;
+        }
+
+        Array.from(input.files ?? []).forEach((file) => {
+            files.push(file);
+        });
+        writeFiles();
+    });
+});
+
 document.querySelectorAll('[data-share-url]').forEach((button) => {
     button.addEventListener('click', async () => {
         const url = button.dataset.shareUrl;

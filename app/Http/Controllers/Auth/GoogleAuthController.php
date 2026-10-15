@@ -60,8 +60,9 @@ class GoogleAuthController extends Controller
         $googleId = (string) $googleUser->getId();
         $user = User::query()->where('google_id', $googleId)->first()
             ?? User::query()->where('email', $email)->first();
+        $created = $user === null;
 
-        if ($user === null) {
+        if ($created) {
             $name = trim((string) $googleUser->getName());
 
             $user = $accounts->handle(
@@ -80,7 +81,13 @@ class GoogleAuthController extends Controller
         Auth::login($user, remember: true);
         request()->session()->regenerate();
 
-        return redirect()->route('assignments.index');
+        $redirect = redirect()->route('assignments.index');
+
+        if ($created) {
+            $redirect->with('toast', 'Välkommen! Ditt konto är skapat.');
+        }
+
+        return $redirect;
     }
 
     private function unavailable(): ?RedirectResponse

@@ -16,6 +16,7 @@ class BillingController extends Controller
     public function show(): View
     {
         $company = $this->company();
+        Gate::authorize('update', $company);
 
         return view('settings.billing', [
             'company' => $company,

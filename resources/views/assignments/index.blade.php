@@ -24,18 +24,20 @@
                         <li>
                             <a href="{{ route('assignments.create', absolute: false) }}">Skapa första uppdraget</a>
                         </li>
-                        <li>
-                            <a href="{{ route('settings.edit', absolute: false) }}#logotyp">Ladda upp logotyp</a>
-                            @if ($hasLogo)
-                                <span>Klar</span>
-                            @endif
-                        </li>
-                        <li>
-                            <a href="{{ route('settings.edit', absolute: false) }}#medlemmar">Bjud in teamet</a>
-                            @if ($hasTeam)
-                                <span>Klar</span>
-                            @endif
-                        </li>
+                        @if ($isOwner)
+                            <li>
+                                <a href="{{ route('settings.edit', absolute: false) }}#logotyp">Ladda upp logotyp</a>
+                                @if ($hasLogo)
+                                    <span>Klar</span>
+                                @endif
+                            </li>
+                            <li>
+                                <a href="{{ route('settings.edit', absolute: false) }}#medlemmar">Bjud in teamet</a>
+                                @if ($hasTeam)
+                                    <span>Klar</span>
+                                @endif
+                            </li>
+                        @endif
                     </ol>
                 </section>
             @endif

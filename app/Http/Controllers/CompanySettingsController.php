@@ -21,17 +21,22 @@ class CompanySettingsController extends Controller
         abort_if($company === null, 403);
         Gate::authorize('view', $company);
 
-        $company->load([
-            'users' => fn ($query) => $query->orderBy('id'),
-            'invitations' => fn ($query) => $query->pending()->orderBy('id'),
-        ]);
+        $isOwner = $user->isOwner();
+
+        if ($isOwner) {
+            $company->load([
+                'users' => fn ($query) => $query->orderBy('id'),
+                'invitations' => fn ($query) => $query->pending()->orderBy('id'),
+            ]);
+        }
 
         return view('settings.edit', [
             'company' => $company,
-            'isOwner' => $user->isOwner(),
-            'seatLimit' => $company->seatLimit(),
-            'userCount' => $company->users->count(),
-            'pendingInvites' => $company->invitations->count(),
+            'isOwner' => $isOwner,
+            'profile' => $user,
+            'seatLimit' => $isOwner ? $company->seatLimit() : 0,
+            'userCount' => $isOwner ? $company->users->count() : 0,
+            'pendingInvites' => $isOwner ? $company->invitations->count() : 0,
         ]);
     }
 

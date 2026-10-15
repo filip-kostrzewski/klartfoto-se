@@ -288,7 +288,7 @@ class MarketingSiteTest extends TestCase
         $this->get('/pl/polityka-prywatnosci')->assertOk()
             ->assertSee('name="robots" content="index,follow,max-image-preview:large"', false);
 
-        $this->get('/robots.txt')->assertOk()->assertSee("User-agent: *\nAllow: /\n\nSitemap: https://klartfoto.se/sitemap.xml", false);
+        $this->get('/robots.txt')->assertOk()->assertSee("User-agent: *\nAllow: /\nDisallow: /r/\n\nSitemap: https://klartfoto.se/sitemap.xml", false);
 
         $sitemap = $this->get('/sitemap.xml')->assertOk()->getContent();
         $this->assertStringContainsString('<loc>https://klartfoto.se/</loc>', $sitemap);

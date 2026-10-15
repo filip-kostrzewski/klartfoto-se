@@ -242,6 +242,35 @@ class CompanyInvitationTest extends TestCase
             ->assertDontSee('3 av 10 användare', false);
     }
 
+    public function test_member_settings_show_only_that_members_profile(): void
+    {
+        $owner = User::factory()->create([
+            'name' => 'Anna Andersson',
+            'email' => 'anna@glans.se',
+        ]);
+        $member = User::factory()->memberOf($owner->company)->create([
+            'name' => 'Kim Berg',
+            'email' => 'kim@glans.se',
+        ]);
+        User::factory()->memberOf($owner->company)->create([
+            'name' => 'Lee Ek',
+            'email' => 'lee@glans.se',
+        ]);
+
+        $this->actingAs($member)->get('/installningar')
+            ->assertOk()
+            ->assertSee('Kim Berg', false)
+            ->assertSee('kim@glans.se', false)
+            ->assertSee('Medlem', false)
+            ->assertDontSee('lee@glans.se', false)
+            ->assertDontSee('anna@glans.se', false)
+            ->assertDontSee('Abonnemang', false)
+            ->assertDontSee('Skicka inbjudan', false)
+            ->assertDontSee('290 kr/mån', false);
+
+        $this->actingAs($member)->get('/installningar/abonnemang')->assertForbidden();
+    }
+
     public function test_owner_can_withdraw_an_invitation_and_another_company_cannot(): void
     {
         $owner = User::factory()->create();

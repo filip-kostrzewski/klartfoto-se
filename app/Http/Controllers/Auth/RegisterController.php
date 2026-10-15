@@ -34,6 +34,8 @@ class RegisterController extends Controller
             $user->sendEmailVerificationNotification();
         }
 
-        return redirect()->route('assignments.index');
+        return redirect()
+            ->route('assignments.index')
+            ->with('toast', 'Välkommen! Ditt konto är skapat.');
     }
 }

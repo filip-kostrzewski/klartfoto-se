@@ -34,6 +34,12 @@
         @endauth
     </header>
     <main id="main" class="app-main">
+        @if (session('toast'))
+            <div class="toast" role="status" data-toast>
+                <p>{{ session('toast') }}</p>
+                <button type="button" data-toast-close>Stäng</button>
+            </div>
+        @endif
         @include('partials.verify-email')
         @yield('content')
     </main>

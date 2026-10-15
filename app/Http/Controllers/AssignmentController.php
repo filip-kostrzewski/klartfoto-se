@@ -41,6 +41,7 @@ class AssignmentController extends Controller
                 $company->users()->count() > 1
                 || $company->invitations()->pending()->exists()
             ),
+            'isOwner' => $user->isOwner(),
         ]);
     }
 
@@ -78,7 +79,9 @@ class AssignmentController extends Controller
             return $assignment;
         });
 
-        return redirect()->route('assignments.show', $assignment);
+        return redirect()
+            ->route('assignments.show', $assignment)
+            ->with('toast', 'Uppdraget är sparat.');
     }
 
     public function show(Assignment $assignment): View

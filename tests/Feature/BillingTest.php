@@ -100,11 +100,7 @@ class BillingTest extends TestCase
         $this->get('/installningar/abonnemang')->assertRedirect(route('login'));
 
         $this->actingAs($member)->get('/installningar/abonnemang')
-            ->assertOk()
-            ->assertSee('Bara ägaren kan ändra abonnemanget', false)
-            ->assertSee('290 kr/mån exkl. moms', false)
-            ->assertSee('590 kr/mån exkl. moms', false)
-            ->assertDontSee('Välj Start', false);
+            ->assertForbidden();
 
         $this->actingAs($member)->post('/installningar/abonnemang', ['plan' => 'team'])
             ->assertForbidden();

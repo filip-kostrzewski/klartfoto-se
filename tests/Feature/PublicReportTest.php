@@ -77,6 +77,24 @@ class PublicReportTest extends TestCase
         $this->assertNotSame($assignment->public_token, $other->public_token);
     }
 
+    public function test_public_reports_ask_crawlers_to_skip_them(): void
+    {
+        $assignment = Assignment::factory()->for(User::factory()->create())->create();
+
+        $this->get('/r/'.$assignment->public_token)
+            ->assertOk()
+            ->assertHeader('X-Robots-Tag', 'noindex, nofollow')
+            ->assertSee('<meta name="robots" content="noindex, nofollow">', false);
+
+        app()->detectEnvironment(fn () => 'production');
+        config(['app.url' => 'https://klartfoto.se']);
+
+        $this->get('/robots.txt')
+            ->assertOk()
+            ->assertSee("Disallow: /r/\n", false)
+            ->assertDontSee('Disallow: /uppdrag', false);
+    }
+
     public function test_public_report_does_not_require_a_login(): void
     {
         $assignment = Assignment::factory()->for(User::factory()->create(['name' => 'Glans Städ AB']))->create([

@@ -66,7 +66,9 @@ class GoogleLoginTest extends TestCase
             'email' => 'anna@glans.se',
         ]));
 
-        $this->get('/auth/google/callback')->assertRedirect(route('assignments.index'));
+        $this->get('/auth/google/callback')
+            ->assertRedirect(route('assignments.index'))
+            ->assertSessionHas('toast', 'Välkommen! Ditt konto är skapat.');
 
         $user = User::query()->where('email', 'anna@glans.se')->first();
         $this->assertNotNull($user);
@@ -96,7 +98,9 @@ class GoogleLoginTest extends TestCase
             'email' => 'anna@glans.se',
         ]));
 
-        $this->get('/auth/google/callback')->assertRedirect(route('assignments.index'));
+        $this->get('/auth/google/callback')
+            ->assertRedirect(route('assignments.index'))
+            ->assertSessionMissing('toast');
 
         $existing->refresh();
         $this->assertAuthenticatedAs($existing);

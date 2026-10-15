@@ -21,6 +21,14 @@
             </div>
         @endif
 
+        @unless ($isOwner)
+            <section class="settings-block" id="profil">
+                <h2>Din profil</h2>
+                <p><strong>{{ $profile->name }}</strong></p>
+                <p>{{ $profile->email }}</p>
+                <p>Medlem</p>
+            </section>
+        @else
         <section class="settings-block" id="abonnemang">
             <h2>Abonnemang</h2>
             @include('settings.partials.subscription')
@@ -96,5 +104,6 @@
                 <p class="field-hint">Bara ägaren kan bjuda in nya användare.</p>
             @endif
         </section>
+        @endunless
     </section>
 @endsection

@@ -30,12 +30,18 @@
                 <label for="performed_on">Datum</label>
                 <input id="performed_on" name="performed_on" type="date" required value="{{ old('performed_on', now()->toDateString()) }}" aria-invalid="{{ $errors->has('performed_on') ? 'true' : 'false' }}">
 
-                <label for="before_photos">Förebilder</label>
-                <input id="before_photos" name="before_photos[]" type="file" accept="image/*" capture multiple>
-                <p class="field-hint">Ta bilder med telefonen eller välj flera från kamerarullen.</p>
+                @include('assignments.partials.photo-input', [
+                    'inputId' => 'before_photos',
+                    'inputName' => 'before_photos[]',
+                    'label' => 'Förebilder',
+                ])
+                <p class="field-hint">Ta bilder med telefonen eller välj flera från kamerarullen. Du kan ta bort en bild innan du sparar.</p>
 
-                <label for="after_photos">Efterbilder</label>
-                <input id="after_photos" name="after_photos[]" type="file" accept="image/*" capture multiple>
+                @include('assignments.partials.photo-input', [
+                    'inputId' => 'after_photos',
+                    'inputName' => 'after_photos[]',
+                    'label' => 'Efterbilder',
+                ])
 
                 <button class="button button-lime" type="submit">Spara uppdraget</button>
             </form>

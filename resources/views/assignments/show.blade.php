@@ -24,26 +24,25 @@
             </div>
         @endif
 
-        @if ($assignment->photos->isEmpty())
+        @forelse ($assignment->photoPairs() as $pair)
+            @include('reports.partials.photo-pair', ['pair' => $pair, 'assignment' => $assignment])
+        @empty
             <p class="empty-note">Inga bilder ännu.</p>
-        @else
-            <div class="owner-photos">
-                @foreach ($assignment->photos as $photo)
-                    <figure>
-                        <img src="{{ route('reports.photos.show', ['token' => $assignment->public_token, 'photo' => $photo], false) }}" alt="{{ $photo->phase === \App\PhotoPhase::Before ? 'Före' : 'Efter' }}">
-                        <figcaption>{{ $photo->phase === \App\PhotoPhase::Before ? 'Före' : 'Efter' }}</figcaption>
-                    </figure>
-                @endforeach
-            </div>
-        @endif
+        @endforelse
 
         @if ($canManageJobs)
             <form class="app-form" method="post" action="{{ route('assignments.photos.store', $assignment, false) }}" enctype="multipart/form-data">
                 @csrf
-                <label for="before_photos">Fler förebilder</label>
-                <input id="before_photos" name="before_photos[]" type="file" accept="image/*" capture multiple>
-                <label for="after_photos">Fler efterbilder</label>
-                <input id="after_photos" name="after_photos[]" type="file" accept="image/*" capture multiple>
+                @include('assignments.partials.photo-input', [
+                    'inputId' => 'before_photos',
+                    'inputName' => 'before_photos[]',
+                    'label' => 'Fler förebilder',
+                ])
+                @include('assignments.partials.photo-input', [
+                    'inputId' => 'after_photos',
+                    'inputName' => 'after_photos[]',
+                    'label' => 'Fler efterbilder',
+                ])
                 <button class="button button-lime" type="submit">Ladda upp bilder</button>
             </form>
         @endif
