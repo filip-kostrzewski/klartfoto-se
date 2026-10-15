@@ -6,9 +6,12 @@ use App\CompanyRole;
 use App\Models\User;
 use App\Notifications\SwedishResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Mail\Transport\ArrayTransport;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
+use Symfony\Component\Mime\Email;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
@@ -128,6 +131,66 @@ class RegistrationTest extends TestCase
         $this->get('/forgot-password')
             ->assertOk()
             ->assertSee('<h1>Återställ lösenord</h1>', false);
+    }
+
+    public function test_login_forgot_password_link_completes_the_reset_flow(): void
+    {
+        $this->get('/login')
+            ->assertOk()
+            ->assertSee('<a href="/forgot-password">Glömt lösenordet?</a>', false);
+
+        $this->get('/forgot-password')
+            ->assertOk()
+            ->assertSee('<h1>Återställ lösenord</h1>', false)
+            ->assertSee('action="/forgot-password"', false)
+            ->assertSee('name="email"', false)
+            ->assertSee('Skicka länk', false);
+
+        $user = User::factory()->create([
+            'email' => 'anna@glans.se',
+            'password' => 'hemligt-losen',
+        ]);
+
+        $this->post('/forgot-password', ['email' => 'anna@glans.se'])
+            ->assertSessionHas('status', 'Om adressen finns hos oss har vi skickat en länk för att välja ett nytt lösenord.');
+
+        $transport = Mail::mailer()->getSymfonyTransport();
+        $this->assertInstanceOf(ArrayTransport::class, $transport);
+        $message = $transport->messages()->sole()->getOriginalMessage();
+        $this->assertInstanceOf(Email::class, $message);
+        $body = html_entity_decode(($message->getHtmlBody() ?? '').($message->getTextBody() ?? ''));
+        $this->assertSame(1, preg_match('#https?://[^"\s<>]+/reset-password/[A-Za-z0-9]+\?email=[^"\s<>]+#', $body, $matches));
+
+        $parts = parse_url($matches[0]);
+        $this->assertIsArray($parts);
+        $resetPath = ($parts['path'] ?? '').(isset($parts['query']) ? '?'.$parts['query'] : '');
+
+        $this->get($resetPath)
+            ->assertOk()
+            ->assertSee('<h1>Byt lösenord</h1>', false)
+            ->assertSee('name="token"', false)
+            ->assertSee('value="anna@glans.se"', false);
+
+        $this->assertSame(1, preg_match('#/reset-password/([A-Za-z0-9]+)#', $resetPath, $token));
+
+        $this->post('/reset-password', [
+            'token' => $token[1],
+            'email' => 'anna@glans.se',
+            'password' => 'nytt-losenord',
+            'password_confirmation' => 'nytt-losenord',
+        ])->assertRedirect('/login')
+            ->assertSessionHas('status', 'Lösenordet är bytt. Logga in med det nya lösenordet.');
+
+        $this->post('/login', [
+            'email' => 'anna@glans.se',
+            'password' => 'hemligt-losen',
+        ])->assertSessionHasErrors('email');
+
+        $this->post('/login', [
+            'email' => 'anna@glans.se',
+            'password' => 'nytt-losenord',
+        ])->assertRedirect(route('assignments.index'));
+        $this->assertAuthenticatedAs($user);
     }
 
     public function test_password_reset_mail_is_sent_only_when_the_address_exists(): void

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\CompanyLogoResponse;
 use App\Actions\StoreCompanyLogo;
 use App\Http\Requests\StoreCompanyLogoRequest;
+use App\Http\Requests\UpdateProfileNameRequest;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -38,6 +39,18 @@ class CompanySettingsController extends Controller
             'userCount' => $isOwner ? $company->users->count() : 0,
             'pendingInvites' => $isOwner ? $company->invitations->count() : 0,
         ]);
+    }
+
+    public function updateProfile(UpdateProfileNameRequest $request): RedirectResponse
+    {
+        $user = $request->user();
+        abort_if($user === null, 403);
+
+        $user->update([
+            'name' => $request->string('name')->toString(),
+        ]);
+
+        return back()->with('toast', 'Ditt namn är sparat.');
     }
 
     public function storeLogo(StoreCompanyLogoRequest $request, StoreCompanyLogo $logos): RedirectResponse

@@ -6,6 +6,9 @@ use App\Actions\StoreAssignmentPhotos;
 use App\Http\Requests\StoreAssignmentPhotoRequest;
 use App\Http\Requests\StoreAssignmentRequest;
 use App\Models\Assignment;
+use App\Models\Company;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -27,7 +30,12 @@ class AssignmentController extends Controller
             ->orderByDesc('performed_on')
             ->orderByDesc('id')
             ->get();
-        $showOnboarding = $assignments->isEmpty();
+        $onboardingSteps = $user->onboarding_dismissed_at === null
+            ? $this->onboardingSteps($user, $company, $assignments)
+            : [];
+        $showOnboarding = collect($onboardingSteps)->contains(
+            fn (array $step): bool => $step['done'] === false,
+        );
 
         return view('assignments.index', [
             'assignments' => $assignments,
@@ -36,12 +44,7 @@ class AssignmentController extends Controller
             'companyName' => $company->name,
             'trialEndsAt' => $company->trial_ends_at,
             'showOnboarding' => $showOnboarding,
-            'hasLogo' => filled($company->logo_path),
-            'hasTeam' => $showOnboarding && (
-                $company->users()->count() > 1
-                || $company->invitations()->pending()->exists()
-            ),
-            'isOwner' => $user->isOwner(),
+            'onboardingSteps' => $onboardingSteps,
         ]);
     }
 
@@ -114,7 +117,73 @@ class AssignmentController extends Controller
             );
         });
 
-        return redirect()->route('assignments.show', $assignment);
+        return redirect()
+            ->route('assignments.show', $assignment)
+            ->with('toast', 'Bilderna är uppladdade.');
+    }
+
+    public function share(Assignment $assignment): RedirectResponse
+    {
+        Gate::authorize('view', $assignment);
+        $assignment->markReportShared();
+
+        return back();
+    }
+
+    public function dismissOnboarding(): RedirectResponse
+    {
+        $user = request()->user();
+        abort_if($user === null, 403);
+        $user->forceFill(['onboarding_dismissed_at' => now()])->save();
+
+        return redirect()->route('assignments.index');
+    }
+
+    /**
+     * @param  Collection<int, Assignment>  $assignments
+     * @return list<array{label: string, done: bool, url: string|null}>
+     */
+    private function onboardingSteps(User $user, Company $company, Collection $assignments): array
+    {
+        $photoJob = $assignments->first(
+            fn (Assignment $assignment): bool => (int) $assignment->photos_count === 0,
+        ) ?? $assignments->first();
+        $shareJob = $assignments->first(
+            fn (Assignment $assignment): bool => $assignment->report_shared_at === null,
+        ) ?? $assignments->first();
+        $hasTeammate = $company->users()->whereKeyNot($user->id)->exists()
+            || $company->invitations()->pending()->exists();
+
+        return [
+            [
+                'label' => 'Skapa första uppdraget',
+                'done' => $assignments->isNotEmpty(),
+                'url' => route('assignments.create', absolute: false),
+            ],
+            [
+                'label' => 'Ladda upp bilder',
+                'done' => $assignments->contains(
+                    fn (Assignment $assignment): bool => $assignment->photos_count > 0,
+                ),
+                'url' => $photoJob instanceof Assignment
+                    ? route('assignments.show', $photoJob, false)
+                    : route('assignments.create', absolute: false),
+            ],
+            [
+                'label' => 'Dela rapportlänken',
+                'done' => $assignments->contains(
+                    fn (Assignment $assignment): bool => $assignment->report_shared_at !== null,
+                ),
+                'url' => $shareJob instanceof Assignment
+                    ? route('assignments.show', $shareJob, false)
+                    : route('assignments.create', absolute: false),
+            ],
+            [
+                'label' => 'Bjud in en teammedlem',
+                'done' => $hasTeammate,
+                'url' => $user->isOwner() ? route('settings.edit', absolute: false).'#medlemmar' : null,
+            ],
+        ];
     }
 
     /**

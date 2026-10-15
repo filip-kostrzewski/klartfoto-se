@@ -2800,6 +2800,10 @@ select {
 }
 
 .app-form .button,
+.share-box form {
+    width: 100%;
+}
+
 .share-box .button {
     width: 100%;
     margin-top: 12px;
@@ -3182,4 +3186,8 @@ select {
 .onboarding-list a {
     color: var(--ink);
     font-weight: 700;
+}
+
+.onboarding > form .button {
+    width: 100%;
 }

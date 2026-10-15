@@ -33,6 +33,7 @@ class User extends Authenticatable implements MustVerifyEmailContract
         return [
             'email_verified_at' => 'datetime',
             'trial_ends_at' => 'datetime',
+            'onboarding_dismissed_at' => 'datetime',
             'password' => 'hashed',
             'role' => CompanyRole::class,
         ];

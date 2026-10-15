@@ -38,9 +38,12 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/uppdrag', [AssignmentController::class, 'index'])->name('assignments.index');
     Route::get('/uppdrag/nytt', [AssignmentController::class, 'create'])->name('assignments.create');
     Route::post('/uppdrag', [AssignmentController::class, 'store'])->name('assignments.store');
+    Route::post('/uppdrag/kom-igang/dolj', [AssignmentController::class, 'dismissOnboarding'])->name('onboarding.dismiss');
     Route::get('/uppdrag/{assignment}', [AssignmentController::class, 'show'])->name('assignments.show');
     Route::post('/uppdrag/{assignment}/foton', [AssignmentController::class, 'storePhotos'])->name('assignments.photos.store');
+    Route::post('/uppdrag/{assignment}/delning', [AssignmentController::class, 'share'])->name('assignments.share');
     Route::get('/installningar', [CompanySettingsController::class, 'edit'])->name('settings.edit');
+    Route::put('/installningar/profil', [CompanySettingsController::class, 'updateProfile'])->name('settings.profile.update');
     Route::get('/installningar/abonnemang', [BillingController::class, 'show'])->name('settings.billing');
     Route::post('/installningar/abonnemang', [BillingController::class, 'checkout'])
         ->middleware('throttle:10,1')

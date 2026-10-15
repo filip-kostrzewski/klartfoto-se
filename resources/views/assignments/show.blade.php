@@ -11,7 +11,10 @@
         <div class="share-box">
             <label for="share-link">Länk till kunden</label>
             <input id="share-link" type="text" readonly value="{{ $reportUrl }}">
-            <button class="button button-dark" type="button" data-share-url="{{ $reportUrl }}">Dela rapporten</button>
+            <form method="post" action="{{ route('assignments.share', $assignment, false) }}">
+                @csrf
+                <button class="button button-dark" type="submit" data-share-url="{{ $reportUrl }}">Dela rapporten</button>
+            </form>
         </div>
 
         @if ($errors->any())

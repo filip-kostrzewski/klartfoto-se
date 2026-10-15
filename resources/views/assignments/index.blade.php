@@ -12,35 +12,15 @@
             <p class="form-status form-status-error" role="status">Provperioden är slut. Du kan fortfarande öppna rapporter som redan är skapade.</p>
         @endif
 
+        @if ($showOnboarding)
+            @include('assignments.partials.onboarding')
+        @endif
+
         @if ($canManageJobs)
             <a class="button button-lime" href="{{ route('assignments.create', absolute: false) }}">Nytt uppdrag</a>
         @endif
 
         @if ($assignments->isEmpty())
-            @if ($showOnboarding)
-                <section class="onboarding" aria-label="Kom igång">
-                    <h2>Kom igång</h2>
-                    <ol class="onboarding-list">
-                        <li>
-                            <a href="{{ route('assignments.create', absolute: false) }}">Skapa första uppdraget</a>
-                        </li>
-                        @if ($isOwner)
-                            <li>
-                                <a href="{{ route('settings.edit', absolute: false) }}#logotyp">Ladda upp logotyp</a>
-                                @if ($hasLogo)
-                                    <span>Klar</span>
-                                @endif
-                            </li>
-                            <li>
-                                <a href="{{ route('settings.edit', absolute: false) }}#medlemmar">Bjud in teamet</a>
-                                @if ($hasTeam)
-                                    <span>Klar</span>
-                                @endif
-                            </li>
-                        @endif
-                    </ol>
-                </section>
-            @endif
             <p class="empty-note">Inga uppdrag ännu. Lägg till kunden, adressen och bilder från telefonen.</p>
         @else
             <ul class="job-list">

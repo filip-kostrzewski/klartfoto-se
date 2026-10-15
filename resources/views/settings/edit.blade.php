@@ -24,11 +24,16 @@
         @unless ($isOwner)
             <section class="settings-block" id="profil">
                 <h2>Din profil</h2>
-                <p><strong>{{ $profile->name }}</strong></p>
+                @include('settings.partials.profile-name')
                 <p>{{ $profile->email }}</p>
                 <p>Medlem</p>
             </section>
         @else
+        <section class="settings-block" id="profil">
+            <h2>Din profil</h2>
+            @include('settings.partials.profile-name')
+        </section>
+
         <section class="settings-block" id="abonnemang">
             <h2>Abonnemang</h2>
             @include('settings.partials.subscription')

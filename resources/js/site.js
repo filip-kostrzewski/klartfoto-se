@@ -122,13 +122,29 @@ document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
 });
 
 document.querySelectorAll('[data-share-url]').forEach((button) => {
-    button.addEventListener('click', async () => {
+    button.addEventListener('click', async (event) => {
+        event.preventDefault();
+
         const url = button.dataset.shareUrl;
         const original = button.textContent;
+        const form = button.closest('form');
+        const recordShare = () => {
+            if (! form) {
+                return;
+            }
+
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                keepalive: true,
+            }).catch(() => {});
+        };
 
         if (navigator.share) {
             try {
                 await navigator.share({ title: 'Städrapport', url });
+                recordShare();
+
                 return;
             } catch (error) {
                 if (error && error.name === 'AbortError') {
@@ -139,11 +155,13 @@ document.querySelectorAll('[data-share-url]').forEach((button) => {
 
         try {
             await navigator.clipboard.writeText(url);
+            recordShare();
             button.textContent = 'Länken är kopierad';
             window.setTimeout(() => {
                 button.textContent = original;
             }, 2000);
         } catch (error) {
+            recordShare();
             const input = document.querySelector('#share-link');
 
             if (input instanceof HTMLInputElement) {
