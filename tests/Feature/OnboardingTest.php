@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Assignment;
 use App\Models\User;
+use App\PhotoPhase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -70,7 +71,7 @@ class OnboardingTest extends TestCase
             'checklist' => '1',
         ])->assertRedirect('/uppdrag')
             ->assertSessionHas('toast', 'Länken är kopierad.');
-        $this->assertNotNull($assignment->fresh()->report_shared_at);
+        $this->assertNotNull($assignment->fresh()->link_copied_at);
 
         $this->actingAs($owner)->get('/uppdrag')
             ->assertOk()
@@ -86,8 +87,9 @@ class OnboardingTest extends TestCase
 
         $this->actingAs($owner)->get('/uppdrag')
             ->assertOk()
-            ->assertDontSee('Kom igång', false)
-            ->assertDontSee('Dölj', false);
+            ->assertDontSee('<h2>Kom igång</h2>', false)
+            ->assertDontSee('Dölj', false)
+            ->assertDontSee('Visa Kom igång', false);
     }
 
     public function test_the_share_step_copies_the_latest_report_link(): void
@@ -112,8 +114,8 @@ class OnboardingTest extends TestCase
         ])->assertRedirect('/uppdrag')
             ->assertSessionHas('toast', 'Länken är kopierad.');
 
-        $this->assertNotNull($newer->fresh()->report_shared_at);
-        $this->assertNull($older->fresh()->report_shared_at);
+        $this->assertNotNull($newer->fresh()->link_copied_at);
+        $this->assertNull($older->fresh()->link_copied_at);
 
         $this->actingAs($owner)->get('/uppdrag')
             ->assertOk()
@@ -121,16 +123,26 @@ class OnboardingTest extends TestCase
             ->assertSeeInOrder(['Dela rapportlänken', 'Klar'], false);
     }
 
-    public function test_opening_the_public_report_marks_the_share_step_done(): void
+    public function test_viewing_a_report_does_not_finish_the_share_step(): void
     {
         $owner = User::factory()->create();
+        $member = User::factory()->memberOf($owner->company)->create();
         $assignment = Assignment::factory()->for($owner)->create();
+        $assignment->forceFill(['report_shared_at' => now()])->save();
+        $assignment->photos()->create([
+            'phase' => PhotoPhase::Before,
+            'path' => 'photos/fore.jpg',
+            'sort_order' => 1,
+        ]);
 
         $this->get('/r/'.$assignment->public_token)->assertOk();
+        $this->assertNull($assignment->fresh()->link_copied_at);
 
-        $this->actingAs($owner)->get('/uppdrag')
+        $this->actingAs($member)->get('/uppdrag')
             ->assertOk()
-            ->assertSeeInOrder(['Dela rapportlänken', 'Klar'], false);
+            ->assertSee('<h2>Kom igång</h2>', false)
+            ->assertSee('data-copy-report="'.route('reports.show', ['token' => $assignment->public_token]).'"', false)
+            ->assertDontSee('Visa Kom igång', false);
     }
 
     public function test_the_checklist_can_be_dismissed_before_every_step_is_done(): void
@@ -144,14 +156,26 @@ class OnboardingTest extends TestCase
             ->assertDontSee('href="/installningar#medlemmar"', false);
 
         $this->actingAs($owner)->post('/uppdrag/kom-igang/dolj')->assertRedirect('/uppdrag');
+        $this->assertNotNull($owner->fresh()->onboarding_dismissed_at);
+        $this->assertNull($member->fresh()->onboarding_dismissed_at);
 
         $this->actingAs($owner)->get('/uppdrag')
             ->assertOk()
-            ->assertDontSee('Kom igång', false);
+            ->assertDontSee('<h2>Kom igång</h2>', false)
+            ->assertSee('Visa Kom igång', false);
 
         $this->actingAs($member)->get('/uppdrag')
             ->assertOk()
-            ->assertSee('Kom igång', false);
+            ->assertSee('<h2>Kom igång</h2>', false)
+            ->assertDontSee('Visa Kom igång', false);
+
+        $this->actingAs($owner)->post('/uppdrag/kom-igang/visa')->assertRedirect('/uppdrag');
+        $this->assertNull($owner->fresh()->onboarding_dismissed_at);
+
+        $this->actingAs($owner)->get('/uppdrag')
+            ->assertOk()
+            ->assertSee('<h2>Kom igång</h2>', false)
+            ->assertDontSee('Visa Kom igång', false);
     }
 
     public function test_another_company_cannot_mark_a_report_as_shared(): void
@@ -162,7 +186,7 @@ class OnboardingTest extends TestCase
 
         $this->post(route('assignments.share', $assignment))->assertRedirect(route('login'));
         $this->actingAs($other)->post(route('assignments.share', $assignment))->assertNotFound();
-        $this->assertNull($assignment->fresh()->report_shared_at);
+        $this->assertNull($assignment->fresh()->link_copied_at);
     }
 
     public function test_register_page_asks_for_the_owners_name(): void

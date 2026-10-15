@@ -33,12 +33,11 @@ class AssignmentController extends Controller
             ->orderByDesc('performed_on')
             ->orderByDesc('id')
             ->get();
-        $onboardingSteps = $user->onboarding_dismissed_at === null
-            ? $this->onboardingSteps($user, $company, $assignments)
-            : [];
-        $showOnboarding = collect($onboardingSteps)->contains(
-            fn (array $step): bool => $step['done'] === false,
+        $onboardingSteps = $this->onboardingSteps($user, $company, $assignments);
+        $onboardingComplete = collect($onboardingSteps)->every(
+            fn (array $step): bool => $step['done'] === true,
         );
+        $dismissed = $user->onboarding_dismissed_at !== null;
 
         return view('assignments.index', [
             'assignments' => $assignments,
@@ -46,7 +45,8 @@ class AssignmentController extends Controller
             'canManageJobs' => $company->canManageJobs(),
             'companyName' => $company->name,
             'trialEndsAt' => $company->trial_ends_at,
-            'showOnboarding' => $showOnboarding,
+            'showOnboarding' => ! $dismissed && ! $onboardingComplete,
+            'showOnboardingRestore' => $dismissed && ! $onboardingComplete,
             'onboardingSteps' => $onboardingSteps,
         ]);
     }
@@ -141,7 +141,7 @@ class AssignmentController extends Controller
     public function share(Request $request, Assignment $assignment): RedirectResponse
     {
         Gate::authorize('view', $assignment);
-        $assignment->markReportShared();
+        $assignment->markLinkCopied();
 
         $redirect = back();
 
@@ -157,6 +157,15 @@ class AssignmentController extends Controller
         $user = request()->user();
         abort_if($user === null, 403);
         $user->forceFill(['onboarding_dismissed_at' => now()])->save();
+
+        return redirect()->route('assignments.index');
+    }
+
+    public function restoreOnboarding(): RedirectResponse
+    {
+        $user = request()->user();
+        abort_if($user === null, 403);
+        $user->forceFill(['onboarding_dismissed_at' => null])->save();
 
         return redirect()->route('assignments.index');
     }
@@ -196,7 +205,7 @@ class AssignmentController extends Controller
             [
                 'label' => 'Dela rapportlänken',
                 'done' => $assignments->contains(
-                    fn (Assignment $assignment): bool => $assignment->report_shared_at !== null,
+                    fn (Assignment $assignment): bool => $assignment->link_copied_at !== null,
                 ),
                 'url' => $latestJob instanceof Assignment ? null : route('assignments.create', absolute: false),
                 'copyUrl' => $latestJob instanceof Assignment

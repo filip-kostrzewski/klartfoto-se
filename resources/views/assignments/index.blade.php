@@ -14,6 +14,11 @@
 
         @if ($showOnboarding)
             @include('assignments.partials.onboarding')
+        @elseif ($showOnboardingRestore)
+            <form class="onboarding-restore" method="post" action="{{ route('onboarding.restore', absolute: false) }}">
+                @csrf
+                <button type="submit">Visa Kom igång</button>
+            </form>
         @endif
 
         @if ($canManageJobs)

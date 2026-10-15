@@ -18,8 +18,6 @@ class PublicReportController extends Controller
             ->where('public_token', $token)
             ->firstOrFail();
 
-        $assignment->markReportShared();
-
         $company = $assignment->company;
         $logoUrl = $company !== null && $company->logo_path !== null && $company->allowsTeamFeatures()
             ? route('reports.logo', ['token' => $assignment->public_token], false)

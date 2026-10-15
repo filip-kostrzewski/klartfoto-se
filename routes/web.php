@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/uppdrag/nytt', [AssignmentController::class, 'create'])->name('assignments.create');
     Route::post('/uppdrag', [AssignmentController::class, 'store'])->name('assignments.store');
     Route::post('/uppdrag/kom-igang/dolj', [AssignmentController::class, 'dismissOnboarding'])->name('onboarding.dismiss');
+    Route::post('/uppdrag/kom-igang/visa', [AssignmentController::class, 'restoreOnboarding'])->name('onboarding.restore');
     Route::get('/uppdrag/{assignment}', [AssignmentController::class, 'show'])->name('assignments.show');
     Route::post('/uppdrag/{assignment}/foton', [AssignmentController::class, 'storePhotos'])->name('assignments.photos.store');
     Route::delete('/uppdrag/{assignment}/foton/{photo}', [AssignmentController::class, 'destroyPhoto'])->name('assignments.photos.destroy');
@@ -97,6 +98,9 @@ Route::get('/r/{token}', [PublicReportController::class, 'show'])
     ->where('token', '[A-Za-z0-9]{32,80}')
     ->name('reports.show');
 
+Route::permanentRedirect('/logga-in', '/login');
+Route::permanentRedirect('/registrera', '/register');
+Route::permanentRedirect('/glomt-losenord', '/forgot-password');
 Route::permanentRedirect('/integritet', '/integritetspolicy');
 Route::permanentRedirect('/rapportmall-fore-efter', '/exempel-rapport');
 Route::permanentRedirect('/sv/integritet', '/integritetspolicy');

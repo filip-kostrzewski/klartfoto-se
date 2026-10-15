@@ -3214,3 +3214,19 @@ select {
 .onboarding > form .button {
     width: 100%;
 }
+
+.onboarding-restore {
+    margin: 0;
+}
+
+.onboarding-restore button {
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    font-weight: 700;
+    text-align: left;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}

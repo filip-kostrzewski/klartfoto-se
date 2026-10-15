@@ -126,6 +126,13 @@ class RegistrationTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_swedish_auth_addresses_redirect_to_the_working_pages(): void
+    {
+        $this->get('/logga-in')->assertStatus(301)->assertRedirect('/login');
+        $this->get('/registrera')->assertStatus(301)->assertRedirect('/register');
+        $this->get('/glomt-losenord')->assertStatus(301)->assertRedirect('/forgot-password');
+    }
+
     public function test_forgot_password_page_uses_the_reset_heading(): void
     {
         $this->get('/forgot-password')

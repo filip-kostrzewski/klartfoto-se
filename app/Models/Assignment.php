@@ -38,6 +38,7 @@ class Assignment extends Model
         return [
             'performed_on' => 'date',
             'report_shared_at' => 'datetime',
+            'link_copied_at' => 'datetime',
         ];
     }
 
@@ -79,12 +80,12 @@ class Assignment extends Model
         return $pairs;
     }
 
-    public function markReportShared(): void
+    public function markLinkCopied(): void
     {
-        if ($this->report_shared_at !== null) {
+        if ($this->link_copied_at !== null) {
             return;
         }
 
-        $this->forceFill(['report_shared_at' => now()])->save();
+        $this->forceFill(['link_copied_at' => now()])->save();
     }
 }
