@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\CompanyRole;
 use App\Models\User;
 use App\Notifications\SwedishResetPassword;
+use App\SiteSeo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Mail\Transport\ArrayTransport;
 use Illuminate\Support\Facades\Hash;
@@ -40,6 +41,7 @@ class RegistrationTest extends TestCase
 
         $user = User::query()->where('email', 'anna@glans.se')->first();
         $this->assertNotNull($user);
+        $this->assertNull($user->email_verified_at);
         $this->assertSame('Anna Andersson', $user->name);
         $this->assertSame(CompanyRole::Owner, $user->role);
         $this->assertSame('Glans Städ AB', $user->company?->name);
@@ -52,6 +54,23 @@ class RegistrationTest extends TestCase
             ->assertSee('Anna Andersson', false)
             ->assertSee('Ägare', false)
             ->assertSee('Glans Städ AB', false);
+    }
+
+    public function test_runtime_routes_and_assets_use_app_url_while_seo_uses_public_origin(): void
+    {
+        $this->assertSame('https://klartfoto.test', config('app.url'));
+
+        $this->post('/register', [
+            'company_name' => 'Glans Städ AB',
+            'name' => 'Anna Andersson',
+            'email' => 'anna@glans.se',
+            'password' => 'hemligt-losen',
+            'password_confirmation' => 'hemligt-losen',
+            'privacy' => '1',
+        ])->assertRedirect('https://klartfoto.test/uppdrag');
+
+        $this->assertSame('https://klartfoto.test/images/cleaning-detail.webp', asset('images/cleaning-detail.webp'));
+        $this->assertSame('https://klartfoto.se/', SiteSeo::canonical('/'));
     }
 
     public function test_fixed_trial_end_overrides_the_default_number_of_days(): void

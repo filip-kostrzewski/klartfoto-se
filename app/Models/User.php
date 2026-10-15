@@ -65,7 +65,11 @@ class User extends Authenticatable implements MustVerifyEmailContract
     {
         $this->loadMissing('company');
 
-        return $this->company?->canManageJobs() ?? false;
+        if ($this->company === null || ! $this->company->canManageJobs()) {
+            return false;
+        }
+
+        return $this->isOwner() || $this->company->allowsTeamFeatures();
     }
 
     public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void

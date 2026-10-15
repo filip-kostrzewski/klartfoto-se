@@ -11,7 +11,7 @@
             <p>{{ $page['intro'] }}</p>
             <div class="hero-actions">
                 <button class="button button-lime" type="button" data-print>{{ $page['print'] }} <span aria-hidden="true">↗</span></button>
-                <a class="button button-outline" href="/register">{{ $copy['nav']['start'] }} <span aria-hidden="true">↗</span></a>
+                <a class="button button-outline" href="{{ route('register', absolute: false) }}">{{ $copy['nav']['start'] }} <span aria-hidden="true">↗</span></a>
             </div>
             <p class="resource-note">{{ $page['print_note'] }}</p>
         </div>
@@ -33,30 +33,16 @@
                 <div><span>{{ $page['place'] }}</span><strong>{{ $page['place_value'] }}</strong></div>
                 <div><span>{{ $page['date'] }}</span><strong>{{ $page['date_value'] }}</strong></div>
             </div>
-            <div class="printable-disclaimer">{{ $page['disclaimer'] }}</div>
+            <div class="printable-disclaimer"><span aria-hidden="true">✳</span> {{ $copy['home']['photo_note'] }}</div>
             <div class="printable-photos">
                 <figure>
-                    <img src="{{ asset('images/demo/kitchen-before.svg') }}?v={{ config('klartfoto.demo_asset_version') }}" width="768" height="1024" alt="{{ $page['before_alt'] }}" loading="lazy" decoding="async">
+                    <img src="{{ asset('images/demo/kitchen-before-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" srcset="{{ asset('images/demo/kitchen-before-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/demo/kitchen-before.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w" sizes="(max-width: 680px) 100vw, 42vw" width="1536" height="1024" alt="{{ $page['before_alt'] }}" loading="lazy" decoding="async">
                     <figcaption><span>{{ $page['before_caption'] }}</span><span>{{ $page['before_description'] }}</span></figcaption>
                 </figure>
                 <figure>
-                    <img src="{{ asset('images/demo/kitchen-after.svg') }}?v={{ config('klartfoto.demo_asset_version') }}" width="768" height="1024" alt="{{ $page['after_alt'] }}" loading="lazy" decoding="async">
+                    <img src="{{ asset('images/demo/kitchen-after-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" srcset="{{ asset('images/demo/kitchen-after-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/demo/kitchen-after.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w" sizes="(max-width: 680px) 100vw, 42vw" width="1536" height="1024" alt="{{ $page['after_alt'] }}" loading="lazy" decoding="async">
                     <figcaption><span>{{ $page['after_caption'] }}</span><span>{{ $page['after_description'] }}</span></figcaption>
                 </figure>
-            </div>
-            <div class="printable-details">
-                <section>
-                    <h3>{{ $page['checklist_title'] }}</h3>
-                    <ul class="print-checklist">
-                        @foreach ($page['checklist'] as $item)
-                            <li><span aria-hidden="true">✓</span> {{ $item }}</li>
-                        @endforeach
-                    </ul>
-                </section>
-                <section>
-                    <h3>{{ $page['note_title'] }}</h3>
-                    <p>{{ $page['note'] }}</p>
-                </section>
             </div>
             <footer class="printable-footer">
                 <span>{{ str_replace(':brand', $page['brand'], $page['footer_brand']) }}</span>

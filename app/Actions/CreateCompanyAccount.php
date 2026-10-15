@@ -11,11 +11,17 @@ use Illuminate\Support\Facades\DB;
 
 class CreateCompanyAccount
 {
-    public function handle(string $companyName, string $email, string $password, ?string $googleId = null, ?string $ownerName = null): User
-    {
+    public function handle(
+        string $companyName,
+        string $email,
+        string $password,
+        ?string $googleId = null,
+        ?string $ownerName = null,
+        bool $emailIsVerified = false,
+    ): User {
         $ownerName = trim((string) $ownerName);
 
-        return DB::transaction(function () use ($companyName, $email, $password, $googleId, $ownerName): User {
+        return DB::transaction(function () use ($companyName, $email, $password, $googleId, $ownerName, $emailIsVerified): User {
             $trialEndsAt = TrialPeriod::endsAt();
 
             $company = Company::query()->create([
@@ -31,7 +37,7 @@ class CreateCompanyAccount
                 'email' => $email,
                 'password' => $password,
                 'google_id' => $googleId,
-                'email_verified_at' => $googleId !== null ? now() : null,
+                'email_verified_at' => $emailIsVerified ? now() : null,
                 'trial_ends_at' => $trialEndsAt,
             ]);
         });

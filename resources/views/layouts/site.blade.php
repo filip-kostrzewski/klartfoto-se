@@ -75,12 +75,14 @@
                         @if (config('klartfoto.pricing_visible'))
                             <a href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#priser">{{ $copy['nav']['pricing'] }}</a>
                         @endif
-                        <a class="mobile-menu-signup" href="/register">
+                        <a href="{{ route('login', absolute: false) }}">{{ $copy['nav']['login'] }}</a>
+                        <a class="mobile-menu-signup" href="{{ route('register', absolute: false) }}">
                             {{ $copy['nav']['start'] }} <span aria-hidden="true">↗</span>
                         </a>
                     </nav>
                 </details>
-                <a class="button button-small button-lime" href="/register">
+                <a class="header-login" href="{{ route('login', absolute: false) }}">{{ $copy['nav']['login'] }}</a>
+                <a class="button button-small button-lime" href="{{ route('register', absolute: false) }}">
                     {{ $copy['nav']['start'] }} <span aria-hidden="true">↗</span>
                 </a>
             </div>
@@ -104,12 +106,15 @@
                 <span class="brand-name">{{ $page['brand'] }}</span>
             </a>
             <p>{{ $copy['nav']['footer_slogan'] }}</p>
-            <a class="footer-cta" href="/register">{{ $copy['nav']['footer_cta'] }} <span aria-hidden="true">↗</span></a>
+            <a class="footer-cta" href="{{ route('register', absolute: false) }}">{{ $copy['nav']['footer_cta'] }} <span aria-hidden="true">↗</span></a>
         </div>
         <p class="footer-legal">Prodi Digital AB, org.nr 559214-9370, Tegelbrukets väg 41, 195 59 Märsta</p>
         <div class="footer-bottom">
             <span>{{ $copy['nav']['footer_tagline'] }}</span>
             <nav class="footer-links" aria-label="{{ __('marketing.cookies.region') }}">
+                @php($wisegentLocale = ['sv' => 'se', 'en' => 'en', 'pl' => 'pl'][$locale] ?? 'en')
+                <a href="https://wisegent.se/{{ $wisegentLocale }}" target="_blank" rel="noopener noreferrer">{{ $copy['nav']['wisegent'] }} <span aria-hidden="true">↗</span></a>
+                <a href="{{ route('login', absolute: false) }}">{{ $copy['nav']['login'] }}</a>
                 <a href="{{ \App\LocalizedUrl::route('privacy', $locale, false) }}">{{ $copy['nav']['privacy'] }}</a>
                 <button type="button" class="footer-cookie-settings" data-cookie-settings>{{ __('marketing.cookies.settings') }}</button>
             </nav>

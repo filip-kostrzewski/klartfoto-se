@@ -49,33 +49,74 @@ class GoogleAuthController extends Controller
             ]);
         }
 
-        $email = $googleUser->getEmail();
-
-        if (! is_string($email) || trim($email) === '') {
+        $googleId = (string) $googleUser->getId();
+        if ($googleId === '') {
             return redirect()->route('login')->withErrors([
-                'email' => 'Google lämnade ingen e-postadress. Skapa kontot med e-post och lösenord i stället.',
+                'email' => 'Google kunde inte bekräfta kontot. Logga in med e-post och lösenord.',
             ]);
         }
 
-        $googleId = (string) $googleUser->getId();
-        $user = User::query()->where('google_id', $googleId)->first()
-            ?? User::query()->where('email', $email)->first();
-        $created = $user === null;
+        $claims = $googleUser->getRaw();
+        $email = $googleUser->getEmail();
+        $user = User::query()->where('google_id', $googleId)->first();
+        $created = false;
 
-        if ($created) {
-            $name = trim((string) $googleUser->getName());
-
-            $user = $accounts->handle(
-                $name !== '' ? $name : Str::before($email, '@'),
-                $email,
-                Str::password(40),
-                $googleId,
-            );
+        if ($user instanceof User) {
+            if (
+                is_string($email)
+                && strcasecmp(trim($email), $user->email) === 0
+                && $this->hasAuthoritativeVerifiedEmail($claims, $email)
+                && ! $user->hasVerifiedEmail()
+            ) {
+                $user->markEmailAsVerified();
+            }
         } else {
-            $user->forceFill([
-                'google_id' => $googleId,
-                'email_verified_at' => $user->email_verified_at ?? now(),
-            ])->save();
+            if (! is_string($email) || trim($email) === '') {
+                return redirect()->route('login')->withErrors([
+                    'email' => 'Google lämnade ingen e-postadress. Skapa kontot med e-post och lösenord i stället.',
+                ]);
+            }
+
+            $email = trim($email);
+            $user = User::query()
+                ->whereRaw('LOWER(email) = ?', [Str::lower($email)])
+                ->first();
+            $emailIsAuthoritative = $this->hasAuthoritativeVerifiedEmail($claims, $email);
+
+            if ($user instanceof User) {
+                if (filled($user->google_id)) {
+                    return redirect()->route('login')->withErrors([
+                        'email' => 'Kontot är redan kopplat till en annan Google-inloggning. Logga in med e-post och lösenord.',
+                    ]);
+                }
+
+                if (! $emailIsAuthoritative) {
+                    return redirect()->route('login')->withErrors([
+                        'email' => 'Google kan inte bekräfta att e-postadressen tillhör kontot. Logga in med e-post och lösenord.',
+                    ]);
+                }
+
+                $user->forceFill(['google_id' => $googleId])->save();
+
+                if (! $user->hasVerifiedEmail()) {
+                    $user->markEmailAsVerified();
+                }
+            } else {
+                $name = trim((string) $googleUser->getName());
+
+                $user = $accounts->handle(
+                    $name !== '' ? $name : Str::before($email, '@'),
+                    $email,
+                    Str::password(40),
+                    googleId: $googleId,
+                    emailIsVerified: $emailIsAuthoritative,
+                );
+                $created = true;
+
+                if (! $user->hasVerifiedEmail()) {
+                    $user->sendEmailVerificationNotification();
+                }
+            }
         }
 
         Auth::login($user, remember: true);
@@ -99,5 +140,23 @@ class GoogleAuthController extends Controller
         return redirect()->route('login')->withErrors([
             'email' => 'Google-inloggning är inte aktiverad. Logga in med e-post och lösenord.',
         ]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $claims
+     */
+    private function hasAuthoritativeVerifiedEmail(array $claims, string $email): bool
+    {
+        $emailIsVerified = ($claims['email_verified'] ?? $claims['verified_email'] ?? false) === true;
+
+        if (! $emailIsVerified) {
+            return false;
+        }
+
+        $emailDomain = Str::afterLast(Str::lower($email), '@');
+        $hostedDomain = $claims['hd'] ?? null;
+
+        return $emailDomain === 'gmail.com'
+            || (is_string($hostedDomain) && trim($hostedDomain) !== '');
     }
 }

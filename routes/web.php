@@ -47,6 +47,9 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/installningar', [CompanySettingsController::class, 'edit'])->name('settings.edit');
     Route::put('/installningar/profil', [CompanySettingsController::class, 'updateProfile'])->name('settings.profile.update');
     Route::get('/installningar/abonnemang', [BillingController::class, 'show'])->name('settings.billing');
+    Route::post('/installningar/abonnemang/faktura', [BillingController::class, 'requestInvoice'])
+        ->middleware('throttle:5,60')
+        ->name('settings.billing.request');
     Route::post('/installningar/abonnemang', [BillingController::class, 'checkout'])
         ->middleware('throttle:10,1')
         ->name('settings.billing.checkout');

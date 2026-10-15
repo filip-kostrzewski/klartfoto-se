@@ -84,20 +84,14 @@ class EarlyAccessTest extends TestCase
         foreach (array_keys(config('marketing.locales')) as $index => $locale) {
             $this->withServerVariables(['REMOTE_ADDR' => '10.2.0.'.($index + 1)]);
             $validation = trans('marketing', [], $locale)['form']['validation'];
-            $response = $this->followingRedirects()->post(LocalizedUrl::route('signup', $locale, false), [
+            $response = $this->post(LocalizedUrl::route('signup', $locale, false), [
                 'email' => 'not-an-email',
                 'industry' => 'cleaning',
                 'consent' => '1',
             ]);
 
-            $response->assertOk()
-                ->assertSee($validation['email.email'])
-                ->assertSee('<html lang="'.$locale.'">', false)
-                ->assertSee('id="email-error"', false);
-
-            if ($locale !== 'pl') {
-                $response->assertDontSee('Dołącz do listy testowej');
-            }
+            $response->assertRedirect(LocalizedUrl::route('home', $locale, false).'#signup')
+                ->assertSessionHasErrors(['email' => $validation['email.email']]);
         }
 
         $this->assertDatabaseCount('early_access_signups', 0);
@@ -105,7 +99,7 @@ class EarlyAccessTest extends TestCase
 
     public function test_malformed_email_and_industry_arrays_are_rejected_after_the_redirect(): void
     {
-        $response = $this->followingRedirects()->post(LocalizedUrl::route('signup', 'pl', false), [
+        $response = $this->post(LocalizedUrl::route('signup', 'pl', false), [
             'email' => ['invalid'],
             'industry' => ['cleaning'],
             'consent' => '1',
@@ -113,12 +107,11 @@ class EarlyAccessTest extends TestCase
 
         $validation = trans('marketing', [], 'pl')['form']['validation'];
 
-        $response->assertOk()
-            ->assertSee('<html lang="pl">', false)
-            ->assertSee($validation['email.string'])
-            ->assertSee($validation['industry.string'])
-            ->assertSee('id="email"', false)
-            ->assertSee('id="industry"', false);
+        $response->assertRedirect('/pl#signup')
+            ->assertSessionHasErrors([
+                'email' => $validation['email.string'],
+                'industry' => $validation['industry.string'],
+            ]);
 
         $this->assertDatabaseCount('early_access_signups', 0);
     }

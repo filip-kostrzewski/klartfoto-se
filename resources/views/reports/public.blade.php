@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#111715">
-    <title>Rapport från {{ $companyName }}</title>
+    <title>Fotorapport från {{ $companyName }}</title>
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     @vite(['resources/css/site.css', 'resources/js/site.js'])
 </head>
@@ -15,7 +15,7 @@
             @if ($logoUrl)
                 <img class="customer-report-logo" src="{{ $logoUrl }}" alt="{{ $companyName }}">
             @endif
-            <p class="report-overline">Städrapport</p>
+            <p class="report-overline">Fotorapport</p>
             <h1>{{ $companyName }}</h1>
             <p>{{ $assignment->performed_on->locale('sv')->translatedFormat('j F Y') }}</p>
         </header>

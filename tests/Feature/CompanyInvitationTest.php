@@ -142,6 +142,7 @@ class CompanyInvitationTest extends TestCase
         $second->company->forceFill([
             'plan' => CompanyPlan::Team,
             'trial_ends_at' => now()->subDay(),
+            'paid_until' => now()->addMonth(),
         ])->save();
         $this->actingAs($second)->post('/installningar/inbjudningar', [
             'email' => 'team@exempel.se',
@@ -264,11 +265,14 @@ class CompanyInvitationTest extends TestCase
             ->assertSee('Medlem', false)
             ->assertDontSee('lee@glans.se', false)
             ->assertDontSee('anna@glans.se', false)
-            ->assertDontSee('Abonnemang', false)
+            ->assertSee('Abonnemang', false)
             ->assertDontSee('Skicka inbjudan', false)
             ->assertDontSee('290 kr/mån', false);
 
-        $this->actingAs($member)->get('/installningar/abonnemang')->assertForbidden();
+        $this->actingAs($member)->get('/installningar/abonnemang')
+            ->assertOk()
+            ->assertSee('Endast kontoägaren kan begära en faktura.', false)
+            ->assertDontSee('Fakturauppgifter', false);
     }
 
     public function test_owner_can_withdraw_an_invitation_and_another_company_cannot(): void

@@ -1,3 +1,49 @@
+document.documentElement.classList.add('js-enhanced');
+
+document.querySelectorAll('[data-password-toggle]').forEach((button) => {
+    const field = button.closest('.password-field')?.querySelector('input');
+    const label = button.querySelector('span');
+
+    if (! (field instanceof HTMLInputElement) || ! label) {
+        return;
+    }
+
+    button.hidden = false;
+    button.addEventListener('click', () => {
+        const isVisible = field.type === 'text';
+        field.type = isVisible ? 'password' : 'text';
+        label.textContent = isVisible ? button.dataset.showLabel : button.dataset.hideLabel;
+        button.setAttribute('aria-label', isVisible ? button.dataset.showLabel : button.dataset.hideLabel);
+        button.setAttribute('aria-pressed', String(! isVisible));
+    });
+});
+
+document.querySelectorAll('form[data-submit-feedback]').forEach((form) => {
+    form.addEventListener('submit', (event) => {
+        const submitter = event.submitter;
+
+        if (! (submitter instanceof HTMLButtonElement) || ! submitter.dataset.loadingText) {
+            return;
+        }
+
+        submitter.dataset.originalContent ??= submitter.innerHTML;
+        submitter.dataset.originalDisabled ??= String(submitter.disabled);
+        form.setAttribute('aria-busy', 'true');
+        submitter.disabled = true;
+        submitter.textContent = submitter.dataset.loadingText;
+    });
+});
+
+window.addEventListener('pageshow', () => {
+    document.querySelectorAll('form[data-submit-feedback]').forEach((form) => {
+        form.removeAttribute('aria-busy');
+        form.querySelectorAll('button[data-original-content]').forEach((button) => {
+            button.innerHTML = button.dataset.originalContent;
+            button.disabled = button.dataset.originalDisabled === 'true';
+        });
+    });
+});
+
 document.querySelectorAll('[data-comparison]').forEach((comparison) => {
     const control = comparison.querySelector('.comparison-control');
     const description = comparison.querySelector('[data-comparison-description]');

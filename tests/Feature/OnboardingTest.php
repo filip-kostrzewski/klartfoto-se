@@ -31,7 +31,7 @@ class OnboardingTest extends TestCase
             ->assertDontSee('>Klar<', false)
             ->assertDontSee('data-copy-report', false);
         $this->assertLessThan(
-            strpos($empty->getContent(), 'Nytt uppdrag'),
+            strpos($empty->getContent(), 'class="dashboard-empty-state"'),
             strpos($empty->getContent(), 'Kom igång'),
         );
 

@@ -29,6 +29,8 @@ class CompanySettingsController extends Controller
                 'users' => fn ($query) => $query->orderBy('id'),
                 'invitations' => fn ($query) => $query->pending()->orderBy('id'),
             ]);
+        } else {
+            $company->setAttribute('billing_details', null);
         }
 
         return view('settings.edit', [
@@ -38,6 +40,14 @@ class CompanySettingsController extends Controller
             'seatLimit' => $isOwner ? $company->seatLimit() : 0,
             'userCount' => $isOwner ? $company->users->count() : 0,
             'pendingInvites' => $isOwner ? $company->invitations->count() : 0,
+            'hasPendingInvoiceRequest' => $company->hasPendingInvoiceRequest(),
+            'isTrialActive' => $company->onTrial(),
+            'isManualPlanActive' => $company->isManualPlanActive(),
+            'canManageJobs' => $user->canManageJobs(),
+            'hasTeamFeatures' => $company->allowsTeamFeatures(),
+            'canRequestInvoice' => $isOwner
+                && ! $company->hasPendingInvoiceRequest()
+                && ! $company->subscribed('default'),
         ]);
     }
 

@@ -33,23 +33,23 @@ class AppServiceProvider extends ServiceProvider
             });
         });
 
-        $baseUrl = SiteSeo::baseUrl();
+        $applicationUrl = rtrim((string) config('app.url', SiteSeo::PUBLIC_BASE_URL), '/');
+        $canonicalBaseUrl = SiteSeo::baseUrl();
 
         $config = [
-            'app.url' => $baseUrl,
-            'marketing.base_url' => $baseUrl,
-            'filesystems.disks.public.url' => $baseUrl.'/storage',
+            'marketing.base_url' => $canonicalBaseUrl,
+            'filesystems.disks.public.url' => $applicationUrl.'/storage',
         ];
 
         $mailDomain = (string) config('mail.mailers.smtp.local_domain');
 
         if ($mailDomain === '' || preg_match('/(^localhost$|^127\.|\.local$|\.test$)/i', $mailDomain) === 1) {
-            $config['mail.mailers.smtp.local_domain'] = parse_url($baseUrl, PHP_URL_HOST);
+            $config['mail.mailers.smtp.local_domain'] = parse_url($applicationUrl, PHP_URL_HOST);
         }
 
         config($config);
 
-        URL::forceRootUrl($baseUrl);
+        URL::forceRootUrl($applicationUrl);
         URL::forceScheme('https');
     }
 }

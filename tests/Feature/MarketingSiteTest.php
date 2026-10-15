@@ -14,11 +14,12 @@ class MarketingSiteTest extends TestCase
 
         $response->assertOk()
             ->assertSee('<html lang="sv">', false)
-            ->assertSee('Slipp reklamationer', false)
-            ->assertSee('bevisa varje städning med bilder', false)
+            ->assertSee('Tydliga foton', false)
+            ->assertSee('Visa vad som blev gjort', false)
             ->assertSee('content="sv_SE"', false)
             ->assertSee('https://klartfoto.se/', false)
-            ->assertDontSee('klartfoto.test', false);
+            ->assertDontSee('<link rel="canonical" href="https://klartfoto.test/', false)
+            ->assertDontSee('property="og:url" content="https://klartfoto.test/', false);
     }
 
     public function test_each_of_the_42_localized_pages_has_a_unique_language_title_and_self_canonical(): void
@@ -127,7 +128,7 @@ class MarketingSiteTest extends TestCase
         $this->get('/lista-testowa')->assertNotFound();
     }
 
-    public function test_closed_contact_section_uses_a_real_contact_address_and_does_not_render_the_form(): void
+    public function test_homepage_cta_links_to_signup_and_the_sample_report_with_optional_contact(): void
     {
         config([
             'marketing.waitlist_enabled' => false,
@@ -137,6 +138,8 @@ class MarketingSiteTest extends TestCase
         $this->get('/')->assertOk()
             ->assertSee('mailto:hello@example.com', false)
             ->assertSee(__('marketing.home.signup.closed_contact', [], 'sv'))
+            ->assertSee('href="/register"', false)
+            ->assertSee('href="/exempel-rapport"', false)
             ->assertDontSee('<form class="signup-form"', false);
     }
 
@@ -163,7 +166,7 @@ class MarketingSiteTest extends TestCase
         $this->get('/rapportmall-fore-efter')->assertStatus(301)->assertRedirect('/exempel-rapport');
     }
 
-    public function test_homepage_shows_prices_drawings_and_the_company_footer(): void
+    public function test_homepage_shows_prices_photo_demos_and_the_company_footer(): void
     {
         $this->get('/')
             ->assertOk()
@@ -178,22 +181,26 @@ class MarketingSiteTest extends TestCase
             ->assertSee('30 dagar gratis utan kort. Ingen bindningstid.', false)
             ->assertSee('Kom igång gratis', false)
             ->assertSee('href="/register"', false)
-            ->assertSee('images/demo/kitchen-before.svg?v='.config('klartfoto.demo_asset_version'), false)
-            ->assertSee('images/demo/kitchen-after.svg?v='.config('klartfoto.demo_asset_version'), false)
-            ->assertDontSee('.webp', false)
+            ->assertSee('images/demo/kitchen-before-small.webp?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertSee('images/demo/kitchen-after-small.webp?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertSee('AI-demo · inte ett kundfoto', false)
+            ->assertSee('images/renovation-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertSee('images/property-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertDontSee('images/demo/kitchen-before.svg', false)
             ->assertSee('Prodi Digital AB, org.nr 559214-9370, Tegelbrukets väg 41, 195 59 Märsta', false)
             ->assertSee('href="/integritetspolicy"', false);
 
         $this->get('/exempel-rapport')
             ->assertOk()
-            ->assertSee('images/demo/kitchen-before.svg?v='.config('klartfoto.demo_asset_version'), false)
-            ->assertSee('images/demo/kitchen-after.svg?v='.config('klartfoto.demo_asset_version'), false)
-            ->assertSee('Teckning · inte ett foto', false)
-            ->assertDontSee('.webp', false);
+            ->assertSee('images/demo/kitchen-before-small.webp?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertSee('images/demo/kitchen-after-small.webp?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertSee('AI-demo · inte ett kundfoto', false)
+            ->assertDontSee('checklista', false);
 
         $this->get('/for-stadforetag')
             ->assertOk()
-            ->assertSee('images/demo/kitchen-after.svg?v='.config('klartfoto.demo_asset_version'), false);
+            ->assertSee('images/cleaning-detail.webp?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertSee('AI-genererat demofoto av en person som torkar av en köksbänk', false);
 
         config(['klartfoto.contact_email' => null]);
         $this->get('/integritetspolicy')
@@ -283,7 +290,7 @@ class MarketingSiteTest extends TestCase
         $this->assertSame('https://klartfoto.se/', $schema['@graph'][0]['url']);
         $this->assertStringContainsString('rel="canonical" href="https://klartfoto.se/"', $html);
         $this->assertStringContainsString('name="robots" content="index,follow,max-image-preview:large"', $html);
-        $this->assertStringNotContainsString('klartfoto.test', $html);
+        $this->assertStringContainsString('property="og:url" content="https://klartfoto.se/"', $html);
 
         $this->get('/integritet')->assertStatus(301)->assertRedirect('/integritetspolicy');
         $this->get('/integritetspolicy')->assertOk()

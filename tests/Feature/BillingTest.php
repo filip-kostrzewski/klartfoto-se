@@ -47,26 +47,18 @@ class BillingTest extends TestCase
         $this->actingAs($user)->get('/installningar')
             ->assertOk()
             ->assertSee('Abonnemang', false)
-            ->assertSee('Nuvarande plan: Team', false)
-            ->assertSee('290 kr/mån exkl. moms', false)
-            ->assertSee('590 kr/mån exkl. moms', false)
-            ->assertSee('1 användare', false)
-            ->assertSee('Upp till 10 användare och egen logotyp', false)
-            ->assertSee('Ingen bindningstid', false)
-            ->assertSee('Betalning aktiveras snart', false)
+            ->assertSee('Nuvarande plan', false)
+            ->assertSee('Team', false)
             ->assertSee('14 november 2026', false)
-            ->assertDontSee('Välj Start', false);
+            ->assertDontSee('Stripe', false);
 
         $this->actingAs($user)->get('/installningar/abonnemang')
             ->assertOk()
-            ->assertSee('Betalning aktiveras snart', false)
-            ->assertSee('30 dagar kvar', false)
+            ->assertSee('Begär faktura', false)
+            ->assertSee('Fakturauppgifter', false)
             ->assertSee('14 november 2026', false)
-            ->assertSee('Nuvarande plan: Team', false)
-            ->assertSee('290 kr/mån exkl. moms', false)
-            ->assertSee('590 kr/mån exkl. moms', false)
-            ->assertDontSee('Välj Start', false)
-            ->assertDontSee('Betalningen är mottagen', false);
+            ->assertSee('/installningar/abonnemang/faktura', false)
+            ->assertDontSee('Stripe', false);
 
         $this->actingAs($user)->from('/installningar/abonnemang')
             ->post('/installningar/abonnemang', ['plan' => 'start'])
@@ -89,6 +81,28 @@ class BillingTest extends TestCase
         $this->assertDatabaseCount('subscriptions', 0);
     }
 
+    public function test_billing_stays_dormant_when_the_webhook_signing_secret_is_missing(): void
+    {
+        $this->enableBilling(webhookConfigured: false);
+        $user = User::factory()->create();
+        $company = $user->company;
+        $this->assertInstanceOf(Company::class, $company);
+        $this->assertFalse($company->billingIsReady());
+
+        $this->actingAs($user)->get('/installningar/abonnemang')
+            ->assertOk()
+            ->assertSee('Begär faktura', false)
+            ->assertDontSee('Stripe', false);
+
+        $this->actingAs($user)->from('/installningar/abonnemang')
+            ->post('/installningar/abonnemang', ['plan' => 'start'])
+            ->assertRedirect('/installningar/abonnemang')
+            ->assertSessionHas('status', 'Betalning aktiveras snart');
+
+        $this->assertNull($company->refresh()->stripe_id);
+        $this->assertDatabaseCount('subscriptions', 0);
+    }
+
     public function test_guest_and_member_cannot_start_checkout(): void
     {
         $this->enableBilling();
@@ -100,7 +114,9 @@ class BillingTest extends TestCase
         $this->get('/installningar/abonnemang')->assertRedirect(route('login'));
 
         $this->actingAs($member)->get('/installningar/abonnemang')
-            ->assertForbidden();
+            ->assertOk()
+            ->assertSee('Endast kontoägaren kan begära en faktura.', false)
+            ->assertDontSee('Fakturauppgifter', false);
 
         $this->actingAs($member)->post('/installningar/abonnemang', ['plan' => 'team'])
             ->assertForbidden();
@@ -136,7 +152,8 @@ class BillingTest extends TestCase
 
         $this->actingAs($user)->get('/installningar/abonnemang')
             ->assertOk()
-            ->assertSee('Svensk moms läggs till i kassan', false);
+            ->assertDontSee('Stripe', false)
+            ->assertSee('Begär faktura', false);
 
         $this->actingAs($user)->post('/installningar/abonnemang', ['plan' => 'team'])
             ->assertRedirect('https://checkout.stripe.test/c/pay/cs_test');
@@ -164,7 +181,9 @@ class BillingTest extends TestCase
 
         $this->actingAs($user)->get('/installningar/abonnemang')
             ->assertOk()
-            ->assertSee('Hantera betalning', false);
+            ->assertDontSee('Hantera betalning', false)
+            ->assertDontSee('Begär faktura', false)
+            ->assertDontSee('Stripe', false);
 
         $this->actingAs($user)->post('/installningar/abonnemang', ['plan' => 'team'])
             ->assertRedirect('https://billing.stripe.test/session');
@@ -194,7 +213,7 @@ class BillingTest extends TestCase
 
     public function test_webhook_sets_the_team_plan_and_keeps_job_creation(): void
     {
-        $this->enableBilling();
+        $this->enableBilling(webhookConfigured: false);
         $user = User::factory()->create();
         $company = $user->company;
         $this->assertInstanceOf(Company::class, $company);
@@ -232,7 +251,7 @@ class BillingTest extends TestCase
 
     public function test_webhook_moves_the_company_between_plans_and_back_to_start_when_canceled(): void
     {
-        $this->enableBilling();
+        $this->enableBilling(webhookConfigured: false);
         $user = User::factory()->create();
         $company = $user->company;
         $this->assertInstanceOf(Company::class, $company);
@@ -272,7 +291,7 @@ class BillingTest extends TestCase
 
     public function test_unknown_or_inactive_subscription_does_not_invent_a_team_plan(): void
     {
-        $this->enableBilling();
+        $this->enableBilling(webhookConfigured: false);
         $user = User::factory()->create();
         $company = $user->company;
         $this->assertInstanceOf(Company::class, $company);
@@ -320,7 +339,7 @@ class BillingTest extends TestCase
 
     public function test_unsigned_webhook_is_rejected_outside_testing_when_the_signing_secret_is_missing(): void
     {
-        $this->enableBilling();
+        $this->enableBilling(webhookConfigured: false);
         $this->app->detectEnvironment(fn (): string => 'production');
 
         $this->postJson('/stripe/webhook', $this->subscriptionPayload('customer.subscription.created', 'price_team'))
@@ -329,21 +348,23 @@ class BillingTest extends TestCase
         $this->assertDatabaseCount('subscriptions', 0);
     }
 
-    public function test_checkout_success_message_is_shown_after_returning_from_stripe(): void
+    public function test_manual_billing_page_does_not_expose_a_stripe_success_flow(): void
     {
         $this->enableBilling();
         $user = User::factory()->create();
 
         $this->actingAs($user)->get('/installningar/abonnemang?checkout=success')
             ->assertOk()
-            ->assertSee('Betalningen är mottagen. Abonnemanget uppdateras när Stripe har bekräftat den.', false);
+            ->assertSee('Begär faktura', false)
+            ->assertDontSee('Betalningen är mottagen', false)
+            ->assertDontSee('Stripe', false);
     }
 
-    private function enableBilling(bool $tax = false): void
+    private function enableBilling(bool $tax = false, bool $webhookConfigured = true): void
     {
         config([
             'cashier.secret' => 'sk_test_x',
-            'cashier.webhook.secret' => null,
+            'cashier.webhook.secret' => $webhookConfigured ? 'whsec_test' : null,
             'cashier.tax_enabled' => $tax,
             'klartfoto.stripe_price_start' => 'price_start',
             'klartfoto.stripe_price_team' => 'price_team',

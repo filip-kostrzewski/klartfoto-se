@@ -19,6 +19,8 @@ use Illuminate\View\View;
 
 class AssignmentController extends Controller
 {
+    private const ACCESS_PAUSED_MESSAGE = 'Ingen aktiv åtkomst till nya uppdrag. Du kan fortfarande öppna befintliga rapporter.';
+
     public function index(OnboardingChecklist $checklist): View
     {
         $user = request()->user();
@@ -46,7 +48,7 @@ class AssignmentController extends Controller
         return view('assignments.index', [
             'assignments' => $assignments,
             'onTrial' => $company->onTrial(),
-            'canManageJobs' => $company->canManageJobs(),
+            'canManageJobs' => $user->canManageJobs(),
             'companyName' => $company->name,
             'trialEndsAt' => $company->trial_ends_at,
             'showOnboarding' => $celebrate || (! $dismissed && ! $onboardingComplete),
@@ -70,7 +72,7 @@ class AssignmentController extends Controller
     {
         if (! Gate::allows('create', Assignment::class)) {
             return back()->withInput()->withErrors([
-                'trial' => 'Provperioden är slut. Du kan fortfarande öppna rapporter som redan är skapade.',
+                'trial' => self::ACCESS_PAUSED_MESSAGE,
             ]);
         }
 
@@ -123,7 +125,7 @@ class AssignmentController extends Controller
         $user = $request->user();
         if (! $user instanceof User || ! $user->canManageJobs()) {
             return back()->withErrors([
-                'trial' => 'Provperioden är slut. Du kan fortfarande öppna rapporter som redan är skapade.',
+                'trial' => self::ACCESS_PAUSED_MESSAGE,
             ]);
         }
 
@@ -152,6 +154,14 @@ class AssignmentController extends Controller
     {
         Gate::authorize('update', $assignment);
         abort_unless($photo->assignment_id === $assignment->id, 404);
+
+        $user = request()->user();
+
+        if (! $user instanceof User || ! $user->canManageJobs()) {
+            return back()->withErrors([
+                'trial' => self::ACCESS_PAUSED_MESSAGE,
+            ]);
+        }
 
         Storage::disk('local')->delete($photo->path);
         $photo->delete();

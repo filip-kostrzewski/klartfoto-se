@@ -140,7 +140,10 @@ class CompanyLogoTest extends TestCase
         ])->assertRedirect('/installningar')
             ->assertSessionHasErrors('logo');
 
-        $owner->company->forceFill(['plan' => CompanyPlan::Team])->save();
+        $owner->company->forceFill([
+            'plan' => CompanyPlan::Team,
+            'paid_until' => now()->addMonth(),
+        ])->save();
 
         $this->get('/r/'.$assignment->public_token)
             ->assertOk()

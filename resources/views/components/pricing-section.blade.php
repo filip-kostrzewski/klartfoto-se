@@ -26,7 +26,7 @@
                 </ul>
             </article>
         </div>
-        <p class="pricing-note">{{ $pricing['note'] }}</p>
+        <p class="pricing-note">{{ $pricing['note'] }} {{ $pricing['invoice_note'] }}</p>
         <a class="button button-lime" href="/register">{{ $pricing['cta'] }} <span aria-hidden="true">↗</span></a>
     </section>
 @endif

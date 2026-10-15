@@ -6,13 +6,15 @@ use App\CompanyPlan;
 use App\CompanyRole;
 use Database\Factories\CompanyFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Cashier\Billable;
 use Laravel\Cashier\Subscription;
 
-#[Fillable(['name', 'plan', 'trial_ends_at', 'logo_path'])]
+#[Fillable(['name', 'plan', 'trial_ends_at', 'logo_path', 'paid_until', 'requested_plan', 'requested_at', 'billing_details'])]
+#[Hidden(['billing_details'])]
 class Company extends Model
 {
     /** @use HasFactory<CompanyFactory> */
@@ -26,6 +28,9 @@ class Company extends Model
         return [
             'plan' => CompanyPlan::class,
             'trial_ends_at' => 'datetime',
+            'paid_until' => 'datetime',
+            'requested_at' => 'datetime',
+            'billing_details' => 'encrypted:array',
         ];
     }
 
@@ -82,19 +87,35 @@ class Company extends Model
 
     public function canManageJobs(): bool
     {
-        return $this->onGenericTrial() || $this->subscribed('default');
+        return $this->onGenericTrial() || $this->isManualPlanActive() || $this->subscribed('default');
     }
 
     public function billingIsReady(): bool
     {
         return filled(config('cashier.secret'))
+            && filled(config('cashier.webhook.secret'))
             && filled(config('klartfoto.stripe_price_start'))
             && filled(config('klartfoto.stripe_price_team'));
     }
 
     public function allowsTeamFeatures(): bool
     {
-        return $this->onTrial() || $this->plan === CompanyPlan::Team;
+        if ($this->onTrial()) {
+            return true;
+        }
+
+        return $this->plan === CompanyPlan::Team
+            && ($this->isManualPlanActive() || $this->subscribed('default'));
+    }
+
+    public function isManualPlanActive(): bool
+    {
+        return $this->paid_until?->isFuture() ?? false;
+    }
+
+    public function hasPendingInvoiceRequest(): bool
+    {
+        return filled($this->requested_plan) && $this->requested_at !== null;
     }
 
     public function seatLimit(): int
