@@ -53,6 +53,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('site.sv.home');
+        return redirect()->route('login');
     }
 }

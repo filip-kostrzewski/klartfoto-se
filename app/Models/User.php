@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 #[Fillable(['company_id', 'role', 'name', 'email', 'password', 'google_id', 'trial_ends_at', 'email_verified_at'])]
 #[Hidden(['password', 'remember_token', 'google_id'])]
@@ -67,11 +69,21 @@ class User extends Authenticatable implements MustVerifyEmailContract
 
     public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void
     {
-        $this->notify(new SwedishResetPassword($token));
+        try {
+            $this->notifyNow(new SwedishResetPassword($token));
+        } catch (Throwable $exception) {
+            Log::error('Kunde inte skicka lösenordsåterställning till '.$this->email.'. '.$exception->getMessage());
+            report($exception);
+        }
     }
 
     public function sendEmailVerificationNotification(): void
     {
-        $this->notify(new SwedishVerifyEmail);
+        try {
+            $this->notifyNow(new SwedishVerifyEmail);
+        } catch (Throwable $exception) {
+            Log::error('Kunde inte skicka e-postbekräftelse till '.$this->email.'. '.$exception->getMessage());
+            report($exception);
+        }
     }
 }

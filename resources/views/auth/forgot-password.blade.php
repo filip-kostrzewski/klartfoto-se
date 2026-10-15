@@ -5,7 +5,7 @@
 @section('content')
     <section class="auth-card">
         <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> Lösenord</p>
-        <h1>Välj ett nytt lösenord</h1>
+        <h1>Återställ lösenord</h1>
         <p class="auth-lead">Skriv e-postadressen till kontot. Om den finns hos oss skickar vi en länk.</p>
 
         @if (session('status'))

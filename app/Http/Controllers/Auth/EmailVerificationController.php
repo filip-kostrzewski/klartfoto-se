@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateAccountEmailRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Throwable;
 
 class EmailVerificationController extends Controller
 {
@@ -40,7 +39,7 @@ class EmailVerificationController extends Controller
             return back()->with('status', 'E-postadressen är redan bekräftad.');
         }
 
-        $this->sendVerification($user);
+        $user->sendEmailVerificationNotification();
 
         return back()->with('status', 'Vi har skickat en ny länk till '.$user->email.'.');
     }
@@ -60,17 +59,8 @@ class EmailVerificationController extends Controller
             'email' => $email,
             'email_verified_at' => null,
         ])->save();
-        $this->sendVerification($user);
+        $user->sendEmailVerificationNotification();
 
         return back()->with('status', 'E-postadressen är uppdaterad. Bekräfta den via mejlet.');
-    }
-
-    private function sendVerification(User $user): void
-    {
-        try {
-            $user->sendEmailVerificationNotification();
-        } catch (Throwable $exception) {
-            report($exception);
-        }
     }
 }

@@ -110,6 +110,22 @@ class RegistrationTest extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
+    public function test_logout_returns_to_the_login_page(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->post('/logout')
+            ->assertRedirect('/login');
+        $this->assertGuest();
+    }
+
+    public function test_forgot_password_page_uses_the_reset_heading(): void
+    {
+        $this->get('/forgot-password')
+            ->assertOk()
+            ->assertSee('<h1>Återställ lösenord</h1>', false);
+    }
+
     public function test_password_reset_mail_is_sent_only_when_the_address_exists(): void
     {
         Notification::fake();

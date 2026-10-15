@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'default' => env('MAIL_MAILER', 'log'),
+    'default' => env('MAIL_MAILER', 'postmark'),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,6 +55,7 @@ return [
 
         'postmark' => [
             'transport' => 'postmark',
+            'token' => env('POSTMARK_API_KEY'),
             // 'message_stream_id' => env('POSTMARK_MESSAGE_STREAM_ID'),
             // 'client' => [
             //     'timeout' => 5,
@@ -112,7 +113,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'noreply@klartfoto.se'),
-        'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
+        'name' => env('MAIL_FROM_NAME', 'Klartfoto'),
     ],
 
 ];

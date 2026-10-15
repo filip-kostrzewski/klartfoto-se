@@ -53,7 +53,7 @@
 
         <section class="settings-block" id="medlemmar">
             <h2>Medlemmar</h2>
-            <p class="auth-lead">{{ $seatsUsed }} av {{ $seatLimit }} användare. @if ($company->onTrial())Under provperioden kan ni vara upp till 10.@else Start inkluderar 1 användare. Team inkluderar upp till 10.@endif</p>
+            <p class="auth-lead">{{ $userCount }} av {{ $seatLimit }} användare{{ $pendingInvites === 1 ? ', 1 inbjudan väntar' : ($pendingInvites > 1 ? ', '.$pendingInvites.' inbjudningar väntar' : '') }}. @if ($company->onTrial())Under provperioden kan ni vara upp till 10.@else Start inkluderar 1 användare. Team inkluderar upp till 10.@endif</p>
             <ul class="member-list">
                 @foreach ($company->users as $member)
                     <li>

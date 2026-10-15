@@ -8,7 +8,6 @@ use App\Http\Requests\RegisterRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Throwable;
 
 class RegisterController extends Controller
 {
@@ -32,11 +31,7 @@ class RegisterController extends Controller
         $request->session()->regenerate();
 
         if (! $user->hasVerifiedEmail()) {
-            try {
-                $user->sendEmailVerificationNotification();
-            } catch (Throwable $exception) {
-                report($exception);
-            }
+            $user->sendEmailVerificationNotification();
         }
 
         return redirect()->route('assignments.index');

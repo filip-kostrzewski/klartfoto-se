@@ -26,7 +26,7 @@ class CompanyInvitationTest extends TestCase
 
         $this->actingAs($owner)->post('/installningar/inbjudningar', [
             'email' => 'Kim@Exempel.se',
-        ])->assertRedirect()->assertSessionHas('status', 'Inbjudan är skickad.');
+        ])->assertRedirect()->assertSessionHas('status', 'Inbjudan är skickad till kim@exempel.se.');
 
         $invitation = CompanyInvitation::query()->first();
         $this->assertNotNull($invitation);
@@ -203,6 +203,43 @@ class CompanyInvitationTest extends TestCase
         ])->assertSessionHasErrors('token');
 
         $this->assertDatabaseMissing('users', ['email' => 'kim@exempel.se']);
+    }
+
+    public function test_seat_line_counts_users_apart_from_pending_invitations(): void
+    {
+        Notification::fake();
+        $owner = User::factory()->create();
+        CompanyInvitation::factory()->create([
+            'company_id' => $owner->company_id,
+            'invited_by' => $owner->id,
+            'email' => 'gammal@exempel.se',
+            'expires_at' => now()->subDay(),
+        ]);
+
+        $this->actingAs($owner)->get('/installningar')
+            ->assertOk()
+            ->assertSee('1 av 10 användare.', false)
+            ->assertDontSee('inbjudan väntar', false)
+            ->assertDontSee('inbjudningar väntar', false);
+
+        $this->actingAs($owner)->post('/installningar/inbjudningar', [
+            'email' => 'kim@exempel.se',
+        ]);
+
+        $this->actingAs($owner)->get('/installningar')
+            ->assertOk()
+            ->assertSee('1 av 10 användare, 1 inbjudan väntar', false)
+            ->assertDontSee('2 av 10 användare', false);
+
+        $this->actingAs($owner)->post('/installningar/inbjudningar', [
+            'email' => 'lee@exempel.se',
+        ]);
+
+        $this->actingAs($owner)->get('/installningar')
+            ->assertOk()
+            ->assertSee('1 av 10 användare, 2 inbjudningar väntar', false)
+            ->assertDontSee('1 inbjudan väntar', false)
+            ->assertDontSee('3 av 10 användare', false);
     }
 
     public function test_owner_can_withdraw_an_invitation_and_another_company_cannot(): void

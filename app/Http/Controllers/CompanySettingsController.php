@@ -30,7 +30,8 @@ class CompanySettingsController extends Controller
             'company' => $company,
             'isOwner' => $user->isOwner(),
             'seatLimit' => $company->seatLimit(),
-            'seatsUsed' => $company->users->count() + $company->invitations->count(),
+            'userCount' => $company->users->count(),
+            'pendingInvites' => $company->invitations->count(),
         ]);
     }
 

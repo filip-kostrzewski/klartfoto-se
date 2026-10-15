@@ -12,10 +12,12 @@ use App\Notifications\CompanyInvitationNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Throwable;
 
 class CompanyInvitationController extends Controller
 {
@@ -31,7 +33,7 @@ class CompanyInvitationController extends Controller
             ]);
         }
 
-        DB::transaction(function () use ($owner, $email): void {
+        $invitation = DB::transaction(function () use ($owner, $email): CompanyInvitation {
             $company = Company::query()->whereKey($owner->company_id)->lockForUpdate()->first();
             abort_if($company === null, 403);
 
@@ -44,9 +46,8 @@ class CompanyInvitationController extends Controller
                     'invited_by' => $owner->id,
                 ])->save();
                 $existing->setRelation('company', $company);
-                Notification::route('mail', $email)->notify(new CompanyInvitationNotification($existing));
 
-                return;
+                return $existing;
             }
 
             $used = $company->users()->count() + $company->invitations()->pending()->count();
@@ -64,10 +65,22 @@ class CompanyInvitationController extends Controller
                 'expires_at' => now()->addDays(14),
             ]);
             $invitation->setRelation('company', $company);
-            Notification::route('mail', $email)->notify(new CompanyInvitationNotification($invitation));
+
+            return $invitation;
         });
 
-        return back()->with('status', 'Inbjudan är skickad.');
+        try {
+            Notification::route('mail', $email)->notifyNow(new CompanyInvitationNotification($invitation));
+        } catch (Throwable $exception) {
+            Log::error('Kunde inte skicka inbjudan till '.$email.'. '.$exception->getMessage());
+            report($exception);
+
+            return back()->withErrors([
+                'email' => 'Inbjudan är sparad, men mejlet till '.$email.' kunde inte skickas. Försök igen om en stund.',
+            ]);
+        }
+
+        return back()->with('status', 'Inbjudan är skickad till '.$email.'.');
     }
 
     public function destroy(CompanyInvitation $invitation): RedirectResponse
