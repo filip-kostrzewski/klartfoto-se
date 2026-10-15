@@ -178,17 +178,22 @@ class MarketingSiteTest extends TestCase
             ->assertSee('30 dagar gratis utan kort. Ingen bindningstid.', false)
             ->assertSee('Kom igång gratis', false)
             ->assertSee('href="/register"', false)
-            ->assertSee('images/demo/kitchen-before.svg', false)
-            ->assertSee('images/demo/kitchen-after.svg', false)
+            ->assertSee('images/demo/kitchen-before.svg?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertSee('images/demo/kitchen-after.svg?v='.config('klartfoto.demo_asset_version'), false)
             ->assertDontSee('.webp', false)
             ->assertSee('Prodi Digital AB, org.nr 559214-9370, Tegelbrukets väg 41, 195 59 Märsta', false)
             ->assertSee('href="/integritetspolicy"', false);
 
         $this->get('/exempel-rapport')
             ->assertOk()
-            ->assertSee('images/demo/kitchen-before.svg', false)
+            ->assertSee('images/demo/kitchen-before.svg?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertSee('images/demo/kitchen-after.svg?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('Teckning · inte ett foto', false)
             ->assertDontSee('.webp', false);
+
+        $this->get('/for-stadforetag')
+            ->assertOk()
+            ->assertSee('images/demo/kitchen-after.svg?v='.config('klartfoto.demo_asset_version'), false);
 
         config(['klartfoto.contact_email' => null]);
         $this->get('/integritetspolicy')

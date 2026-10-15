@@ -36,11 +36,11 @@
             <div class="printable-disclaimer">{{ $page['disclaimer'] }}</div>
             <div class="printable-photos">
                 <figure>
-                    <img src="{{ asset('images/demo/kitchen-before.svg') }}" width="768" height="1024" alt="{{ $page['before_alt'] }}" loading="lazy" decoding="async">
+                    <img src="{{ asset('images/demo/kitchen-before.svg') }}?v={{ config('klartfoto.demo_asset_version') }}" width="768" height="1024" alt="{{ $page['before_alt'] }}" loading="lazy" decoding="async">
                     <figcaption><span>{{ $page['before_caption'] }}</span><span>{{ $page['before_description'] }}</span></figcaption>
                 </figure>
                 <figure>
-                    <img src="{{ asset('images/demo/kitchen-after.svg') }}" width="768" height="1024" alt="{{ $page['after_alt'] }}" loading="lazy" decoding="async">
+                    <img src="{{ asset('images/demo/kitchen-after.svg') }}?v={{ config('klartfoto.demo_asset_version') }}" width="768" height="1024" alt="{{ $page['after_alt'] }}" loading="lazy" decoding="async">
                     <figcaption><span>{{ $page['after_caption'] }}</span><span>{{ $page['after_description'] }}</span></figcaption>
                 </figure>
             </div>

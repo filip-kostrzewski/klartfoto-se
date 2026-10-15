@@ -30,7 +30,7 @@
                     <div class="photo-comparison" data-comparison style="--split: 54%;">
                         <img
                             class="comparison-image comparison-after"
-                            src="{{ asset('images/demo/kitchen-after.svg') }}"
+                            src="{{ asset('images/demo/kitchen-after.svg') }}?v={{ config('klartfoto.demo_asset_version') }}"
                             width="768"
                             height="1024"
                             alt="{{ $home['photo_alt'] }}"
@@ -39,7 +39,7 @@
                         <div class="comparison-before">
                             <img
                                 class="comparison-image"
-                                src="{{ asset('images/demo/kitchen-before.svg') }}"
+                                src="{{ asset('images/demo/kitchen-before.svg') }}?v={{ config('klartfoto.demo_asset_version') }}"
                                 width="768"
                                 height="1024"
                                 alt=""
@@ -164,11 +164,11 @@
                 </div>
                 <div class="report-photo-row">
                     <div class="report-photo report-photo-before">
-                        <img src="{{ asset('images/demo/kitchen-before.svg') }}" width="480" height="640" alt="" loading="lazy" decoding="async">
+                        <img src="{{ asset('images/demo/kitchen-before.svg') }}?v={{ config('klartfoto.demo_asset_version') }}" width="480" height="640" alt="" loading="lazy" decoding="async">
                         <span>{{ $home['before'] }}</span>
                     </div>
                     <div class="report-photo report-photo-after">
-                        <img src="{{ asset('images/demo/kitchen-after.svg') }}" width="480" height="640" alt="" loading="lazy" decoding="async">
+                        <img src="{{ asset('images/demo/kitchen-after.svg') }}?v={{ config('klartfoto.demo_asset_version') }}" width="480" height="640" alt="" loading="lazy" decoding="async">
                         <span>{{ $home['after'] }}</span>
                     </div>
                     <div class="report-note">

@@ -132,7 +132,7 @@ class MarketingPageController extends Controller
             return [route('settings.logo', absolute: false), $company->name];
         }
 
-        return [asset('images/demo/company-logo.svg'), (string) trans('marketing.report.logo_alt')];
+        return [asset('images/demo/company-logo.svg').'?v='.config('klartfoto.demo_asset_version'), (string) trans('marketing.report.logo_alt')];
     }
 
     private function localeIsIndexable(): bool

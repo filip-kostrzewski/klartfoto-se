@@ -48,7 +48,7 @@ class CompanyLogoTest extends TestCase
     {
         $this->get('/exempel-rapport')
             ->assertOk()
-            ->assertSee('images/demo/company-logo.svg', false)
+            ->assertSee('images/demo/company-logo.svg?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('Logotyp · teckning', false);
     }
 
