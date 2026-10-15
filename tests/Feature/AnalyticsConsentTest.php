@@ -37,6 +37,8 @@ class AnalyticsConsentTest extends TestCase
             $this->assertStringContainsString('wait_for_update: 500', $html);
             $this->assertStringContainsString('>'.$reject.'</button>', $html);
             $this->assertStringContainsString('>'.$accept.'</button>', $html);
+            $this->assertStringContainsString(__('marketing.cookies.banner', [], $locale), $html);
+            $this->assertStringContainsString(__('marketing.cookies.banner_short', [], $locale), $html);
             $this->assertStringContainsString('type="button" class="footer-cookie-settings" data-cookie-settings>'.$settings.'</button>', $html);
             $this->assertStringContainsString('href="'.$privacy.'#cookies"', $html);
             $this->assertDoesNotMatchRegularExpression('/<a[^>]*data-cookie-settings/', $html);
@@ -51,6 +53,30 @@ class AnalyticsConsentTest extends TestCase
                 ->assertSee($accept, false)
                 ->assertSee($reject, false);
         }
+    }
+
+    public function test_the_phone_banner_is_a_fixed_bar_and_the_desktop_banner_stays_in_place(): void
+    {
+        $css = file_get_contents(resource_path('css/site.css'));
+        $this->assertIsString($css);
+
+        $desktop = strpos($css, '.cookie-banner {');
+        $phone = strpos($css, '@media (max-width: 425px)');
+        $this->assertNotFalse($desktop);
+        $this->assertNotFalse($phone);
+        $this->assertLessThan($phone, $desktop);
+
+        $desktopRule = substr($css, $desktop, $phone - $desktop);
+        $phoneRule = substr($css, $phone, strpos($css, '@media (prefers-reduced-motion: reduce)', $phone) - $phone);
+
+        $this->assertStringContainsString('position: sticky;', $desktopRule);
+        $this->assertStringNotContainsString('position: fixed;', $desktopRule);
+        $this->assertStringContainsString('position: fixed;', $phoneRule);
+        $this->assertStringContainsString('max-height: 110px;', $phoneRule);
+        $this->assertStringContainsString('padding-bottom: 110px;', $phoneRule);
+        $this->assertStringContainsString('html.cookie-choice-saved body', $phoneRule);
+        $this->assertStringContainsString('padding-bottom: 0;', $phoneRule);
+        $this->assertStringContainsString('.cookie-banner-short', $phoneRule);
     }
 
     public function test_a_measurement_id_loads_denied_consent_mode_only_on_public_pages(): void

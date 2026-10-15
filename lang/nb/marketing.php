@@ -154,6 +154,7 @@ return [
     'cookies' => [
         'region' => 'Informasjonskapsler',
         'banner' => 'Vi bruker informasjonskapsler for å måle hvordan nettstedet brukes. Målingen starter bare hvis du velger Godta.',
+        'banner_short' => 'Kapsler for besøksstatistikk.',
         'accept' => 'Godta',
         'reject' => 'Avslå',
         'settings' => 'Innstillinger for informasjonskapsler',

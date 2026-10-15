@@ -154,6 +154,7 @@ return [
     'cookies' => [
         'region' => 'Ciasteczka',
         'banner' => 'Używamy ciasteczek, aby mierzyć, jak korzystasz ze strony. Pomiar zaczyna się dopiero, gdy wybierzesz Akceptuj.',
+        'banner_short' => 'Ciasteczka do statystyki odwiedzin.',
         'accept' => 'Akceptuj',
         'reject' => 'Odrzuć',
         'settings' => 'Ustawienia ciasteczek',

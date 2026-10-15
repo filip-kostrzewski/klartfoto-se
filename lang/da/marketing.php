@@ -154,6 +154,7 @@ return [
     'cookies' => [
         'region' => 'Cookies',
         'banner' => 'Vi bruger cookies til at måle, hvordan websitet bruges. Målingen starter kun, hvis du vælger Acceptér.',
+        'banner_short' => 'Cookies til besøgsstatistik.',
         'accept' => 'Acceptér',
         'reject' => 'Afvis',
         'settings' => 'Cookieindstillinger',

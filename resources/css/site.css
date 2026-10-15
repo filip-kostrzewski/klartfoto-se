@@ -1444,6 +1444,10 @@ html.cookie-choice-saved .cookie-banner {
     line-height: 1.5;
 }
 
+.cookie-banner-short {
+    display: none;
+}
+
 .cookie-banner a {
     color: var(--lime);
 }
@@ -2622,15 +2626,37 @@ html.cookie-choice-saved .cookie-banner {
         width: 100%;
     }
 
+    body {
+        padding-bottom: 110px;
+    }
+
+    html.cookie-choice-saved body {
+        padding-bottom: 0;
+    }
+
     .cookie-banner {
-        position: static;
-        gap: 8px;
-        padding: 10px 16px;
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        max-height: 110px;
+        padding: 8px 12px;
+    }
+
+    .cookie-banner-long {
+        display: none;
+    }
+
+    .cookie-banner-short {
+        display: inline;
     }
 
     .cookie-banner p {
         font-size: 12px;
-        line-height: 1.35;
+        line-height: 1.25;
     }
 
     .cookie-banner-actions {
@@ -2665,6 +2691,10 @@ html.cookie-choice-saved .cookie-banner {
     body {
         background: #fff !important;
         color: #111 !important;
+    }
+
+    body {
+        padding-bottom: 0 !important;
     }
 
     .announcement,

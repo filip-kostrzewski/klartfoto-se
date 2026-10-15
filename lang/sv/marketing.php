@@ -178,6 +178,7 @@ return [
     'cookies' => [
         'region' => 'Cookies',
         'banner' => 'Vi använder cookies för att mäta hur webbplatsen används. Mätningen startar bara om du väljer Godkänn.',
+        'banner_short' => 'Cookies för besöksstatistik.',
         'accept' => 'Godkänn',
         'reject' => 'Neka',
         'settings' => 'Cookie-inställningar',

@@ -174,6 +174,7 @@ return [
     'cookies' => [
         'region' => 'Cookies',
         'banner' => 'We use cookies to measure how the website is used. Measurement starts only if you choose Accept.',
+        'banner_short' => 'Cookies for visit statistics.',
         'accept' => 'Accept',
         'reject' => 'Reject',
         'settings' => 'Cookie settings',

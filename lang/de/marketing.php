@@ -155,6 +155,7 @@ return [
     'cookies' => [
         'region' => 'Cookies',
         'banner' => 'Wir verwenden Cookies, um zu messen, wie die Website genutzt wird. Die Messung startet erst, wenn Sie Akzeptieren wählen.',
+        'banner_short' => 'Cookies für Besuchsstatistik.',
         'accept' => 'Akzeptieren',
         'reject' => 'Ablehnen',
         'settings' => 'Cookie-Einstellungen',

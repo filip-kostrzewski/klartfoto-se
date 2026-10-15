@@ -154,6 +154,7 @@ return [
     'cookies' => [
         'region' => 'Evästeet',
         'banner' => 'Käytämme evästeitä mitataksemme, miten sivustoa käytetään. Mittaus alkaa vain, jos valitset Hyväksy.',
+        'banner_short' => 'Evästeet kävijätilastoihin.',
         'accept' => 'Hyväksy',
         'reject' => 'Hylkää',
         'settings' => 'Evästeasetukset',

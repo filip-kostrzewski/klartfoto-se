@@ -1,6 +1,7 @@
 <div class="cookie-banner" data-cookie-banner role="region" aria-label="{{ __('marketing.cookies.region') }}">
     <p>
-        {{ __('marketing.cookies.banner') }}
+        <span class="cookie-banner-long">{{ __('marketing.cookies.banner') }}</span>
+        <span class="cookie-banner-short">{{ __('marketing.cookies.banner_short') }}</span>
         <a href="{{ \App\LocalizedUrl::route('privacy', $locale, false) }}#cookies">{{ __('marketing.cookies.more') }}</a>
     </p>
     <div class="cookie-banner-actions">
