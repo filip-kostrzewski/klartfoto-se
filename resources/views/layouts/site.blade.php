@@ -22,6 +22,7 @@
         <script type="application/ld+json">@json($page['schema'])</script>
     @endif
     @vite(['resources/css/site.css', 'resources/js/site.js'])
+    @include('partials.google-analytics')
 </head>
 <body>
     <a class="skip-link" href="#main">{{ $copy['nav']['skip'] }}</a>
@@ -108,8 +109,12 @@
         <p class="footer-legal">Prodi Digital AB, org.nr 559214-9370, Tegelbrukets väg 41, 195 59 Märsta</p>
         <div class="footer-bottom">
             <span>{{ $copy['nav']['footer_tagline'] }}</span>
-            <a href="{{ \App\LocalizedUrl::route('privacy', $locale, false) }}">{{ $copy['nav']['privacy'] }}</a>
+            <nav class="footer-links" aria-label="{{ __('marketing.cookies.region', [], 'sv') }}">
+                <a href="{{ \App\LocalizedUrl::route('privacy', $locale, false) }}">{{ $copy['nav']['privacy'] }}</a>
+                <a href="{{ \App\LocalizedUrl::route('privacy', $locale, false) }}#cookies" data-cookie-settings>{{ __('marketing.cookies.settings', [], 'sv') }}</a>
+            </nav>
         </div>
     </footer>
+    @include('partials.cookie-banner')
 </body>
 </html>

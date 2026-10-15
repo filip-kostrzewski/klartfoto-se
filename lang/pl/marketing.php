@@ -153,13 +153,19 @@ return [
     ],
     'privacy' => [
         'title' => 'Prywatność | :brand', 'description' => 'Sprawdź, jak :brand przetwarza informacje przekazane przez formularz kontaktowy.',
-        'breadcrumb' => 'Prywatność', 'eyebrow' => 'PRYWATNOŚĆ', 'h1' => 'Prywatność', 'intro' => 'Jak wykorzystujemy dane przekazane w zgłoszeniu dotyczącym Klartfoto.', 'updated' => 'Informacja z 14 października 2026 r.',
+        'breadcrumb' => 'Prywatność', 'eyebrow' => 'PRYWATNOŚĆ', 'h1' => 'Prywatność', 'intro' => 'Jak wykorzystujemy dane przekazane w zgłoszeniu dotyczącym Klartfoto.', 'updated' => 'Informacja z 15 października 2026 r.',
         'unconfigured_contact' => 'Na tej stronie nie podano danych kontaktowych administratora.',
         'sections' => [
             ['title' => 'Administrator danych i kontakt', 'paragraphs' => ['Administratorem danych jest :controller. W sprawach danych napisz na adres :email.'], 'configured' => true],
             ['title' => 'Jakie dane zbieramy i w jakim celu', 'paragraphs' => ['W zgłoszeniu podajesz adres e-mail i wybierasz obszar pracy. Zapisujemy także czas udzielenia zgody i wysłania formularza.', 'Dane wykorzystujemy do obsługi zgłoszenia i kontaktu w sprawie Klartfoto oraz raportowania wykonanych usług. Podanie adresu jest dobrowolne; bez niego nie możemy odpowiedzieć na zgłoszenie. Podstawą przetwarzania jest Twoja zgoda, którą możesz wycofać w dowolnym momencie.']],
             ['title' => 'Kto może przetwarzać dane', 'paragraphs' => ['Dostęp do danych mają osoby obsługujące zapytania. Dostawca hostingu może je przetwarzać w zakresie potrzebnym do przechowywania i zabezpieczenia.', 'Nie sprzedajemy ani nie publikujemy otrzymanych zgłoszeń. Formularz nie prosi o nazwisko, telefon, zdjęcia z obiektów ani dane Twoich klientów.']],
             ['title' => 'Jak długo przechowujemy zgłoszenie', 'paragraphs' => ['Usuwamy zgłoszenie nie później niż 12 miesięcy od jego wysłania. Możesz poprosić o wcześniejsze usunięcie. Dane po upływie terminu są usuwane podczas codziennego czyszczenia.']],
+            ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
+                'Na stronach publicznych możemy używać Google Analytics 4, aby widzieć, jak witryna jest używana, na przykład które strony są otwierane. Pomiar zaczyna się dopiero po wyborze Godkänn. Neka pozostawia go wyłączonym.',
+                'Wybór jest zapisywany na 180 dni w ciasteczku klartfoto_cookie_consent. Ciasteczko pamięta tylko, czy pomiar został przyjęty, czy odrzucony. Wybór zmienisz linkiem Cookie-inställningar w stopce.',
+                'Nie włączamy przechowywania danych reklamowych i nie używamy tych danych do spersonalizowanych reklam. Pomiaru nie ma w panelu po zalogowaniu ani w raporcie otwieranym przez klienta.',
+                'Gdy pomiar jest włączony, Google otrzymuje techniczne dane o wizycie, na przykład które strony zostały otwarte.',
+            ]],
             ['title' => 'Twoje prawa', 'paragraphs' => ['Możesz poprosić o dostęp do swoich danych, ich poprawienie lub usunięcie, ograniczenie przetwarzania albo wycofać zgodę. Wycofanie zgody nie wpływa na wcześniejsze przetwarzanie. Przysługuje Ci również skarga do właściwego organu nadzorczego.', 'W sprawach danych napisz na adres :email. Dla bezpieczeństwa możemy poprosić o potwierdzenie adresu użytego w zgłoszeniu.'], 'configured' => true],
         ],
     ],

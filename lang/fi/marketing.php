@@ -153,13 +153,19 @@ return [
     ],
     'privacy' => [
         'title' => 'Tietosuoja | :brand', 'description' => 'Lue, miten :brand käsittelee yhteydenottolomakkeella annettuja tietoja.',
-        'breadcrumb' => 'Tietosuoja', 'eyebrow' => 'TIETOSUOJA', 'h1' => 'Tietosuoja', 'intro' => 'Näin käytämme Klartfotoa koskevassa yhteydenotossa antamiasi tietoja.', 'updated' => 'Tiedot päivätty 14. lokakuuta 2026.',
+        'breadcrumb' => 'Tietosuoja', 'eyebrow' => 'TIETOSUOJA', 'h1' => 'Tietosuoja', 'intro' => 'Näin käytämme Klartfotoa koskevassa yhteydenotossa antamiasi tietoja.', 'updated' => 'Tiedot päivätty 15. lokakuuta 2026.',
         'unconfigured_contact' => 'Rekisterinpitäjän yhteystietoja ei ole ilmoitettu tällä sivulla.',
         'sections' => [
             ['title' => 'Rekisterinpitäjä ja yhteystiedot', 'paragraphs' => ['Tietojasi käsittelee :controller. Ota yhteyttä osoitteeseen :email, jos sinulla on kysyttävää tiedoistasi.'], 'configured' => true],
             ['title' => 'Mitä tietoja keräämme ja miksi', 'paragraphs' => ['Yhteydenotossa annat sähköpostiosoitteen ja valitset työalueen. Tallennamme myös suostumuksen ja viestin lähetysajan.', 'Käytämme tietoja yhteydenottosi käsittelyyn ja yhteydenottoon Klartfotoa sekä tehdyn työn raportointia koskien. Osoitteen antaminen on vapaaehtoista; ilman sitä emme voi vastata. Käsittely perustuu suostumukseesi, jonka voit peruuttaa milloin tahansa.']],
             ['title' => 'Kuka voi käsitellä tietoja', 'paragraphs' => ['Yhteydenottoja käsittelevät henkilöt voivat käyttää tietoja. Hosting-palveluntarjoajamme voi käsitellä niitä tietojen tallentamiseksi ja suojaamiseksi.', 'Emme myy tai julkaise yhteydenottoja. Lomake ei pyydä nimeä, puhelinnumeroa, työmaakuvia tai asiakkaidesi tietoja.']],
             ['title' => 'Kuinka kauan säilytämme ilmoittautumisen', 'paragraphs' => ['Poistamme yhteydenoton viimeistään 12 kuukauden kuluttua lähettämisestä. Voit pyytää tietojen poistamista aiemmin. Määräajan ylittäneet tiedot poistetaan päivittäisessä siivouksessa.']],
+            ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
+                'Julkisilla sivuilla voimme käyttää Google Analytics 4:ää nähdäksemme, miten sivustoa käytetään, esimerkiksi mitkä sivut avataan. Mittaus alkaa vain, jos valitset Godkänn. Neka jättää sen pois päältä.',
+                'Valinta tallennetaan 180 päiväksi evästeeseen klartfoto_cookie_consent. Eväste muistaa vain, hyväksyitkö vai kielsitkö mittauksen. Muutat valintaa alatunnisteen Cookie-inställningar-linkistä.',
+                'Emme ota mainosten tallennusta käyttöön emmekä käytä tietoja personoituihin mainoksiin. Mittausta ei ole kirjautuneen tilin näkymässä eikä asiakkaan avaamassa raportissa.',
+                'Kun mittaus on päällä, Google saa teknisiä tietoja käynnistä, esimerkiksi siitä, mitkä sivut avattiin.',
+            ]],
             ['title' => 'Oikeutesi', 'paragraphs' => ['Voit pyytää tietojesi tarkastamista, korjaamista tai poistamista, käsittelyn rajoittamista tai peruuttaa suostumuksesi. Peruutus ei vaikuta sitä edeltäneeseen käsittelyyn. Voit myös tehdä valituksen toimivaltaiselle valvontaviranomaiselle.', 'Ota yhteyttä osoitteeseen :email tietojasi koskevissa asioissa. Turvallisuussyistä voimme pyytää vahvistamaan yhteydenotossa käyttämäsi osoitteen.'], 'configured' => true],
         ],
     ],

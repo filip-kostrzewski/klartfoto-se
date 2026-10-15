@@ -175,6 +175,14 @@ return [
         'footer_brand' => ':brand · demonstrationsexempel', 'footer_desc' => 'Rapport med före- och efterbilder',
         'after_note' => 'Teckningarna visar samma kök i två skick. Rapporten är bara ett exempel på formatet.',
     ],
+    'cookies' => [
+        'region' => 'Cookies',
+        'banner' => 'Vi använder cookies för att mäta hur webbplatsen används. Mätningen startar bara om du väljer Godkänn.',
+        'accept' => 'Godkänn',
+        'reject' => 'Neka',
+        'settings' => 'Cookie-inställningar',
+        'more' => 'Läs mer i integritetspolicyn',
+    ],
     'privacy' => [
         'title' => 'Integritetspolicy | :brand',
         'description' => 'Så hanterar Prodi Digital AB kontouppgifter, uppdrag och foton av kunders hem i :brand.',
@@ -204,6 +212,12 @@ return [
             ['title' => 'Hur länge vi sparar uppgifterna', 'paragraphs' => [
                 'Kontot, uppdragen och fotona sparas så länge kontot är aktivt. Om du tar bort ett uppdrag försvinner tillhörande bilder. När kontot avslutas tar vi bort kontouppgifter, uppdrag och foton inom 30 dagar, om vi inte måste spara något enligt lag.',
                 'En intresseanmälan tas bort senast 12 månader efter att den skickats. Du kan be oss ta bort den tidigare.',
+            ]],
+            ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
+                'På de offentliga sidorna kan vi använda Google Analytics 4 för att se hur webbplatsen används, till exempel vilka sidor som öppnas. Ingen mätning startar förrän du väljer Godkänn. Väljer du Neka förblir mätningen avstängd.',
+                'Valet sparas i 180 dagar i cookien klartfoto_cookie_consent. Den behövs för att komma ihåg valet och innehåller bara om du godkänt eller nekat. Du ändrar valet via Cookie-inställningar i sidfoten.',
+                'Vi slår inte på lagring för annonser, och uppgifterna används inte för anpassade annonser. Mätningen ingår inte i kontopanelen efter inloggning och inte i rapporten som kunden öppnar.',
+                'När mätningen är påslagen tar Google emot tekniska uppgifter om besöket, till exempel vilka sidor som öppnats.',
             ]],
             ['title' => 'Dina rättigheter', 'paragraphs' => [
                 'Du kan begära tillgång till, rättelse av eller radering av dina uppgifter, och du kan invända mot eller begära begränsning av behandlingen. Du kan också klaga hos Integritetsskyddsmyndigheten (IMY).',

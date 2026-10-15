@@ -153,13 +153,19 @@ return [
     ],
     'privacy' => [
         'title' => 'Privatliv | :brand', 'description' => 'Læs hvordan :brand håndterer oplysninger, der sendes via kontaktformularen.',
-        'breadcrumb' => 'Privatliv', 'eyebrow' => 'PRIVATLIV', 'h1' => 'Privatliv', 'intro' => 'Sådan bruger vi oplysninger, der sendes i en henvendelse om Klartfoto.', 'updated' => 'Information dateret 14. oktober 2026.',
+        'breadcrumb' => 'Privatliv', 'eyebrow' => 'PRIVATLIV', 'h1' => 'Privatliv', 'intro' => 'Sådan bruger vi oplysninger, der sendes i en henvendelse om Klartfoto.', 'updated' => 'Information dateret 15. oktober 2026.',
         'unconfigured_contact' => 'Kontaktoplysninger til den dataansvarlige er ikke angivet på denne side.',
         'sections' => [
             ['title' => 'Dataansvarlig og kontakt', 'paragraphs' => ['Dine oplysninger behandles af :controller. Skriv til :email, hvis du har spørgsmål om dine oplysninger.'], 'configured' => true],
             ['title' => 'Hvilke oplysninger indsamler vi, og hvorfor?', 'paragraphs' => ['Når du sender en henvendelse, oplyser du en e-mailadresse og vælger et arbejdsområde. Vi gemmer også tidspunktet for samtykke og indsendelse.', 'Vi bruger oplysningerne til at behandle din henvendelse og kontakte dig om Klartfoto og rapporter over udført arbejde. Det er frivilligt at oplyse adressen; uden den kan vi ikke svare. Behandlingen bygger på dit samtykke, som du kan trække tilbage når som helst.']],
             ['title' => 'Hvem kan behandle oplysningerne?', 'paragraphs' => ['Personer, der behandler henvendelser, kan få adgang. Vores hostingudbyder kan behandle oplysningerne, når det er nødvendigt for opbevaring og beskyttelse.', 'Vi sælger eller offentliggør ikke henvendelser. Formularen spørger ikke efter navn, telefonnummer, arbejdsbilleder eller oplysninger om dine kunder.']],
             ['title' => 'Hvor længe gemmer vi en tilmelding?', 'paragraphs' => ['Vi sletter en henvendelse senest 12 måneder efter indsendelsen. Du kan bede om tidligere sletning. Oplysninger efter fristen slettes ved den daglige oprydning.']],
+            ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
+                'På de offentlige sider kan vi bruge Google Analytics 4 til at se, hvordan websitet bruges, for eksempel hvilke sider der åbnes. Målingen starter kun, hvis du vælger Godkänn. Neka lader den være slået fra.',
+                'Valget gemmes i 180 dage i cookien klartfoto_cookie_consent. Den husker kun, om du accepterede eller afviste. Du ændrer valget via Cookie-inställningar i sidefoden.',
+                'Vi slår ikke lagring til annoncer til, og oplysningerne bruges ikke til tilpassede annoncer. Målingen indgår ikke i kontoen efter login og ikke i rapporten, som kunden åbner.',
+                'Når målingen er slået til, modtager Google tekniske oplysninger om besøget, for eksempel hvilke sider der blev åbnet.',
+            ]],
             ['title' => 'Dine rettigheder', 'paragraphs' => ['Du kan bede om indsigt, rettelse eller sletning af dine oplysninger, begrænsning af behandlingen eller trække dit samtykke tilbage. Tilbagetrækning påvirker ikke behandling, der fandt sted før. Du kan også klage til den relevante tilsynsmyndighed.', 'Kontakt :email om dine oplysninger. Af sikkerhedshensyn kan vi bede dig bekræfte adressen, du brugte i din henvendelse.'], 'configured' => true],
         ],
     ],

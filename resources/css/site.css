@@ -1401,6 +1401,71 @@ select {
     font-weight: 500;
 }
 
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+}
+
+.cookie-banner {
+    position: sticky;
+    bottom: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 18px max(20px, calc((100vw - 1260px) / 2));
+    border-top: 1px solid rgba(255, 255, 255, .12);
+    background: var(--ink);
+    color: var(--white);
+}
+
+html.cookie-choice-saved .cookie-banner {
+    display: none;
+}
+
+.cookie-banner p {
+    max-width: 760px;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.cookie-banner a {
+    color: var(--lime);
+}
+
+.cookie-banner-actions {
+    display: flex;
+    flex: 0 0 auto;
+    width: min(100%, 340px);
+    gap: 12px;
+}
+
+.cookie-choice {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 48px;
+    padding: 0 16px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 750;
+    line-height: 1.2;
+}
+
+.cookie-choice[data-cookie-choice="denied"] {
+    background: var(--white);
+    color: var(--ink);
+}
+
+.cookie-choice[data-cookie-choice="granted"] {
+    background: var(--lime);
+    color: var(--ink);
+}
+
 .breadcrumbs {
     display: flex;
     flex-wrap: wrap;
@@ -2230,6 +2295,16 @@ select {
         padding: 29px 20px 16px;
     }
 
+    .cookie-banner {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 16px 20px;
+    }
+
+    .cookie-banner-actions {
+        width: 100%;
+    }
+
     .industry-hero-inner,
     .resource-hero-inner,
     .legal-hero-inner {
@@ -2570,6 +2645,7 @@ select {
     .announcement,
     .site-header,
     .site-footer,
+    .cookie-banner,
     .resource-hero,
     .printable-after {
         display: none !important;

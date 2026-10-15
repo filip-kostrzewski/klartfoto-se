@@ -15,7 +15,7 @@
     <article class="legal-content section-pad">
         <p class="legal-updated">{{ $page['updated'] }}</p>
         @foreach ($page['sections'] as $section)
-            <section>
+            <section @if (($section['id'] ?? null) === 'cookies') id="cookies" @endif>
                 <h2>{{ $section['title'] }}</h2>
                 @foreach ($section['paragraphs'] as $paragraph)
                     @php

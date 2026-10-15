@@ -174,13 +174,19 @@ return [
     'privacy' => [
         'title' => 'Privacy | :brand', 'description' => 'Read how :brand handles information submitted through the contact form.',
         'breadcrumb' => 'Privacy', 'eyebrow' => 'PRIVACY', 'h1' => 'Privacy',
-        'intro' => 'How we use details submitted in an enquiry about Klartfoto.', 'updated' => 'Information dated 14 October 2026.',
+        'intro' => 'How we use details submitted in an enquiry about Klartfoto.', 'updated' => 'Information dated 15 October 2026.',
         'unconfigured_contact' => 'Contact details for the data controller are not provided on this page.',
         'sections' => [
             ['title' => 'Data controller and contact', 'paragraphs' => ['Your information is handled by :controller. Contact us at :email with questions about your information.'], 'configured' => true],
             ['title' => 'What we collect and why', 'paragraphs' => ['When you send an enquiry, you provide an email address and choose a work area. We also store the time of your consent and submission.', 'We use the information to handle your enquiry and contact you about Klartfoto and reports for completed work. Providing an address is optional; without it, we cannot reply to your enquiry. Processing is based on your consent, which you may withdraw at any time.']],
             ['title' => 'Who can process the information', 'paragraphs' => ['People handling enquiries can access the information. Our hosting provider may process it as needed to store and protect the information.', 'We do not sell or publish enquiries. The form does not ask for your name, phone number, site photos or information about your customers.']],
             ['title' => 'How long we keep a registration', 'paragraphs' => ['We remove an enquiry no later than 12 months after submission. You can request earlier deletion. Information past the limit is removed during the daily cleanup.']],
+            ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
+                'On the public pages we may use Google Analytics 4 to see how the website is used, for example which pages are opened. Measurement starts only if you choose Godkänn. Neka leaves it off.',
+                'The choice is stored for 180 days in the cookie klartfoto_cookie_consent. That cookie only remembers whether you accepted or refused. You can change it from Cookie-inställningar in the footer.',
+                'We do not turn on advertising storage, and the data is not used for personalised ads. Measurement is not included in the signed-in account or on the customer report.',
+                'When measurement is on, Google receives technical details about the visit, such as which pages were opened.',
+            ]],
             ['title' => 'Your rights', 'paragraphs' => ['You can request access to, correction or deletion of your information, restriction of processing, or withdraw your consent. Withdrawal does not affect processing that took place before it. You may also complain to the relevant supervisory authority.', 'Contact :email about your information. For security, we may ask you to confirm the address used in your enquiry.'], 'configured' => true],
         ],
     ],

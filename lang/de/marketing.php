@@ -154,13 +154,19 @@ return [
     ],
     'privacy' => [
         'title' => 'Datenschutz | :brand', 'description' => 'Erfahren Sie, wie :brand Angaben aus dem Kontaktformular verarbeitet.',
-        'breadcrumb' => 'Datenschutz', 'eyebrow' => 'DATENSCHUTZ', 'h1' => 'Datenschutz', 'intro' => 'So verwenden wir Angaben, die Sie in einer Anfrage zu Klartfoto übermitteln.', 'updated' => 'Stand: 14. Oktober 2026.',
+        'breadcrumb' => 'Datenschutz', 'eyebrow' => 'DATENSCHUTZ', 'h1' => 'Datenschutz', 'intro' => 'So verwenden wir Angaben, die Sie in einer Anfrage zu Klartfoto übermitteln.', 'updated' => 'Stand: 15. Oktober 2026.',
         'unconfigured_contact' => 'Auf dieser Seite sind keine Kontaktdaten der verantwortlichen Stelle angegeben.',
         'sections' => [
             ['title' => 'Verantwortliche Stelle und Kontakt', 'paragraphs' => ['Ihre Angaben werden von :controller verarbeitet. Bei Fragen zu Ihren Daten schreiben Sie an :email.'], 'configured' => true],
             ['title' => 'Welche Daten wir erheben und warum', 'paragraphs' => ['In Ihrer Anfrage geben Sie eine E-Mail-Adresse an und wählen einen Arbeitsbereich. Zusätzlich speichern wir den Zeitpunkt Ihrer Einwilligung und der Übermittlung.', 'Wir verwenden die Angaben, um Ihre Anfrage zu bearbeiten und Sie zu Klartfoto und Berichten über erledigte Arbeiten zu kontaktieren. Die Angabe einer Adresse ist freiwillig; ohne sie können wir nicht antworten. Die Verarbeitung beruht auf Ihrer Einwilligung, die Sie jederzeit widerrufen können.']],
             ['title' => 'Wer die Daten verarbeiten kann', 'paragraphs' => ['Personen, die Anfragen bearbeiten, können auf die Angaben zugreifen. Unser Hostinganbieter kann sie soweit erforderlich speichern und schützen.', 'Wir verkaufen oder veröffentlichen keine Anfragen. Das Formular fragt weder nach Namen oder Telefonnummer noch nach Objektfotos oder Angaben zu Ihren Kunden.']],
             ['title' => 'Wie lange wir eine Anmeldung speichern', 'paragraphs' => ['Wir löschen eine Anfrage spätestens 12 Monate nach ihrer Übermittlung. Sie können eine frühere Löschung beantragen. Angaben nach Ablauf der Frist werden bei der täglichen Bereinigung gelöscht.']],
+            ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
+                'Auf den öffentlichen Seiten können wir Google Analytics 4 verwenden, um zu sehen, wie die Website genutzt wird, zum Beispiel welche Seiten geöffnet werden. Die Messung startet erst, wenn Sie Godkänn wählen. Neka lässt sie aus.',
+                'Die Wahl wird 180 Tage im Cookie klartfoto_cookie_consent gespeichert. Das Cookie merkt sich nur, ob Sie zugestimmt oder abgelehnt haben. Sie ändern die Wahl über Cookie-inställningar in der Fußzeile.',
+                'Wir schalten keine Werbespeicherung ein und nutzen die Daten nicht für personalisierte Anzeigen. Die Messung ist nicht im Konto nach der Anmeldung und nicht im Bericht enthalten, den der Kunde öffnet.',
+                'Wenn die Messung aktiv ist, erhält Google technische Angaben zum Besuch, etwa welche Seiten geöffnet wurden.',
+            ]],
             ['title' => 'Ihre Rechte', 'paragraphs' => ['Sie können Auskunft, Berichtigung oder Löschung Ihrer Angaben sowie Einschränkung der Verarbeitung verlangen oder Ihre Einwilligung widerrufen. Der Widerruf berührt die zuvor erfolgte Verarbeitung nicht. Außerdem können Sie sich bei der zuständigen Aufsichtsbehörde beschweren.', 'Wenden Sie sich mit Anliegen zu Ihren Daten an :email. Aus Sicherheitsgründen bitten wir gegebenenfalls um Bestätigung der in Ihrer Anfrage verwendeten Adresse.'], 'configured' => true],
         ],
     ],

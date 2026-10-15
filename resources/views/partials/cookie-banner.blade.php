@@ -1,0 +1,87 @@
+<div class="cookie-banner" data-cookie-banner role="region" aria-label="{{ __('marketing.cookies.region', [], 'sv') }}">
+    <p>
+        {{ __('marketing.cookies.banner', [], 'sv') }}
+        <a href="{{ \App\LocalizedUrl::route('privacy', $locale, false) }}#cookies">{{ __('marketing.cookies.more', [], 'sv') }}</a>
+    </p>
+    <div class="cookie-banner-actions">
+        <button type="button" class="cookie-choice" data-cookie-choice="denied">{{ __('marketing.cookies.reject', [], 'sv') }}</button>
+        <button type="button" class="cookie-choice" data-cookie-choice="granted">{{ __('marketing.cookies.accept', [], 'sv') }}</button>
+    </div>
+</div>
+<script>
+    (function () {
+        var name = @json(\App\GoogleAnalytics::CONSENT_COOKIE);
+        var banner = document.querySelector('[data-cookie-banner]');
+        var read = function () {
+            var match = document.cookie.match(new RegExp('(?:^|; )' + name + '=(granted|denied)(?:;|$)'));
+
+            return match ? match[1] : null;
+        };
+        var write = function (value) {
+            var secure = window.location.protocol === 'https:' ? '; Secure' : '';
+            document.cookie = name + '=' + value + '; Max-Age=15552000; Path=/; SameSite=Lax' + secure;
+        };
+        var apply = function (value) {
+            if (typeof window.gtag !== 'function') {
+                return;
+            }
+
+            window.gtag('consent', 'update', {
+                analytics_storage: value === 'granted' ? 'granted' : 'denied',
+                ad_storage: 'denied',
+                ad_user_data: 'denied',
+                ad_personalization: 'denied'
+            });
+        };
+        var clearAnalytics = function () {
+            document.cookie.split(';').forEach(function (part) {
+                var cookieName = part.split('=')[0].trim();
+
+                if (cookieName === '_ga' || cookieName === '_gid' || cookieName.indexOf('_ga_') === 0) {
+                    document.cookie = cookieName + '=; Max-Age=0; Path=/';
+                }
+            });
+        };
+        var hide = function () {
+            document.documentElement.classList.add('cookie-choice-saved');
+        };
+        var show = function () {
+            document.documentElement.classList.remove('cookie-choice-saved');
+
+            if (! banner) {
+                return;
+            }
+
+            var first = banner.querySelector('button');
+
+            if (first) {
+                first.focus();
+            }
+        };
+
+        if (read()) {
+            hide();
+        }
+
+        document.querySelectorAll('[data-cookie-choice]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var value = button.getAttribute('data-cookie-choice') === 'granted' ? 'granted' : 'denied';
+                write(value);
+                apply(value);
+
+                if (value === 'denied') {
+                    clearAnalytics();
+                }
+
+                hide();
+            });
+        });
+
+        document.querySelectorAll('[data-cookie-settings]').forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                show();
+            });
+        });
+    })();
+</script>
