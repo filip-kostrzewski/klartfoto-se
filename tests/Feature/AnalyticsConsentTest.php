@@ -12,35 +12,44 @@ class AnalyticsConsentTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_public_pages_ask_in_swedish_and_load_no_tag_without_a_measurement_id(): void
+    public function test_public_pages_translate_the_banner_and_set_denied_consent_without_a_measurement_id(): void
     {
         config(['services.google_analytics.measurement_id' => null]);
 
-        $home = $this->get('/')->assertOk()->getContent();
-
-        $this->assertStringContainsString('data-cookie-choice="denied"', $home);
-        $this->assertStringContainsString('>Neka</button>', $home);
-        $this->assertStringContainsString('data-cookie-choice="granted"', $home);
-        $this->assertStringContainsString('>Godkänn</button>', $home);
-        $this->assertStringContainsString('Cookie-inställningar', $home);
-        $this->assertStringContainsString('href="/integritetspolicy#cookies"', $home);
-        $this->assertStringContainsString('klartfoto_cookie_consent', $home);
-        $this->assertStringNotContainsString('googletagmanager.com', $home);
-        $this->assertStringNotContainsString('function gtag', $home);
-
-        $english = $this->get('/en')->assertOk()->getContent();
-        $this->assertStringContainsString('>Neka</button>', $english);
-        $this->assertStringContainsString('>Godkänn</button>', $english);
-        $this->assertStringContainsString('Cookie-inställningar', $english);
-
         foreach (config('marketing.locales') as $locale => $metadata) {
-            $this->get(LocalizedUrl::route('privacy', $locale, false))
+            $html = $this->get(LocalizedUrl::route('home', $locale, false))->assertOk()->getContent();
+            $reject = __('marketing.cookies.reject', [], $locale);
+            $accept = __('marketing.cookies.accept', [], $locale);
+            $settings = __('marketing.cookies.settings', [], $locale);
+            $privacy = LocalizedUrl::route('privacy', $locale, false);
+            $default = strpos($html, "gtag('consent', 'default'");
+            $update = strpos($html, "gtag('consent', 'update'");
+
+            $this->assertNotFalse($default);
+            $this->assertNotFalse($update);
+            $this->assertLessThan($update, $default);
+            $this->assertStringContainsString('window.dataLayer = window.dataLayer || [];', $html);
+            $this->assertStringContainsString('function gtag(){dataLayer.push(arguments);}', $html);
+            $this->assertStringContainsString("analytics_storage: 'denied'", $html);
+            $this->assertStringContainsString("ad_storage: 'denied'", $html);
+            $this->assertStringContainsString("ad_user_data: 'denied'", $html);
+            $this->assertStringContainsString("ad_personalization: 'denied'", $html);
+            $this->assertStringContainsString('wait_for_update: 500', $html);
+            $this->assertStringContainsString('>'.$reject.'</button>', $html);
+            $this->assertStringContainsString('>'.$accept.'</button>', $html);
+            $this->assertStringContainsString('type="button" class="footer-cookie-settings" data-cookie-settings>'.$settings.'</button>', $html);
+            $this->assertStringContainsString('href="'.$privacy.'#cookies"', $html);
+            $this->assertDoesNotMatchRegularExpression('/<a[^>]*data-cookie-settings/', $html);
+            $this->assertStringNotContainsString('googletagmanager.com', $html);
+            $this->assertStringNotContainsString("gtag('config'", $html);
+
+            $this->get($privacy)
                 ->assertOk()
                 ->assertSee('id="cookies"', false)
                 ->assertSee('Google Analytics 4', false)
                 ->assertSee('klartfoto_cookie_consent', false)
-                ->assertSee('Godkänn', false)
-                ->assertSee('Neka', false);
+                ->assertSee($accept, false)
+                ->assertSee($reject, false);
         }
     }
 
@@ -92,8 +101,10 @@ class AnalyticsConsentTest extends TestCase
 
         $home = $this->get('/')->assertOk()->getContent();
 
+        $this->assertStringContainsString('function gtag(){dataLayer.push(arguments);}', $home);
+        $this->assertStringContainsString("gtag('consent', 'default'", $home);
         $this->assertStringNotContainsString('googletagmanager.com', $home);
-        $this->assertStringNotContainsString('function gtag', $home);
+        $this->assertStringNotContainsString("gtag('config'", $home);
         $this->assertStringNotContainsString('alert(1)', $home);
         $this->assertStringContainsString('>Godkänn</button>', $home);
     }

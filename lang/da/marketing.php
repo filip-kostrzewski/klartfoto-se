@@ -151,6 +151,14 @@ return [
         'footer_brand' => ':brand · demonstrationseksempel', 'footer_desc' => 'Rapport med før- og efterbilleder',
         'after_note' => 'Billederne viser det samme genererede køkken i to tilstande. Rapporten er kun et eksempel på formatet.',
     ],
+    'cookies' => [
+        'region' => 'Cookies',
+        'banner' => 'Vi bruger cookies til at måle, hvordan websitet bruges. Målingen starter kun, hvis du vælger Acceptér.',
+        'accept' => 'Acceptér',
+        'reject' => 'Afvis',
+        'settings' => 'Cookieindstillinger',
+        'more' => 'Læs mere i privatlivspolitikken',
+    ],
     'privacy' => [
         'title' => 'Privatliv | :brand', 'description' => 'Læs hvordan :brand håndterer oplysninger, der sendes via kontaktformularen.',
         'breadcrumb' => 'Privatliv', 'eyebrow' => 'PRIVATLIV', 'h1' => 'Privatliv', 'intro' => 'Sådan bruger vi oplysninger, der sendes i en henvendelse om Klartfoto.', 'updated' => 'Information dateret 15. oktober 2026.',
@@ -161,8 +169,8 @@ return [
             ['title' => 'Hvem kan behandle oplysningerne?', 'paragraphs' => ['Personer, der behandler henvendelser, kan få adgang. Vores hostingudbyder kan behandle oplysningerne, når det er nødvendigt for opbevaring og beskyttelse.', 'Vi sælger eller offentliggør ikke henvendelser. Formularen spørger ikke efter navn, telefonnummer, arbejdsbilleder eller oplysninger om dine kunder.']],
             ['title' => 'Hvor længe gemmer vi en tilmelding?', 'paragraphs' => ['Vi sletter en henvendelse senest 12 måneder efter indsendelsen. Du kan bede om tidligere sletning. Oplysninger efter fristen slettes ved den daglige oprydning.']],
             ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
-                'På de offentlige sider kan vi bruge Google Analytics 4 til at se, hvordan websitet bruges, for eksempel hvilke sider der åbnes. Målingen starter kun, hvis du vælger Godkänn. Neka lader den være slået fra.',
-                'Valget gemmes i 180 dage i cookien klartfoto_cookie_consent. Den husker kun, om du accepterede eller afviste. Du ændrer valget via Cookie-inställningar i sidefoden.',
+                'På de offentlige sider kan vi bruge Google Analytics 4 til at se, hvordan websitet bruges, for eksempel hvilke sider der åbnes. Målingen starter kun, hvis du vælger Acceptér. Afvis lader den være slået fra.',
+                'Valget gemmes i 180 dage i cookien klartfoto_cookie_consent. Den husker kun, om du accepterede eller afviste. Du ændrer valget via Cookieindstillinger i sidefoden.',
                 'Vi slår ikke lagring til annoncer til, og oplysningerne bruges ikke til tilpassede annoncer. Målingen indgår ikke i kontoen efter login og ikke i rapporten, som kunden åbner.',
                 'Når målingen er slået til, modtager Google tekniske oplysninger om besøget, for eksempel hvilke sider der blev åbnet.',
             ]],

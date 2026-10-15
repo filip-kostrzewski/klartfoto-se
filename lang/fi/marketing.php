@@ -151,6 +151,14 @@ return [
         'footer_brand' => ':brand · havainnollistava esimerkki', 'footer_desc' => 'Raportti ennen ja jälkeen -kuvilla',
         'after_note' => 'Kuvat näyttävät saman tekoälyllä luodun keittiön kahdessa tilanteessa. Raportti on vain esimerkki muodosta.',
     ],
+    'cookies' => [
+        'region' => 'Evästeet',
+        'banner' => 'Käytämme evästeitä mitataksemme, miten sivustoa käytetään. Mittaus alkaa vain, jos valitset Hyväksy.',
+        'accept' => 'Hyväksy',
+        'reject' => 'Hylkää',
+        'settings' => 'Evästeasetukset',
+        'more' => 'Lue lisää tietosuojasta',
+    ],
     'privacy' => [
         'title' => 'Tietosuoja | :brand', 'description' => 'Lue, miten :brand käsittelee yhteydenottolomakkeella annettuja tietoja.',
         'breadcrumb' => 'Tietosuoja', 'eyebrow' => 'TIETOSUOJA', 'h1' => 'Tietosuoja', 'intro' => 'Näin käytämme Klartfotoa koskevassa yhteydenotossa antamiasi tietoja.', 'updated' => 'Tiedot päivätty 15. lokakuuta 2026.',
@@ -161,8 +169,8 @@ return [
             ['title' => 'Kuka voi käsitellä tietoja', 'paragraphs' => ['Yhteydenottoja käsittelevät henkilöt voivat käyttää tietoja. Hosting-palveluntarjoajamme voi käsitellä niitä tietojen tallentamiseksi ja suojaamiseksi.', 'Emme myy tai julkaise yhteydenottoja. Lomake ei pyydä nimeä, puhelinnumeroa, työmaakuvia tai asiakkaidesi tietoja.']],
             ['title' => 'Kuinka kauan säilytämme ilmoittautumisen', 'paragraphs' => ['Poistamme yhteydenoton viimeistään 12 kuukauden kuluttua lähettämisestä. Voit pyytää tietojen poistamista aiemmin. Määräajan ylittäneet tiedot poistetaan päivittäisessä siivouksessa.']],
             ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
-                'Julkisilla sivuilla voimme käyttää Google Analytics 4:ää nähdäksemme, miten sivustoa käytetään, esimerkiksi mitkä sivut avataan. Mittaus alkaa vain, jos valitset Godkänn. Neka jättää sen pois päältä.',
-                'Valinta tallennetaan 180 päiväksi evästeeseen klartfoto_cookie_consent. Eväste muistaa vain, hyväksyitkö vai kielsitkö mittauksen. Muutat valintaa alatunnisteen Cookie-inställningar-linkistä.',
+                'Julkisilla sivuilla voimme käyttää Google Analytics 4:ää nähdäksemme, miten sivustoa käytetään, esimerkiksi mitkä sivut avataan. Mittaus alkaa vain, jos valitset Hyväksy. Hylkää jättää sen pois päältä.',
+                'Valinta tallennetaan 180 päiväksi evästeeseen klartfoto_cookie_consent. Eväste muistaa vain, hyväksyitkö vai kielsitkö mittauksen. Muutat valintaa alatunnisteen Evästeasetukset-painikkeesta.',
                 'Emme ota mainosten tallennusta käyttöön emmekä käytä tietoja personoituihin mainoksiin. Mittausta ei ole kirjautuneen tilin näkymässä eikä asiakkaan avaamassa raportissa.',
                 'Kun mittaus on päällä, Google saa teknisiä tietoja käynnistä, esimerkiksi siitä, mitkä sivut avattiin.',
             ]],

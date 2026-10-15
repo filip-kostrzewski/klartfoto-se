@@ -151,6 +151,14 @@ return [
         'footer_brand' => ':brand · eksempel til demonstrasjon', 'footer_desc' => 'Rapport med før- og etterbilder',
         'after_note' => 'Bildene viser det samme genererte kjøkkenet i to tilstander. Rapporten er bare et eksempel på formatet.',
     ],
+    'cookies' => [
+        'region' => 'Informasjonskapsler',
+        'banner' => 'Vi bruker informasjonskapsler for å måle hvordan nettstedet brukes. Målingen starter bare hvis du velger Godta.',
+        'accept' => 'Godta',
+        'reject' => 'Avslå',
+        'settings' => 'Innstillinger for informasjonskapsler',
+        'more' => 'Les mer i personvernerklæringen',
+    ],
     'privacy' => [
         'title' => 'Personvern | :brand', 'description' => 'Les hvordan :brand behandler opplysninger som sendes inn via kontaktskjemaet.',
         'breadcrumb' => 'Personvern', 'eyebrow' => 'PERSONVERN', 'h1' => 'Personvern', 'intro' => 'Slik bruker vi opplysninger som sendes inn i en henvendelse om Klartfoto.', 'updated' => 'Informasjonen er datert 15. oktober 2026.',
@@ -161,8 +169,8 @@ return [
             ['title' => 'Hvem som kan behandle opplysningene', 'paragraphs' => ['Personer som behandler henvendelser, kan få tilgang. Driftsleverandøren vår kan behandle opplysningene når det trengs for lagring og beskyttelse.', 'Vi selger eller publiserer ikke henvendelser. Skjemaet ber ikke om navn, telefonnummer, bilder fra arbeidssteder eller opplysninger om kundene dine.']],
             ['title' => 'Hvor lenge vi lagrer påmeldingen', 'paragraphs' => ['Vi sletter en henvendelse senest 12 måneder etter innsending. Du kan be om tidligere sletting. Opplysninger etter fristen slettes i den daglige oppryddingen.']],
             ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
-                'På de offentlige sidene kan vi bruke Google Analytics 4 for å se hvordan nettstedet brukes, for eksempel hvilke sider som åpnes. Målingen starter bare hvis du velger Godkänn. Neka lar den være av.',
-                'Valget lagres i 180 dager i informasjonskapselen klartfoto_cookie_consent. Den husker bare om du godtok eller avslo. Du endrer valget via Cookie-inställningar i bunnteksten.',
+                'På de offentlige sidene kan vi bruke Google Analytics 4 for å se hvordan nettstedet brukes, for eksempel hvilke sider som åpnes. Målingen starter bare hvis du velger Godta. Avslå lar den være av.',
+                'Valget lagres i 180 dager i informasjonskapselen klartfoto_cookie_consent. Den husker bare om du godtok eller avslo. Du endrer valget via Innstillinger for informasjonskapsler i bunnteksten.',
                 'Vi slår ikke på lagring for annonser, og opplysningene brukes ikke til tilpassede annonser. Målingen inngår ikke i kontoen etter innlogging og ikke i rapporten kunden åpner.',
                 'Når målingen er på, mottar Google tekniske opplysninger om besøket, for eksempel hvilke sider som ble åpnet.',
             ]],

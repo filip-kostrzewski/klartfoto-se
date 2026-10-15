@@ -109,9 +109,9 @@
         <p class="footer-legal">Prodi Digital AB, org.nr 559214-9370, Tegelbrukets väg 41, 195 59 Märsta</p>
         <div class="footer-bottom">
             <span>{{ $copy['nav']['footer_tagline'] }}</span>
-            <nav class="footer-links" aria-label="{{ __('marketing.cookies.region', [], 'sv') }}">
+            <nav class="footer-links" aria-label="{{ __('marketing.cookies.region') }}">
                 <a href="{{ \App\LocalizedUrl::route('privacy', $locale, false) }}">{{ $copy['nav']['privacy'] }}</a>
-                <a href="{{ \App\LocalizedUrl::route('privacy', $locale, false) }}#cookies" data-cookie-settings>{{ __('marketing.cookies.settings', [], 'sv') }}</a>
+                <button type="button" class="footer-cookie-settings" data-cookie-settings>{{ __('marketing.cookies.settings') }}</button>
             </nav>
         </div>
     </footer>

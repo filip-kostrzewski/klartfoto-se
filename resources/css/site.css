@@ -1404,7 +1404,19 @@ select {
 .footer-links {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 10px 22px;
+}
+
+.footer-cookie-settings {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: rgba(255, 255, 255, .67);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
 }
 
 .cookie-banner {
@@ -1448,22 +1460,14 @@ html.cookie-choice-saved .cookie-banner {
     min-width: 0;
     min-height: 48px;
     padding: 0 16px;
-    border: 1px solid transparent;
+    border: 1px solid rgba(255, 255, 255, .55);
     border-radius: 3px;
+    background: transparent;
+    color: var(--white);
     cursor: pointer;
     font-size: 13px;
-    font-weight: 750;
+    font-weight: 650;
     line-height: 1.2;
-}
-
-.cookie-choice[data-cookie-choice="denied"] {
-    background: var(--white);
-    color: var(--ink);
-}
-
-.cookie-choice[data-cookie-choice="granted"] {
-    background: var(--lime);
-    color: var(--ink);
 }
 
 .breadcrumbs {
@@ -2616,6 +2620,27 @@ html.cookie-choice-saved .cookie-banner {
 
     .delete-row .button {
         width: 100%;
+    }
+
+    .cookie-banner {
+        position: static;
+        gap: 8px;
+        padding: 10px 16px;
+    }
+
+    .cookie-banner p {
+        font-size: 12px;
+        line-height: 1.35;
+    }
+
+    .cookie-banner-actions {
+        width: 100%;
+    }
+
+    .cookie-choice {
+        min-height: 36px;
+        padding: 0 8px;
+        font-size: 12px;
     }
 }
 

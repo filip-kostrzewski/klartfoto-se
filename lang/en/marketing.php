@@ -171,6 +171,14 @@ return [
         'footer_brand' => ':brand · demonstration example', 'footer_desc' => 'Report with before-and-after photos',
         'after_note' => 'The images show the same generated kitchen in two conditions. This report is only an example of the format.',
     ],
+    'cookies' => [
+        'region' => 'Cookies',
+        'banner' => 'We use cookies to measure how the website is used. Measurement starts only if you choose Accept.',
+        'accept' => 'Accept',
+        'reject' => 'Reject',
+        'settings' => 'Cookie settings',
+        'more' => 'Read more in the privacy policy',
+    ],
     'privacy' => [
         'title' => 'Privacy | :brand', 'description' => 'Read how :brand handles information submitted through the contact form.',
         'breadcrumb' => 'Privacy', 'eyebrow' => 'PRIVACY', 'h1' => 'Privacy',
@@ -182,8 +190,8 @@ return [
             ['title' => 'Who can process the information', 'paragraphs' => ['People handling enquiries can access the information. Our hosting provider may process it as needed to store and protect the information.', 'We do not sell or publish enquiries. The form does not ask for your name, phone number, site photos or information about your customers.']],
             ['title' => 'How long we keep a registration', 'paragraphs' => ['We remove an enquiry no later than 12 months after submission. You can request earlier deletion. Information past the limit is removed during the daily cleanup.']],
             ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
-                'On the public pages we may use Google Analytics 4 to see how the website is used, for example which pages are opened. Measurement starts only if you choose Godkänn. Neka leaves it off.',
-                'The choice is stored for 180 days in the cookie klartfoto_cookie_consent. That cookie only remembers whether you accepted or refused. You can change it from Cookie-inställningar in the footer.',
+                'On the public pages we may use Google Analytics 4 to see how the website is used, for example which pages are opened. Measurement starts only if you choose Accept. Reject leaves it off.',
+                'The choice is stored for 180 days in the cookie klartfoto_cookie_consent. That cookie only remembers whether you accepted or refused. You can change it from Cookie settings in the footer.',
                 'We do not turn on advertising storage, and the data is not used for personalised ads. Measurement is not included in the signed-in account or on the customer report.',
                 'When measurement is on, Google receives technical details about the visit, such as which pages were opened.',
             ]],

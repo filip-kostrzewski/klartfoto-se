@@ -1,11 +1,11 @@
-<div class="cookie-banner" data-cookie-banner role="region" aria-label="{{ __('marketing.cookies.region', [], 'sv') }}">
+<div class="cookie-banner" data-cookie-banner role="region" aria-label="{{ __('marketing.cookies.region') }}">
     <p>
-        {{ __('marketing.cookies.banner', [], 'sv') }}
-        <a href="{{ \App\LocalizedUrl::route('privacy', $locale, false) }}#cookies">{{ __('marketing.cookies.more', [], 'sv') }}</a>
+        {{ __('marketing.cookies.banner') }}
+        <a href="{{ \App\LocalizedUrl::route('privacy', $locale, false) }}#cookies">{{ __('marketing.cookies.more') }}</a>
     </p>
     <div class="cookie-banner-actions">
-        <button type="button" class="cookie-choice" data-cookie-choice="denied">{{ __('marketing.cookies.reject', [], 'sv') }}</button>
-        <button type="button" class="cookie-choice" data-cookie-choice="granted">{{ __('marketing.cookies.accept', [], 'sv') }}</button>
+        <button type="button" class="cookie-choice" data-cookie-choice="denied">{{ __('marketing.cookies.reject') }}</button>
+        <button type="button" class="cookie-choice" data-cookie-choice="granted">{{ __('marketing.cookies.accept') }}</button>
     </div>
 </div>
 <script>
@@ -59,10 +59,6 @@
             }
         };
 
-        if (read()) {
-            hide();
-        }
-
         document.querySelectorAll('[data-cookie-choice]').forEach(function (button) {
             button.addEventListener('click', function () {
                 var value = button.getAttribute('data-cookie-choice') === 'granted' ? 'granted' : 'denied';
@@ -77,9 +73,8 @@
             });
         });
 
-        document.querySelectorAll('[data-cookie-settings]').forEach(function (link) {
-            link.addEventListener('click', function (event) {
-                event.preventDefault();
+        document.querySelectorAll('[data-cookie-settings]').forEach(function (button) {
+            button.addEventListener('click', function () {
                 show();
             });
         });

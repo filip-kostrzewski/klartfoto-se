@@ -151,6 +151,14 @@ return [
         'footer_brand' => ':brand · przykład demonstracyjny', 'footer_desc' => 'Raport ze zdjęciami przed i po',
         'after_note' => 'Zdjęcia pokazują tę samą wygenerowaną kuchnię w dwóch stanach. Raport służy wyłącznie jako przykład formatu.',
     ],
+    'cookies' => [
+        'region' => 'Ciasteczka',
+        'banner' => 'Używamy ciasteczek, aby mierzyć, jak korzystasz ze strony. Pomiar zaczyna się dopiero, gdy wybierzesz Akceptuj.',
+        'accept' => 'Akceptuj',
+        'reject' => 'Odrzuć',
+        'settings' => 'Ustawienia ciasteczek',
+        'more' => 'Więcej w polityce prywatności',
+    ],
     'privacy' => [
         'title' => 'Prywatność | :brand', 'description' => 'Sprawdź, jak :brand przetwarza informacje przekazane przez formularz kontaktowy.',
         'breadcrumb' => 'Prywatność', 'eyebrow' => 'PRYWATNOŚĆ', 'h1' => 'Prywatność', 'intro' => 'Jak wykorzystujemy dane przekazane w zgłoszeniu dotyczącym Klartfoto.', 'updated' => 'Informacja z 15 października 2026 r.',
@@ -161,8 +169,8 @@ return [
             ['title' => 'Kto może przetwarzać dane', 'paragraphs' => ['Dostęp do danych mają osoby obsługujące zapytania. Dostawca hostingu może je przetwarzać w zakresie potrzebnym do przechowywania i zabezpieczenia.', 'Nie sprzedajemy ani nie publikujemy otrzymanych zgłoszeń. Formularz nie prosi o nazwisko, telefon, zdjęcia z obiektów ani dane Twoich klientów.']],
             ['title' => 'Jak długo przechowujemy zgłoszenie', 'paragraphs' => ['Usuwamy zgłoszenie nie później niż 12 miesięcy od jego wysłania. Możesz poprosić o wcześniejsze usunięcie. Dane po upływie terminu są usuwane podczas codziennego czyszczenia.']],
             ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
-                'Na stronach publicznych możemy używać Google Analytics 4, aby widzieć, jak witryna jest używana, na przykład które strony są otwierane. Pomiar zaczyna się dopiero po wyborze Godkänn. Neka pozostawia go wyłączonym.',
-                'Wybór jest zapisywany na 180 dni w ciasteczku klartfoto_cookie_consent. Ciasteczko pamięta tylko, czy pomiar został przyjęty, czy odrzucony. Wybór zmienisz linkiem Cookie-inställningar w stopce.',
+                'Na stronach publicznych możemy używać Google Analytics 4, aby widzieć, jak witryna jest używana, na przykład które strony są otwierane. Pomiar zaczyna się dopiero po wyborze Akceptuj. Odrzuć pozostawia go wyłączonym.',
+                'Wybór jest zapisywany na 180 dni w ciasteczku klartfoto_cookie_consent. Ciasteczko pamięta tylko, czy pomiar został przyjęty, czy odrzucony. Wybór zmienisz przyciskiem Ustawienia ciasteczek w stopce.',
                 'Nie włączamy przechowywania danych reklamowych i nie używamy tych danych do spersonalizowanych reklam. Pomiaru nie ma w panelu po zalogowaniu ani w raporcie otwieranym przez klienta.',
                 'Gdy pomiar jest włączony, Google otrzymuje techniczne dane o wizycie, na przykład które strony zostały otwarte.',
             ]],
