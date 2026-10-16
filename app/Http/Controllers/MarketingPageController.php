@@ -77,6 +77,8 @@ class MarketingPageController extends Controller
         $homeUrl = LocalizedUrl::route('home', app()->getLocale());
         $page = $this->pageData($content, 'guides', $canonical, $this->guideIsIndexable(), []);
         $page['og_type'] = 'article';
+        $page['og_image'] = $page['report_image_url_absolute'];
+        $page['og_image_alt'] = $page['report_image']['alt'];
         $page['schema'] = SiteSeo::articleDocument(
             $canonical,
             (string) $page['h1'],
@@ -86,11 +88,12 @@ class MarketingPageController extends Controller
             app()->getLocale(),
             $homeUrl,
             [
-                ['name' => (string) trans('marketing.nav.brand_home', ['brand' => $page['brand']]), 'item' => $homeUrl],
+                ['name' => (string) $page['home_crumb'], 'item' => $homeUrl],
                 ['name' => (string) $page['index_label'], 'item' => SiteSeo::canonical(self::GUIDE_INDEX_PATH)],
                 ['name' => (string) $page['breadcrumb'], 'item' => $canonical],
             ],
             $page['faqs'],
+            $page['report_image_url_absolute'],
         );
 
         return view('pages.guides.show', $this->guideViewData($page));
@@ -117,12 +120,14 @@ class MarketingPageController extends Controller
 
         foreach (config('marketing.indexable_locales', []) as $locale) {
             foreach (self::INDEXABLE_PAGES as $page) {
-                $urls[] = LocalizedUrl::route($page, $locale);
+                $urls[] = ['loc' => LocalizedUrl::route($page, $locale)];
             }
         }
 
+        $guideUpdatedOn = (string) trans('guides.cleaning_photos.updated_on');
+
         foreach ([self::GUIDE_INDEX_PATH, self::CLEANING_GUIDE_PATH] as $path) {
-            $urls[] = SiteSeo::canonical($path);
+            $urls[] = ['loc' => SiteSeo::canonical($path), 'lastmod' => $guideUpdatedOn];
         }
 
         return response()
@@ -215,6 +220,12 @@ class MarketingPageController extends Controller
             abort(404);
         }
 
+        $content['home_crumb'] = (string) trans('guides.home_crumb');
+
+        if (isset($content['intro_more'])) {
+            $content['intro_more'] = $this->withInlineLinks((string) $content['intro_more']);
+        }
+
         if (isset($content['sections']) && is_array($content['sections'])) {
             foreach ($content['sections'] as $index => $section) {
                 if (! is_array($section)) {
@@ -231,6 +242,41 @@ class MarketingPageController extends Controller
             }
         }
 
+        if ($key === 'cleaning_photos') {
+            $content = $this->withGuideImages($content);
+        }
+
+        return $content;
+    }
+
+    /**
+     * @param  array<string, mixed>  $content
+     * @return array<string, mixed>
+     */
+    private function withGuideImages(array $content): array
+    {
+        $version = config('klartfoto.demo_asset_version');
+        $url = function (string $path) use ($version): string {
+            return asset($path).'?v='.$version;
+        };
+        $files = [
+            ['images/guides/kok-fore.svg', 'images/guides/kok-efter.svg'],
+            ['images/guides/badrum-fore.svg', 'images/guides/badrum-efter.svg'],
+            ['images/guides/hall-fore.svg', 'images/guides/hall-efter.svg'],
+        ];
+
+        foreach ($files as $index => $pair) {
+            if (! isset($content['pairs'][$index]) || ! is_array($content['pairs'][$index])) {
+                continue;
+            }
+
+            $content['pairs'][$index]['before_url'] = $url($pair[0]);
+            $content['pairs'][$index]['after_url'] = $url($pair[1]);
+        }
+
+        $content['report_image_url'] = $url('images/guides/exempel-rapport.jpg');
+        $content['report_image_url_absolute'] = SiteSeo::baseUrl().'/images/guides/exempel-rapport.jpg?v='.$version;
+
         return $content;
     }
 
@@ -239,10 +285,12 @@ class MarketingPageController extends Controller
         $locale = app()->getLocale();
 
         return str_replace(
-            [':report', ':privacy'],
+            [':report', ':privacy', ':cleaning', ':imy'],
             [
                 '<a href="'.e(LocalizedUrl::route('report', $locale, false)).'">'.e((string) trans('guides.links.report')).'</a>',
                 '<a href="'.e(LocalizedUrl::route('privacy', $locale, false)).'">'.e((string) trans('guides.links.privacy')).'</a>',
+                '<a href="'.e(LocalizedUrl::route('cleaning', $locale, false)).'">'.e((string) trans('guides.links.cleaning')).'</a>',
+                '<a href="https://www.imy.se/verksamhet/dataskydd/det-har-galler-enligt-gdpr/de-registrerades-rattigheter">'.e((string) trans('guides.links.imy')).'</a>',
             ],
             e($paragraph),
         );

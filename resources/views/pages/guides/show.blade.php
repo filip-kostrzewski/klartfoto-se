@@ -5,7 +5,7 @@
         <header class="industry-hero guide-hero">
             <div class="industry-hero-inner">
                 <nav class="breadcrumbs" aria-label="{{ $copy['nav']['main'] }}">
-                    <a href="{{ \App\LocalizedUrl::route('home', $locale, false) }}">{{ str_replace(':brand', $page['brand'], $copy['nav']['brand_home']) }}</a>
+                    <a href="{{ \App\LocalizedUrl::route('home', $locale, false) }}">{{ $page['home_crumb'] }}</a>
                     <span aria-hidden="true">/</span>
                     <a href="{{ route('guides.index', absolute: false) }}">{{ $page['index_label'] }}</a>
                     <span aria-hidden="true">/</span>
@@ -13,16 +13,15 @@
                 </nav>
                 <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> {{ $page['eyebrow'] }}</p>
                 <h1>{{ $page['h1'] }}</h1>
+                <p class="guide-byline">{{ $page['byline'] }}</p>
                 <p class="guide-dates">
                     <time datetime="{{ $page['published_on'] }}">{{ $page['published_label'] }}</time>
-                    <time datetime="{{ $page['updated_on'] }}">{{ $page['updated_label'] }}</time>
+                    @if ($page['updated_on'] !== $page['published_on'])
+                        <time datetime="{{ $page['updated_on'] }}">{{ $page['updated_label'] }}</time>
+                    @endif
                 </p>
                 <p class="industry-lead">{{ $page['intro'] }}</p>
-                <p class="industry-lead guide-lead-more">{{ $page['intro_more'] }}</p>
-                <div class="hero-actions">
-                    <a class="button button-lime" href="{{ route('register', absolute: false) }}">{{ $copy['nav']['start'] }} <span aria-hidden="true">↗</span></a>
-                    <a class="text-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $page['cta_report'] }} <span aria-hidden="true">↗</span></a>
-                </div>
+                <p class="industry-lead guide-lead-more">{!! $page['intro_more'] !!}</p>
             </div>
         </header>
 
@@ -41,8 +40,45 @@
                                 @endforeach
                             </ul>
                         @endif
+                        @if ($section['id'] === 'what')
+                            @include('pages.guides.pair', ['pair' => $page['pairs'][1]])
+                        @elseif ($section['id'] === 'same')
+                            @include('pages.guides.pair', ['pair' => $page['pairs'][0]])
+                            @include('pages.guides.pair', ['pair' => $page['pairs'][2]])
+                        @elseif ($section['id'] === 'share')
+                            <figure class="guide-figure">
+                                <img src="{{ $page['report_image_url'] }}" width="1600" height="1244" alt="{{ $page['report_image']['alt'] }}" loading="lazy" decoding="async">
+                                <figcaption>{{ $page['report_image']['caption'] }}</figcaption>
+                            </figure>
+                        @endif
+                        @if (! empty($section['show_cta']))
+                            <p class="guide-inline-cta">
+                                <a class="button button-lime" href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#signup">{{ $page['cta_label'] }}</a>
+                            </p>
+                        @endif
                     </section>
                 @endforeach
+
+                <section aria-labelledby="guide-steps-title">
+                    <h2 id="guide-steps-title">{{ $page['steps_caption'] }}</h2>
+                    <table class="guide-steps">
+                        <caption class="sr-only">{{ $page['steps_caption'] }}</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Steg</th>
+                                <th scope="col">Gör så här</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($page['steps'] as $step)
+                                <tr>
+                                    <th scope="row">{{ $step[0] }}</th>
+                                    <td>{{ $step[1] }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </section>
 
                 <section aria-labelledby="guide-checklist-title">
                     <h2 id="guide-checklist-title">{{ $page['checklist_title'] }}</h2>
@@ -68,8 +104,7 @@
             <h2>{{ $page['cta_title'] }} <em>{{ $page['cta_emphasis'] }}</em></h2>
             <p>{{ $page['cta_body'] }}</p>
             <div class="hero-actions">
-                <a class="button button-dark" href="{{ route('register', absolute: false) }}">{{ $copy['nav']['start'] }} <span aria-hidden="true">↗</span></a>
-                <a class="text-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $page['cta_report'] }} <span aria-hidden="true">↗</span></a>
+                <a class="button button-dark" href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#signup">{{ $page['cta_label'] }}</a>
             </div>
         </section>
     </article>

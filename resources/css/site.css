@@ -7959,6 +7959,7 @@ html {
     }
 }
 
+.guide-byline,
 .guide-dates {
     display: flex;
     flex-wrap: wrap;
@@ -7966,6 +7967,70 @@ html {
     margin: 16px 0 0;
     color: rgba(255, 255, 255, .72);
     font-size: 13px;
+}
+
+.guide-byline {
+    margin-bottom: 0;
+}
+
+.guide-figure {
+    margin: 1.4em 0 1.6em;
+}
+
+.guide-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--paper);
+}
+
+.guide-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.guide-pair figcaption,
+.guide-figure figcaption {
+    grid-column: 1 / -1;
+    margin-top: 8px;
+    color: #526056;
+    font-size: 13px;
+}
+
+.guide-inline-cta {
+    margin: 1.6em 0 0;
+}
+
+.guide-steps {
+    width: 100%;
+    margin-top: 1em;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.guide-steps th,
+.guide-steps td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+}
+
+.guide-steps th[scope="row"] {
+    width: 38%;
+    font-weight: 650;
+}
+
+.guide-index-report {
+    margin-top: 18px;
+}
+
+.guide-index-report a {
+    color: inherit;
+    font-weight: 650;
 }
 
 .guide-hero .industry-lead {

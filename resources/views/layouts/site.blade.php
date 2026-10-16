@@ -22,6 +22,12 @@
     <meta property="og:title" content="{{ $page['title'] }}">
     <meta property="og:description" content="{{ $page['description'] }}">
     <meta property="og:url" content="{{ $page['canonical'] }}">
+    @if (! empty($page['og_image']))
+        <meta property="og:image" content="{{ $page['og_image'] }}">
+        @if (! empty($page['og_image_alt']))
+            <meta property="og:image:alt" content="{{ $page['og_image_alt'] }}">
+        @endif
+    @endif
     @if (! empty($page['schema']))
         <script type="application/ld+json">@json($page['schema'])</script>
     @endif

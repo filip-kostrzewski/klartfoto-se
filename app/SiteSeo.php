@@ -143,6 +143,7 @@ class SiteSeo
         string $homeUrl,
         array $breadcrumbs,
         array $faqs,
+        ?string $imageUrl = null,
     ): array {
         $document = self::structuredData($canonical, $headline, false, $locale, $homeUrl);
         $organizationId = self::canonical('/').'#organization';
@@ -176,7 +177,7 @@ class SiteSeo
             '@id' => $canonical.'#breadcrumb',
             'itemListElement' => $crumbs,
         ];
-        $document['@graph'][] = [
+        $article = [
             '@type' => 'Article',
             '@id' => $canonical.'#article',
             'headline' => $headline,
@@ -188,6 +189,12 @@ class SiteSeo
             'author' => ['@id' => $organizationId],
             'publisher' => ['@id' => $organizationId],
         ];
+
+        if (is_string($imageUrl) && $imageUrl !== '') {
+            $article['image'] = $imageUrl;
+        }
+
+        $document['@graph'][] = $article;
         $document['@graph'][] = [
             '@type' => 'FAQPage',
             '@id' => $canonical.'#faq',
