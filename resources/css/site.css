@@ -3948,6 +3948,51 @@ html {
     padding: clamp(68px, 9vw, 120px) max(32px, calc((100% - 1200px) / 2));
 }
 
+.benefits-section {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+    padding-block: 38px;
+    background: var(--forest);
+    color: var(--white);
+}
+
+.benefit-item {
+    display: flex;
+    align-items: start;
+    gap: 14px;
+}
+
+.benefit-icon {
+    display: grid;
+    width: 30px;
+    height: 30px;
+    flex: none;
+    place-items: center;
+    border: 1px solid #5c7651;
+    border-radius: 50%;
+    color: var(--lime);
+}
+
+.benefit-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.benefit-item h2 {
+    margin: 0 0 6px;
+    font-size: 16px;
+    font-weight: 650;
+    letter-spacing: -.02em;
+}
+
+.benefit-item p {
+    margin: 0;
+    color: #d2dccf;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
 .section-heading-row,
 .sample-heading {
     display: flex;
@@ -4460,10 +4505,118 @@ html {
     color: #4f5d52;
 }
 
+.pricing-intro {
+    max-width: 58ch;
+    margin: -8px 0 32px;
+    color: #526057;
+    line-height: 1.65;
+}
+
+.pricing-card-heading {
+    display: flex;
+    min-height: 30px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pricing-badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: var(--lime);
+    color: var(--forest);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.pricing-description {
+    max-width: 42ch;
+    min-height: 3.2em;
+    margin: 0 0 8px;
+    color: #526057;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.pricing-card-team .pricing-description {
+    color: #d2dccf;
+}
+
 .pricing-section .button {
     width: auto;
     align-self: start;
     padding-inline: 22px;
+}
+
+.pricing-card .button {
+    align-self: stretch;
+    margin-top: auto;
+}
+
+.sales-faq {
+    display: grid;
+    grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+    align-items: start;
+    gap: clamp(32px, 6vw, 88px);
+    background: var(--paper);
+}
+
+.sales-faq h2 {
+    max-width: 16ch;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.35rem, 4.4vw, 4.35rem);
+    font-weight: 500;
+    letter-spacing: -.055em;
+    line-height: 1.05;
+}
+
+.sales-faq-item {
+    border-bottom: 1px solid var(--line);
+}
+
+.sales-faq-item:first-child {
+    border-top: 1px solid var(--line);
+}
+
+.sales-faq-item summary {
+    display: flex;
+    min-height: 68px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-block: 20px;
+    font-size: 16px;
+    font-weight: 650;
+    line-height: 1.5;
+    list-style: none;
+    cursor: pointer;
+}
+
+.sales-faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.sales-faq-item summary > span {
+    flex: none;
+    color: #536d35;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.sales-faq-item[open] summary > span {
+    transform: rotate(45deg);
+}
+
+.sales-faq-item p {
+    max-width: 60ch;
+    margin: 0;
+    padding: 0 30px 22px 0;
+    color: #526057;
+    font-size: 15px;
+    line-height: 1.7;
 }
 
 .signup-section {
@@ -5880,6 +6033,17 @@ html {
     .workflow-grid,
     .industry-grid {
         grid-template-columns: 1fr;
+    }
+
+    .benefits-section {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding-block: 32px;
+    }
+
+    .sales-faq {
+        grid-template-columns: 1fr;
+        gap: 28px;
     }
 
     .workflow-card {

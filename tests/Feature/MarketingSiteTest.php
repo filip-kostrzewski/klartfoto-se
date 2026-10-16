@@ -18,7 +18,7 @@ class MarketingSiteTest extends TestCase
         $response->assertOk()
             ->assertSee('<html lang="sv">', false)
             ->assertSee('Tydliga foton', false)
-            ->assertSee('Visa vad som blev gjort', false)
+            ->assertSee('Jobbet är klart.', false)
             ->assertSee('content="sv_SE"', false)
             ->assertSee('https://klartfoto.se/', false)
             ->assertDontSee('<link rel="canonical" href="https://klartfoto.test/', false)

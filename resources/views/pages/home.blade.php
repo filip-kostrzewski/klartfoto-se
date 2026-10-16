@@ -86,6 +86,18 @@
         </div>
     </section>
 
+    <section class="benefits-section section-pad" aria-label="{{ $home['intro_kicker'] }}">
+        @foreach ($home['values'] as $value)
+            <article class="benefit-item">
+                <span class="benefit-icon"><x-icon name="check" /></span>
+                <div>
+                    <h2>{{ $value['title'] }}</h2>
+                    <p>{{ $value['text'] }}</p>
+                </div>
+            </article>
+        @endforeach
+    </section>
+
     <section class="workflow-section section-pad" id="how-it-works">
         <div class="section-heading-row">
             <div>
@@ -177,18 +189,22 @@
         </div>
     </section>
 
-    <section class="wisegent-callout section-pad" aria-labelledby="wisegent-title">
-        <div class="wisegent-callout-mark" aria-hidden="true"><x-icon name="calendar" /></div>
-        <div>
-            <p class="section-kicker">{{ $home['wisegent']['eyebrow'] }}</p>
-            <h2 id="wisegent-title">{{ $home['wisegent']['title'] }}</h2>
-            <p>{{ $home['wisegent']['text'] }}</p>
-        </div>
-        @php($wisegentLocale = ['sv' => 'se', 'en' => 'en', 'pl' => 'pl'][$locale] ?? 'en')
-        <a class="button button-outline-dark" href="https://wisegent.se/{{ $wisegentLocale }}" target="_blank" rel="noopener noreferrer">{{ $home['wisegent']['link'] }} <span aria-hidden="true">↗</span></a>
-    </section>
-
     <x-pricing-section :pricing="$home['pricing']" />
+
+    <section class="sales-faq section-pad" aria-labelledby="faq-title">
+        <div>
+            <p class="section-kicker"><span>05</span> {{ $home['faq']['kicker'] }}</p>
+            <h2 id="faq-title">{{ $home['faq']['title'] }}</h2>
+        </div>
+        <div class="sales-faq-items">
+            @foreach ($home['faq']['items'] as $item)
+                <details class="sales-faq-item">
+                    <summary>{{ $item['question'] }}<span aria-hidden="true">+</span></summary>
+                    <p>{{ $item['answer'] }}</p>
+                </details>
+            @endforeach
+        </div>
+    </section>
 
     <section class="signup-section section-pad" id="signup" aria-labelledby="signup-title">
         <div class="signup-cta-visual" aria-hidden="true">
@@ -208,5 +224,16 @@
                 @endif
             </div>
         </div>
+    </section>
+
+    <section class="wisegent-callout section-pad" aria-labelledby="wisegent-title">
+        <div class="wisegent-callout-mark" aria-hidden="true"><x-icon name="calendar" /></div>
+        <div>
+            <p class="section-kicker">{{ $home['wisegent']['eyebrow'] }}</p>
+            <h2 id="wisegent-title">{{ $home['wisegent']['title'] }}</h2>
+            <p>{{ $home['wisegent']['text'] }}</p>
+        </div>
+        @php($wisegentLocale = ['sv' => 'se', 'en' => 'en', 'pl' => 'pl'][$locale] ?? 'en')
+        <a class="button button-outline-dark" href="https://wisegent.se/{{ $wisegentLocale }}" target="_blank" rel="noopener noreferrer">{{ $home['wisegent']['link'] }} <span aria-hidden="true">↗</span></a>
     </section>
 @endsection
