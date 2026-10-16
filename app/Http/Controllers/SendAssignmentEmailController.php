@@ -42,6 +42,16 @@ class SendAssignmentEmailController extends Controller
             ]);
         }
 
+        if ($request->boolean('confirm_incomplete_pairs')) {
+            $previousInput['confirm_incomplete_pairs'] = '1';
+        }
+
+        if ($assignment->isMissingAfterPhoto() && ! $request->boolean('confirm_incomplete_pairs')) {
+            return back()->withInput($previousInput)->withErrors([
+                'confirm_incomplete_pairs' => __('assignments.incomplete_confirm_error'),
+            ]);
+        }
+
         $attempt = $sendReportEmail->send(
             $assignment,
             $user,

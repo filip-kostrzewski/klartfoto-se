@@ -504,6 +504,66 @@ class SendAssignmentEmailTest extends TestCase
             ->assertDontSee('Ingen efterbild', false);
     }
 
+    public function test_incomplete_pair_is_not_ready_to_share_and_sending_asks_for_confirmation(): void
+    {
+        $this->useArrayMailer();
+        Storage::fake('local');
+        $owner = User::factory()->create();
+        $assignment = Assignment::factory()->for($owner)->create();
+
+        $this->actingAs($owner)->post(route('assignments.photos.store', $assignment, false), [
+            'place_name' => 'Kök',
+            'before_photos' => [UploadedFile::fake()->image('fore.jpg', 40, 40)],
+            'before_upload_ids' => [Str::uuid()->toString()],
+        ], ['Accept' => 'application/json'])->assertOk();
+
+        $this->actingAs($owner)
+            ->get(route('assignments.show', $assignment, false))
+            ->assertOk()
+            ->assertSee('Saknar efterbild', false)
+            ->assertSee('saknar efterbild', false)
+            ->assertSee('Minst ett rum har en förebild men saknar efterbild.', false)
+            ->assertSee('name="confirm_incomplete_pairs"', false)
+            ->assertDontSee('Klar att dela', false)
+            ->assertDontSee('klar att dela', false);
+
+        $this->actingAs($owner)
+            ->from(route('assignments.show', $assignment, false))
+            ->post(route('assignments.email', $assignment, false), [
+                'recipient_email' => 'kund@example.test',
+            ])
+            ->assertRedirect(route('assignments.show', $assignment, false))
+            ->assertSessionHasErrors([
+                'confirm_incomplete_pairs' => 'Bekräfta att rapporten ska skickas utan efterbild.',
+            ]);
+
+        $this->assertSame(0, AssignmentEmailAttempt::query()->count());
+
+        $this->actingAs($owner)
+            ->from(route('assignments.show', $assignment, false))
+            ->post(route('assignments.email', $assignment, false), [
+                'recipient_email' => 'kund@example.test',
+                'confirm_incomplete_pairs' => '1',
+            ])
+            ->assertRedirect(route('assignments.show', $assignment, false))
+            ->assertSessionHas('status', 'Mejlet har lämnats till e-postleverantören.');
+
+        $this->assertSame(1, AssignmentEmailAttempt::query()->count());
+        $this->assertSame(1, $assignment->reportVersions()->count());
+    }
+
+    public function test_polish_missing_after_status_is_translated(): void
+    {
+        app()->setLocale('pl');
+
+        $this->assertSame('Brak zdjęcia po', __('assignments.missing_after'));
+        $this->assertSame('brak zdjęcia po', __('assignments.missing_after_inline'));
+        $this->assertSame(
+            'Co najmniej jedno pomieszczenie ma zdjęcie przed, ale nie ma zdjęcia po. Klient zobaczy wtedy, że zdjęcia po brakuje.',
+            __('assignments.incomplete_warning'),
+        );
+    }
+
     private function assignmentWithPhoto(User $owner, array $attributes = []): Assignment
     {
         $assignment = Assignment::factory()->for($owner)->create($attributes);

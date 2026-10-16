@@ -169,8 +169,10 @@
                     </span>
                 </div>
                 @if ($latestReportVersion)
-                    <span class="report-version-badge report-version-badge-{{ $latestReportVersion->status }}">
-                        @if ($latestReportVersion->status === 'sent')
+                    <span class="report-version-badge report-version-badge-{{ $assignmentIsMissingAfterPhoto ? 'missing' : $latestReportVersion->status }}">
+                        @if ($assignmentIsMissingAfterPhoto)
+                            {{ __('assignments.missing_after') }}
+                        @elseif ($latestReportVersion->status === 'sent')
                             Skickad vidare
                         @elseif ($currentVersionIsReady)
                             Klar att dela
@@ -241,7 +243,17 @@
                     <strong>{{ $shareProjectName }}</strong>
                     <span>{{ $shareProjectAddress }} · {{ \Illuminate\Support\Carbon::parse($shareProjectDate)->locale('sv')->translatedFormat('j F Y') }}@if ($shareProjectTime) · kl. {{ $shareProjectTime }}@endif</span>
                     @if ($latestReportVersion)
-                        <span>Version {{ $latestReportVersion->version_number }} · {{ $latestReportVersion->status === 'sent' ? 'skickad tidigare' : ($currentVersionIsReady ? 'klar att dela' : 'inte aktuell') }}</span>
+                        <span>Version {{ $latestReportVersion->version_number }} ·
+                            @if ($assignmentIsMissingAfterPhoto)
+                                {{ __('assignments.missing_after_inline') }}
+                            @elseif ($latestReportVersion->status === 'sent')
+                                skickad tidigare
+                            @elseif ($currentVersionIsReady)
+                                klar att dela
+                            @else
+                                inte aktuell
+                            @endif
+                        </span>
                     @else
                         <span>Första rapportversionen skapas vid utskick.</span>
                     @endif
@@ -250,7 +262,7 @@
             </div>
 
             @if ($canSendAssignmentEmail)
-                <details class="assignment-email-disclosure" @if ($errors->has('recipient_email') || $errors->has('message') || filled(old('recipient_email')) || filled(old('message'))) open @endif>
+                <details class="assignment-email-disclosure" @if ($errors->has('recipient_email') || $errors->has('message') || $errors->has('confirm_incomplete_pairs') || filled(old('recipient_email')) || filled(old('message'))) open @endif>
                     <summary class="assignment-email-summary">Skicka rapporten <span>till kunden via e-post</span></summary>
                     <form class="assignment-email-form app-form" method="post" action="{{ route('assignments.email', $assignment, false) }}" data-submit-feedback>
                     @csrf
@@ -269,6 +281,16 @@
 
                     <div class="assignment-email-footer">
                         <p>Rapporten innehåller kundens namn, adress, datum och bilderna som finns i uppdraget just nu.</p>
+                        @if ($assignmentIsMissingAfterPhoto)
+                            <div class="incomplete-report-warning" role="alert">
+                                <p>{{ __('assignments.incomplete_warning') }}</p>
+                                <label class="consent-label" for="confirm_incomplete_pairs">
+                                    <input id="confirm_incomplete_pairs" type="checkbox" name="confirm_incomplete_pairs" value="1" @checked(old('confirm_incomplete_pairs')) aria-invalid="{{ $errors->has('confirm_incomplete_pairs') ? 'true' : 'false' }}" @if ($errors->has('confirm_incomplete_pairs')) aria-describedby="confirm_incomplete_pairs-error" @endif>
+                                    <span>{{ __('assignments.incomplete_confirm') }}</span>
+                                </label>
+                                @error('confirm_incomplete_pairs') <span class="field-error" id="confirm_incomplete_pairs-error">{{ $message }}</span> @enderror
+                            </div>
+                        @endif
                         <button class="button button-lime" type="submit" data-loading-text="Skickar rapporten…">Skicka rapporten <span aria-hidden="true">↗</span></button>
                     </div>
                     </form>

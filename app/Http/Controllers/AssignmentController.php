@@ -348,6 +348,7 @@ class AssignmentController extends Controller
                 ? null
                 : $this->emailAttemptViewData($latestEmailAttempt),
             'currentVersionIsReady' => $currentVersionIsReady,
+            'assignmentIsMissingAfterPhoto' => $assignment->isMissingAfterPhoto(),
             'canSendAssignmentEmail' => $user instanceof User
                 && $user->hasVerifiedEmail()
                 && $canManageJobs

@@ -154,6 +154,28 @@ class Assignment extends Model
             ->translatedFormat('j F Y \\k\\l. H:i');
     }
 
+    public function isMissingAfterPhoto(): bool
+    {
+        $this->loadMissing(['places.photoPairs.photos']);
+
+        foreach ($this->places as $place) {
+            foreach ($place->photoPairs as $pair) {
+                $hasBefore = $pair->photos->contains(
+                    fn (AssignmentPhoto $photo): bool => $photo->phase === PhotoPhase::Before,
+                );
+                $hasAfter = $pair->photos->contains(
+                    fn (AssignmentPhoto $photo): bool => $photo->phase === PhotoPhase::After,
+                );
+
+                if ($hasBefore && ! $hasAfter) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @return list<array{before: AssignmentPhoto|null, after: AssignmentPhoto|null, label: string|null, customerComment: string|null, placeName: string}>
      */
