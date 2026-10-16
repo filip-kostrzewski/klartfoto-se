@@ -214,7 +214,7 @@
             <meta property="og:image" content="{{ url('/images/video-miniatura.jpg') }}">
         @endif
         <script type="application/ld+json">{!! json_encode([
-            '@context' => 'https://schema.org',
+            '@@context' => 'https://schema.org',
             '@type' => 'VideoObject',
             'name' => $home['video']['title'],
             'description' => $home['video']['description'],

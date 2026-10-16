@@ -527,6 +527,7 @@ class MarketingSiteTest extends TestCase
 
         $this->assertIsArray($pageSchema);
         $this->assertIsArray($video);
+        $this->assertSame('https://schema.org', $video['@context']);
         $this->assertSame('Ett uppdrag. Från början till rapport.', $video['name']);
         $this->assertSame('Se hur du lägger till ett uppdrag, laddar upp bilder och delar rapporten med kunden.', $video['description']);
         $this->assertSame(url('/images/video-miniatura.jpg'), $video['thumbnailUrl']);
