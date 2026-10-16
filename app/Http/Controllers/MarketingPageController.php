@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 
 class MarketingPageController extends Controller
 {
-    private const INDEXABLE_PAGES = ['home', 'cleaning', 'renovation', 'property', 'report', 'privacy'];
+    private const INDEXABLE_PAGES = ['home', 'cleaning', 'renovation', 'property', 'report', 'privacy', 'terms', 'contact'];
 
     private const GUIDE_INDEX_PATH = '/guider';
 
@@ -43,6 +43,16 @@ class MarketingPageController extends Controller
     public function privacy(): View
     {
         return $this->page('privacy', 'pages.privacy');
+    }
+
+    public function terms(): View
+    {
+        return $this->page('terms', 'pages.terms');
+    }
+
+    public function contact(): View
+    {
+        return $this->page('contact', 'pages.contact');
     }
 
     public function guideIndex(): View
@@ -120,6 +130,10 @@ class MarketingPageController extends Controller
 
         foreach (config('marketing.indexable_locales', []) as $locale) {
             foreach (self::INDEXABLE_PAGES as $page) {
+                if ($page === 'terms' && $locale !== 'sv') {
+                    continue;
+                }
+
                 $urls[] = ['loc' => LocalizedUrl::route($page, $locale)];
             }
         }
@@ -170,7 +184,9 @@ class MarketingPageController extends Controller
             LocalizedUrl::route('home', app()->getLocale()),
         );
         $page = $this->pageData($content, $pageKey, $canonical, $indexable, $schema);
-        $page['alternates'] = LocalizedUrl::alternates($pageKey);
+        $page['alternates'] = $pageKey === 'terms'
+            ? ['sv' => $canonical, 'x-default' => $canonical]
+            : LocalizedUrl::alternates($pageKey);
         $data = [
             'page' => $page,
             'copy' => trans('marketing'),
@@ -331,9 +347,11 @@ class MarketingPageController extends Controller
         $content['route_key'] = $pageKey;
         $content['locale'] = $locale;
         $content['og_locale'] = $localeConfig['og'];
-        $content['controller_name'] = config('marketing.data_controller');
-        $content['contact_email'] = config('marketing.data_contact');
-        $content['policy_contact_email'] = config('klartfoto.contact_email');
+        $content['controller_name'] = config('marketing.data_controller')
+            ?: ($pageKey === 'privacy' ? 'Prodi Digital AB' : null);
+        $content['contact_email'] = config('marketing.data_contact')
+            ?: ($pageKey === 'privacy' ? config('klartfoto.provider_contact_email') : null);
+        $content['provider_contact_email'] = config('klartfoto.provider_contact_email');
         $content['waitlist_open'] = SiteSeo::waitlistIsOpen();
 
         return $content;

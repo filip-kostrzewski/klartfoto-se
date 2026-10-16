@@ -25,9 +25,43 @@ class MarketingSiteTest extends TestCase
             ->assertDontSee('property="og:url" content="https://klartfoto.test/', false);
     }
 
-    public function test_each_of_the_42_localized_pages_has_a_unique_language_title_and_self_canonical(): void
+    public function test_swedish_terms_page_explains_trial_prices_and_manual_invoice_activation(): void
     {
-        $pageKeys = ['home', 'cleaning', 'renovation', 'property', 'report', 'privacy'];
+        config(['klartfoto.provider_contact_email' => 'filip@prodi.se']);
+
+        $html = $this->get('/villkor')->assertOk()->getContent();
+
+        $this->assertStringContainsString('<html lang="sv">', $html);
+        $this->assertStringContainsString('<title>Användarvillkor | Klartfoto</title>', $html);
+        $this->assertStringContainsString('<link rel="canonical" href="https://klartfoto.se/villkor">', $html);
+        $this->assertStringContainsString('Uppdaterad 16 oktober 2026 · Version 1.0.', $html);
+        $this->assertStringContainsString('mailto:filip@prodi.se', $html);
+        $this->assertStringContainsString('30 dagar', $html);
+        $this->assertStringContainsString('290 kr per månad exklusive moms', $html);
+        $this->assertStringContainsString('590 kr per månad exklusive moms', $html);
+        $this->assertStringContainsString('Den är inte en betalning och aktiverar inte planen.', $html);
+        $this->assertStringContainsString('Vi aktiverar den betalda planen när betalningen har registrerats.', $html);
+        $this->assertStringContainsString('Fakturabetalda planer förnyas inte automatiskt', $html);
+        $this->assertStringNotContainsString('hreflang="en"', $html);
+        $this->assertStringContainsString('hreflang="x-default" href="https://klartfoto.se/villkor"', $html);
+    }
+
+    public function test_every_marketing_footer_links_to_the_swedish_terms_page(): void
+    {
+        foreach (config('marketing.locales') as $locale => $_metadata) {
+            $this->get(LocalizedUrl::route('home', $locale, false))
+                ->assertOk()
+                ->assertSee('href="'.LocalizedUrl::route('contact', $locale, false).'"', false)
+                ->assertSee(trans('marketing.nav.contact', [], $locale), false)
+                ->assertSee('href="/villkor" lang="sv"', false)
+                ->assertSee(trans('marketing.nav.terms', [], $locale), false)
+                ->assertDontSee('marketing.nav.terms', false);
+        }
+    }
+
+    public function test_each_of_the_49_localized_pages_has_a_unique_language_title_and_self_canonical(): void
+    {
+        $pageKeys = ['home', 'cleaning', 'renovation', 'property', 'report', 'privacy', 'contact'];
         $titlesByPage = [];
 
         foreach (config('marketing.locales') as $locale => $localeMetadata) {
@@ -77,8 +111,8 @@ class MarketingSiteTest extends TestCase
             }
         }
 
-        foreach ($titlesByPage as $titles) {
-            $this->assertCount(count(config('marketing.locales')), array_unique($titles));
+        foreach ($titlesByPage as $pageKey => $titles) {
+            $this->assertCount(count(config('marketing.locales')), array_unique($titles), "Localized titles must be unique for {$pageKey}.");
         }
     }
 
@@ -119,6 +153,17 @@ class MarketingSiteTest extends TestCase
 
         foreach ($expectedPaths as $locale => $path) {
             $this->assertSame($path, LocalizedUrl::route('signup', $locale, false));
+            $this->assertSame($path, LocalizedUrl::route('contact', $locale, false));
+            $this->assertSame(
+                $path.'/'.config("marketing.contact_message_slugs.{$locale}"),
+                LocalizedUrl::route('contact.message', $locale, false),
+            );
+
+            $this->get($path)->assertOk()
+                ->assertSee('action="'.LocalizedUrl::route('contact.message', $locale, false).'"', false)
+                ->assertSee('href="'.LocalizedUrl::route('privacy', $locale, false).'"', false)
+                ->assertSee(trans('marketing.contact.submit', [], $locale), false)
+                ->assertDontSee('marketing.contact.', false);
         }
 
         foreach ([
@@ -131,7 +176,7 @@ class MarketingSiteTest extends TestCase
         $this->get('/lista-testowa')->assertNotFound();
     }
 
-    public function test_homepage_cta_links_to_signup_and_the_sample_report_with_optional_contact(): void
+    public function test_homepage_cta_links_to_contact_and_the_sample_report(): void
     {
         config([
             'marketing.waitlist_enabled' => false,
@@ -139,10 +184,11 @@ class MarketingSiteTest extends TestCase
         ]);
 
         $this->get('/')->assertOk()
-            ->assertSee('mailto:hello@example.com', false)
+            ->assertSee('href="/kontakt"', false)
             ->assertSee(__('marketing.home.signup.closed_contact', [], 'sv'))
             ->assertSee('href="/register"', false)
             ->assertSee('href="/exempel-rapport"', false)
+            ->assertDontSee('mailto:hello@example.com', false)
             ->assertDontSee('<form class="signup-form"', false);
     }
 
@@ -209,14 +255,17 @@ class MarketingSiteTest extends TestCase
             ->assertSee('images/cleaning-detail.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('AI-genererat demofoto av en person som torkar av en köksbänk', false);
 
-        config(['klartfoto.contact_email' => null]);
+        config(['klartfoto.provider_contact_email' => null]);
         $this->get('/integritetspolicy')
             ->assertOk()
             ->assertSee('Prodi Digital AB', false)
             ->assertSee('foton av kundens hem', false)
+            ->assertSee('eventuellt företagsnamn', false)
+            ->assertSee('vår e-posttjänst', false)
+            ->assertSee('Formuläret sparar ingen kopia i Klartfotos databas', false)
             ->assertDontSee('mailto:', false);
 
-        config(['klartfoto.contact_email' => 'privacy@klartfoto.se']);
+        config(['klartfoto.provider_contact_email' => 'privacy@klartfoto.se']);
         $this->get('/integritetspolicy')
             ->assertOk()
             ->assertSee('mailto:privacy@klartfoto.se', false);
@@ -226,6 +275,21 @@ class MarketingSiteTest extends TestCase
             ->assertOk()
             ->assertDontSee('id="priser"', false)
             ->assertDontSee('290 kr/mån', false);
+    }
+
+    public function test_polish_privacy_page_uses_verified_provider_contact_when_optional_marketing_fields_are_empty(): void
+    {
+        config([
+            'marketing.data_controller' => null,
+            'marketing.data_contact' => null,
+            'klartfoto.provider_contact_email' => 'filip@prodi.se',
+        ]);
+
+        $this->get('/pl/polityka-prywatnosci')->assertOk()
+            ->assertSee('Administratorem danych jest Prodi Digital AB', false)
+            ->assertSee('mailto:filip@prodi.se', false)
+            ->assertSee('Wiadomości z formularza kontaktowego', false)
+            ->assertDontSee('Na tej stronie nie podano danych kontaktowych', false);
     }
 
     public function test_homepage_slider_description_is_screen_reader_only(): void
@@ -305,10 +369,13 @@ class MarketingSiteTest extends TestCase
         $response = $this->get('/sitemap.xml')->assertOk()->assertHeader('content-type', 'application/xml; charset=UTF-8');
         $xml = $response->getContent();
 
-        $this->assertSame(14, substr_count($xml, '<url>'));
+        $this->assertSame(17, substr_count($xml, '<url>'));
         $this->assertStringContainsString('<loc>https://klartfoto.example/</loc>', $xml);
         $this->assertStringContainsString('<loc>https://klartfoto.example/exempel-rapport</loc>', $xml);
         $this->assertStringContainsString('<loc>https://klartfoto.example/integritetspolicy</loc>', $xml);
+        $this->assertStringContainsString('<loc>https://klartfoto.example/villkor</loc>', $xml);
+        $this->assertStringContainsString('<loc>https://klartfoto.example/kontakt</loc>', $xml);
+        $this->assertStringContainsString('<loc>https://klartfoto.example/pl/kontakt</loc>', $xml);
         $this->assertSame(1, substr_count($xml, '<loc>https://klartfoto.example/guider</loc>'));
         $this->assertSame(1, substr_count($xml, '<loc>https://klartfoto.example/guider/fotodokumentation-stadning</loc>'));
         $this->assertStringContainsString('https://klartfoto.example/for-stadforetag', $xml);

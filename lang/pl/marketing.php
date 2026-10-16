@@ -7,7 +7,7 @@ return [
         'signup' => 'Skontaktuj się', 'start' => 'Zacznij za darmo', 'pricing' => 'Cennik',
         'brand_home' => ':brand — strona główna', 'footer_slogan' => 'Czytelne zdjęcia. Prostsze przekazanie pracy.',
         'footer_cta' => 'Zacznij za darmo', 'footer_tagline' => 'Raporty zdjęciowe dla firm usługowych.',
-        'privacy' => 'Prywatność', 'language' => 'Język', 'choose_language' => 'Wybierz język',
+        'contact' => 'Kontakt', 'privacy' => 'Prywatność', 'terms' => 'Warunki (po szwedzku)', 'language' => 'Język', 'choose_language' => 'Wybierz język',
         'login' => 'Zaloguj się', 'wisegent' => 'Narzędzia dla firm od Wisegent',
     ],
     'home' => [
@@ -189,6 +189,28 @@ return [
         'footer_brand' => ':brand · przykład demonstracyjny', 'footer_desc' => 'Raport ze zdjęciami przed i po',
         'after_note' => 'Zdjęcia pokazują tę samą kuchnię wygenerowaną przez AI przed i po pracy. Dane są poglądowe.',
     ],
+    'contact' => [
+        'title' => 'Skontaktuj się z nami | :brand', 'description' => 'Wyślij pytanie o Klartfoto do Prodi Digital AB.',
+        'breadcrumb' => 'Kontakt', 'eyebrow' => 'KONTAKT', 'h1' => 'Skontaktuj się z nami',
+        'intro' => 'Masz pytanie dotyczące Klartfoto? Wyślij wiadomość, a odpowiemy e-mailem.',
+        'form_heading' => 'Wyślij wiadomość', 'name_label' => 'Imię i nazwisko', 'email_label' => 'Adres e-mail',
+        'company_label' => 'Firma (opcjonalnie)', 'message_label' => 'Wiadomość', 'submit' => 'Wyślij wiadomość', 'sending' => 'Wysyłanie…',
+        'privacy_note' => 'Wykorzystamy te dane, aby obsłużyć Twoje zapytanie i na nie odpowiedzieć.', 'privacy_link' => 'Przeczytaj informacje o prywatności',
+        'status_success' => 'Dziękujemy! Wiadomość została wysłana.',
+        'status_failed' => 'Nie udało się wysłać wiadomości. Spróbuj ponownie za chwilę lub napisz do nas bezpośrednio:',
+        'status_direct_email' => 'Możesz też napisać na adres', 'direct_email_label' => 'Wolisz e-mail?',
+        'error_heading' => 'Sprawdź dane w formularzu:', 'honeypot_label' => 'Pozostaw to pole puste',
+        'validation' => [
+            'attributes' => ['name' => 'imię i nazwisko', 'email' => 'adres e-mail', 'company' => 'nazwa firmy', 'message' => 'wiadomość', 'website' => 'strona internetowa'],
+            'messages' => [
+                'name.required' => 'Podaj imię i nazwisko.', 'name.string' => 'Wpisz imię i nazwisko jako tekst.', 'name.max' => 'Imię i nazwisko może mieć maksymalnie 120 znaków.',
+                'email.required' => 'Podaj adres e-mail.', 'email.string' => 'Wpisz poprawny adres e-mail.', 'email.email' => 'Wpisz poprawny adres e-mail.', 'email.max' => 'Adres e-mail może mieć maksymalnie 254 znaki.',
+                'company.string' => 'Wpisz nazwę firmy jako tekst.', 'company.max' => 'Nazwa firmy może mieć maksymalnie 160 znaków.',
+                'message.required' => 'Wpisz wiadomość.', 'message.string' => 'Wpisz wiadomość jako tekst.', 'message.max' => 'Wiadomość może mieć maksymalnie 5000 znaków.',
+                'website.prohibited' => 'Sprawdź formularz i spróbuj ponownie.',
+            ],
+        ],
+    ],
     'cookies' => [
         'region' => 'Ciasteczka',
         'banner' => 'Używamy ciasteczek, aby mierzyć, jak korzystasz ze strony. Pomiar zaczyna się dopiero, gdy wybierzesz Akceptuj.',
@@ -204,9 +226,13 @@ return [
         'unconfigured_contact' => 'Na tej stronie nie podano danych kontaktowych administratora.',
         'sections' => [
             ['title' => 'Administrator danych i kontakt', 'paragraphs' => ['Administratorem danych jest :controller. W sprawach danych napisz na adres :email.'], 'configured' => true],
-            ['title' => 'Jakie dane zbieramy i w jakim celu', 'paragraphs' => ['W zgłoszeniu podajesz adres e-mail i wybierasz obszar pracy. Zapisujemy także czas udzielenia zgody i wysłania formularza.', 'Dane wykorzystujemy do obsługi zgłoszenia i kontaktu w sprawie Klartfoto oraz raportowania wykonanych usług. Podanie adresu jest dobrowolne; bez niego nie możemy odpowiedzieć na zgłoszenie. Podstawą przetwarzania jest Twoja zgoda, którą możesz wycofać w dowolnym momencie.']],
-            ['title' => 'Kto może przetwarzać dane', 'paragraphs' => ['Dostęp do danych mają osoby obsługujące zapytania. Dostawca hostingu może je przetwarzać w zakresie potrzebnym do przechowywania i zabezpieczenia.', 'Nie sprzedajemy ani nie publikujemy otrzymanych zgłoszeń. Formularz nie prosi o nazwisko, telefon, zdjęcia z obiektów ani dane Twoich klientów.']],
+            ['title' => 'Jakie dane zbieramy i w jakim celu', 'paragraphs' => ['Jeśli formularz zgłoszenia zainteresowania jest dostępny i z niego skorzystasz, podasz adres e-mail i wybierzesz obszar pracy. Zapisujemy także czas udzielenia zgody i wysłania formularza.', 'Dane wykorzystujemy do obsługi zgłoszenia i kontaktu w sprawie Klartfoto oraz raportowania wykonanych usług. Podanie adresu jest dobrowolne; bez niego nie możemy odpowiedzieć. Podstawą przetwarzania jest Twoja zgoda, którą możesz wycofać w dowolnym momencie.']],
+            ['title' => 'Kto może przetwarzać dane', 'paragraphs' => ['Dostęp do danych mają osoby obsługujące zapytania. Dostawca hostingu może je przetwarzać w zakresie potrzebnym do przechowywania i zabezpieczenia.', 'Nie sprzedajemy ani nie publikujemy otrzymanych zgłoszeń. Formularz zgłoszenia zainteresowania nie prosi o imię i nazwisko, numer telefonu, zdjęcia z obiektów ani dane Twoich klientów.']],
             ['title' => 'Jak długo przechowujemy zgłoszenie', 'paragraphs' => ['Usuwamy zgłoszenie nie później niż 12 miesięcy od jego wysłania. Możesz poprosić o wcześniejsze usunięcie. Dane po upływie terminu są usuwane podczas codziennego czyszczenia.']],
+            ['title' => 'Wiadomości z formularza kontaktowego', 'paragraphs' => [
+                'Jeśli wyślesz wiadomość przez formularz kontaktowy, przetwarzamy Twoje imię i nazwisko, adres e-mail, opcjonalną nazwę firmy oraz treść wiadomości, aby obsłużyć zapytanie i odpowiedzieć.',
+                'Wiadomość jest wysyłana przez usługę poczty elektronicznej do skrzynki kontaktowej Prodi Digital AB i jest tam obsługiwana. Formularz nie zapisuje kopii w bazie danych aplikacji Klartfoto. Korespondencję przechowujemy tak długo, jak jest potrzebna do obsługi zapytania; możesz poprosić o jej usunięcie.',
+            ]],
             ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
                 'Na stronach publicznych możemy używać Google Analytics 4, aby widzieć, jak witryna jest używana, na przykład które strony są otwierane. Pomiar zaczyna się dopiero po wyborze Akceptuj. Odrzuć pozostawia go wyłączonym.',
                 'Wybór jest zapisywany na 180 dni w ciasteczku klartfoto_cookie_consent. Ciasteczko pamięta tylko, czy pomiar został przyjęty, czy odrzucony. Wybór zmienisz przyciskiem Ustawienia ciasteczek w stopce.',

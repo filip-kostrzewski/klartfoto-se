@@ -8,7 +8,7 @@ return [
         'start' => 'Kom igång gratis', 'pricing' => 'Priser',
         'brand_home' => ':brand – startsida', 'footer_slogan' => 'Tydliga foton. En enklare överlämning.',
         'footer_cta' => 'Kom igång gratis', 'footer_tagline' => 'Fotodokumentation för städföretag.',
-        'privacy' => 'Integritet', 'language' => 'Språk', 'choose_language' => 'Välj språk',
+        'contact' => 'Kontakt', 'privacy' => 'Integritet', 'terms' => 'Villkor', 'language' => 'Språk', 'choose_language' => 'Välj språk',
         'login' => 'Logga in', 'wisegent' => 'Företagsverktyg från Wisegent',
     ],
     'home' => [
@@ -213,6 +213,32 @@ return [
         'footer_brand' => ':brand · demonstrationsexempel', 'footer_desc' => 'Rapport med före- och efterbilder',
         'after_note' => 'Bilderna visar samma AI-genererade kök före och efter. Uppgifterna är ett exempel.',
     ],
+    'contact' => [
+        'title' => 'Kontakta oss | :brand',
+        'description' => 'Skicka en fråga om Klartfoto till Prodi Digital AB.',
+        'breadcrumb' => 'Kontakt', 'eyebrow' => 'KONTAKT', 'h1' => 'Kontakta oss',
+        'intro' => 'Har du en fråga om Klartfoto? Skicka ett meddelande så svarar vi via e-post.',
+        'form_heading' => 'Skicka ett meddelande',
+        'name_label' => 'Namn', 'email_label' => 'E-postadress', 'company_label' => 'Företag (valfritt)',
+        'message_label' => 'Meddelande', 'submit' => 'Skicka meddelande', 'sending' => 'Skickar…',
+        'privacy_note' => 'Vi använder uppgifterna för att hantera din fråga och svara på den.',
+        'privacy_link' => 'Läs integritetsinformationen',
+        'status_success' => 'Tack! Ditt meddelande har skickats.',
+        'status_failed' => 'Meddelandet kunde inte skickas. Försök igen om en stund eller mejla oss direkt:',
+        'status_direct_email' => 'Du kan också mejla oss på', 'direct_email_label' => 'Vill du hellre mejla?',
+        'error_heading' => 'Kontrollera uppgifterna i formuläret:', 'honeypot_label' => 'Lämna det här fältet tomt',
+        'validation' => [
+            'attributes' => ['name' => 'namn', 'email' => 'e-postadress', 'company' => 'företagsnamn', 'message' => 'meddelande', 'website' => 'webbplats'],
+            'messages' => [
+                'name.required' => 'Ange ditt namn.', 'name.string' => 'Skriv namnet som text.', 'name.max' => 'Namnet får vara högst 120 tecken.',
+                'email.required' => 'Ange din e-postadress.', 'email.string' => 'Skriv en giltig e-postadress.',
+                'email.email' => 'Skriv en giltig e-postadress.', 'email.max' => 'E-postadressen får vara högst 254 tecken.',
+                'company.string' => 'Skriv företagsnamnet som text.', 'company.max' => 'Företagsnamnet får vara högst 160 tecken.',
+                'message.required' => 'Skriv ett meddelande.', 'message.string' => 'Skriv meddelandet som text.', 'message.max' => 'Meddelandet får vara högst 5 000 tecken.',
+                'website.prohibited' => 'Kontrollera formuläret och försök igen.',
+            ],
+        ],
+    ],
     'cookies' => [
         'region' => 'Cookies',
         'banner' => 'Vi använder cookies för att mäta hur webbplatsen används. Mätningen startar bara om du väljer Godkänn.',
@@ -238,7 +264,7 @@ return [
                 'När du skapar ett konto sparar vi företagsnamn, e-postadress och ett lösenord. Lösenordet sparas bara som en hash, inte i klartext. Om du loggar in med Google sparar vi även ett Google-id och den e-postadress som Google lämnar ut.',
                 'För varje uppdrag sparar vi kundens namn, adress och datum.',
                 'Du kan ladda upp foton av kundens hem, före och efter arbetet. Bilderna hör till uppdraget och visas i den rapportlänk du delar med kunden.',
-                'Om du lämnar en intresseanmälan via kontaktformuläret sparar vi e-postadress, valt arbetsområde och tidpunkten för samtycket.',
+                'Om intresseanmälan är tillgänglig och du skickar den behandlar vi e-postadress, valt arbetsområde och tidpunkten för samtycket.',
             ]],
             ['title' => 'Varför vi behandlar uppgifterna', 'paragraphs' => [
                 'Kontouppgifter, uppdrag och foton behövs för att tillhandahålla tjänsten: att samla bilder och dela en rapport med kunden. Den behandlingen görs för att fullgöra avtalet med ditt företag.',
@@ -252,6 +278,10 @@ return [
                 'Kontot, uppdragen och fotona sparas så länge kontot är aktivt. Om du tar bort ett uppdrag försvinner tillhörande bilder. När kontot avslutas tar vi bort kontouppgifter, uppdrag och foton inom 30 dagar, om vi inte måste spara något enligt lag.',
                 'En intresseanmälan tas bort senast 12 månader efter att den skickats. Du kan be oss ta bort den tidigare.',
             ]],
+            ['title' => 'Meddelanden via kontaktformuläret', 'paragraphs' => [
+                'Om du skickar ett meddelande via kontaktformuläret behandlar vi ditt namn, din e-postadress, eventuellt företagsnamn och meddelandet för att hantera och svara på din fråga.',
+                'Meddelandet skickas via vår e-posttjänst till Prodi Digital AB:s kontaktadress och hanteras i e-postlådan. Formuläret sparar ingen kopia i Klartfotos databas. Korrespondensen hanteras så länge den behövs för ärendet; du kan be oss radera den.',
+            ]],
             ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
                 'På de offentliga sidorna kan vi använda Google Analytics 4 för att se hur webbplatsen används, till exempel vilka sidor som öppnas. Ingen mätning startar förrän du väljer Godkänn. Väljer du Neka förblir mätningen avstängd.',
                 'Valet sparas i 180 dagar i cookien klartfoto_cookie_consent. Den behövs för att komma ihåg valet och innehåller bara om du godkänt eller nekat. Du ändrar valet via Cookie-inställningar i sidfoten.',
@@ -261,6 +291,48 @@ return [
             ['title' => 'Dina rättigheter', 'paragraphs' => [
                 'Du kan begära tillgång till, rättelse av eller radering av dina uppgifter, och du kan invända mot eller begära begränsning av behandlingen. Du kan också klaga hos Integritetsskyddsmyndigheten (IMY).',
                 'Skriv till adressen ovan eller till :policy_email. Vi kan behöva bekräfta att förfrågan kommer från kontoinnehavaren.',
+            ]],
+        ],
+    ],
+    'terms' => [
+        'title' => 'Användarvillkor | :brand',
+        'description' => 'Villkor för användning, kostnadsfri provperiod och betalplan med faktura i :brand.',
+        'breadcrumb' => 'Användarvillkor', 'eyebrow' => 'AVTAL', 'h1' => 'Användarvillkor',
+        'intro' => 'Här beskriver vi villkoren för företag som provar eller använder Klartfoto.',
+        'updated' => 'Uppdaterad 16 oktober 2026 · Version 1.0.',
+        'sections' => [
+            ['title' => '1. Tjänsten och avtalet', 'paragraphs' => [
+                'Klartfoto är en webbtjänst där företag samlar uppgifter och foton från utförda arbeten i rapporter som kan delas med kunden via en länk.',
+                'Tjänsten tillhandahålls av Prodi Digital AB. Kontaktuppgifter finns ovan.',
+                'Villkoren gäller mellan Prodi Digital AB och det företag som skapar och använder kontot. Personen som skapar kontot ska ha rätt att företräda företaget.',
+            ]],
+            ['title' => '2. Kostnadsfri provperiod', 'paragraphs' => [
+                'Företaget får prova Klartfoto kostnadsfritt i 30 dagar. Betalkort behövs inte. Provperiodens slutdatum visas i kontot.',
+                'När provperioden löper ut startar ingen betald plan automatiskt och ingen faktura eller kortdebitering görs automatiskt. Om företaget inte väljer och betalar en plan kan befintliga rapporter visas i skrivskyddat läge.',
+            ]],
+            ['title' => '3. Planer och priser', 'paragraphs' => [
+                'Start kostar 290 kr per månad exklusive moms och omfattar en användare. Team kostar 590 kr per månad exklusive moms och omfattar upp till tio användare samt företagets egen logotyp i rapporten. Båda planerna omfattar obegränsat antal rapporter.',
+                'Moms enligt gällande regler tillkommer. Fakturan visar beloppet att betala och sista betalningsdag.',
+            ]],
+            ['title' => '4. Faktura, betalning och aktivering', 'paragraphs' => [
+                'Kontoägaren väljer plan och skickar en fakturaförfrågan från abonnemangssidan. Förfrågan registrerar önskad plan och fakturauppgifter. Den är inte en betalning och aktiverar inte planen.',
+                'Vi behandlar förfrågan och skickar fakturan via Fortnox till den angivna fakturaadressen. Sista betalningsdag framgår av fakturan. När du betalar fakturan godtar du den valda planen och dessa villkor.',
+                'Vi aktiverar den betalda planen när betalningen har registrerats. Planens slutdatum visas på abonnemangssidan.',
+            ]],
+            ['title' => '5. Bindningstid och förnyelse', 'paragraphs' => [
+                'Planerna har ingen bindningstid. Fakturabetalda planer förnyas inte automatiskt och ingen automatisk debitering görs. Kontoägaren behöver begära en ny faktura om företaget vill fortsätta efter den betalda perioden.',
+                'Om ingen ny period betalas upphör den betalda åtkomsten vid det slutdatum som visas i kontot. Befintliga rapporter kan då visas i skrivskyddat läge.',
+            ]],
+            ['title' => '6. Konto, innehåll och personuppgifter', 'paragraphs' => [
+                'Företaget ansvarar för att hålla sina kontouppgifter säkra, ge åtkomst endast till behöriga användare och följa användargränsen för vald plan. Företaget ansvarar också för att ha rätt att använda och dela namn, adresser, foton och annat innehåll som läggs in i tjänsten. En rapportlänk kan öppnas av den som får länken.',
+                'Integritetspolicyn beskriver Prodi Digital AB:s hantering av kontouppgifter. För personuppgifter om företagets kunder ansvarar företaget för sin användning och information till de registrerade. Om Prodi Digital AB behandlar sådana uppgifter för företagets räkning krävs ett separat personuppgiftsbiträdesavtal. Dessa villkor och integritetspolicyn är inte ett sådant avtal. Kontakta oss innan du använder tjänsten för sådan behandling.',
+            ]],
+            ['title' => '7. Avslut, support och kontakt', 'paragraphs' => [
+                'Eftersom planen inte förnyas automatiskt kan företaget avsluta den genom att inte begära och betala en ny period. För att avsluta kontot kontaktar du oss via e-postadressen ovan. När kontot avslutas tar vi bort kontouppgifter, uppdrag och foton inom 30 dagar, om vi inte måste spara något enligt lag. Läs mer i integritetspolicyn.',
+                'Om tjänsten inte fungerar som avsett kan du anmäla felet via e-postadressen ovan. Vi undersöker felanmälan och arbetar för att åtgärda felet. Ingen särskild svarstid eller drifttid garanteras.',
+            ]],
+            ['title' => '8. Tillämplig lag', 'paragraphs' => [
+                'Svensk lag gäller för dessa villkor. Tvister som inte kan lösas genom kontakt med oss prövas av svensk allmän domstol.',
             ]],
         ],
     ],

@@ -20,11 +20,11 @@
                 @foreach ($section['paragraphs'] as $paragraph)
                     @php
                         if (str_contains($paragraph, ':policy_email')) {
-                            if (! filled($page['policy_contact_email'] ?? null)) {
+                            if (! filled($page['provider_contact_email'] ?? null)) {
                                 $paragraph = null;
                             } else {
-                                $escapedPolicyEmail = e($page['policy_contact_email']);
-                                $paragraph = str_replace(':policy_email', '<a href="mailto:'.$escapedPolicyEmail.'">'.$escapedPolicyEmail.'</a>', $paragraph);
+                                $escapedProviderEmail = e($page['provider_contact_email']);
+                                $paragraph = str_replace(':policy_email', '<a href="mailto:'.$escapedProviderEmail.'">'.$escapedProviderEmail.'</a>', $paragraph);
                             }
                         } elseif (str_contains($paragraph, ':controller') && (! $page['controller_name'] || ! $page['contact_email'])) {
                             $paragraph = __('marketing.privacy.unconfigured_contact');

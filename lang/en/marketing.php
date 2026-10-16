@@ -7,7 +7,7 @@ return [
         'signup' => 'Contact us', 'start' => 'Get started free', 'pricing' => 'Prices',
         'brand_home' => ':brand — home', 'footer_slogan' => 'Clear photos. A simpler handover.',
         'footer_cta' => 'Get started free', 'footer_tagline' => 'Photo reports for service businesses.',
-        'privacy' => 'Privacy', 'language' => 'Language', 'choose_language' => 'Choose a language',
+        'contact' => 'Contact', 'privacy' => 'Privacy', 'terms' => 'Terms (Swedish)', 'language' => 'Language', 'choose_language' => 'Choose a language',
         'login' => 'Log in', 'wisegent' => 'Business tools from Wisegent',
     ],
     'home' => [
@@ -209,6 +209,28 @@ return [
         'footer_brand' => ':brand · demonstration example', 'footer_desc' => 'Report with before-and-after photos',
         'after_note' => 'The photos show the same AI-generated kitchen before and after. The details are illustrative.',
     ],
+    'contact' => [
+        'title' => 'Contact us | :brand', 'description' => 'Send a question about Klartfoto to Prodi Digital AB.',
+        'breadcrumb' => 'Contact', 'eyebrow' => 'CONTACT', 'h1' => 'Contact us',
+        'intro' => 'Have a question about Klartfoto? Send us a message and we will reply by email.',
+        'form_heading' => 'Send a message', 'name_label' => 'Name', 'email_label' => 'Email address',
+        'company_label' => 'Company (optional)', 'message_label' => 'Message', 'submit' => 'Send message', 'sending' => 'Sending…',
+        'privacy_note' => 'We use these details to handle and reply to your enquiry.', 'privacy_link' => 'Read our privacy information',
+        'status_success' => 'Thanks! Your message has been sent.',
+        'status_failed' => 'Your message could not be sent. Please try again shortly or email us directly:',
+        'status_direct_email' => 'You can also email us at', 'direct_email_label' => 'Prefer email?',
+        'error_heading' => 'Please check the information in the form:', 'honeypot_label' => 'Leave this field blank',
+        'validation' => [
+            'attributes' => ['name' => 'name', 'email' => 'email address', 'company' => 'company name', 'message' => 'message', 'website' => 'website'],
+            'messages' => [
+                'name.required' => 'Enter your name.', 'name.string' => 'Enter your name as text.', 'name.max' => 'Your name may not exceed 120 characters.',
+                'email.required' => 'Enter your email address.', 'email.string' => 'Enter a valid email address.', 'email.email' => 'Enter a valid email address.', 'email.max' => 'The email address may not exceed 254 characters.',
+                'company.string' => 'Enter the company name as text.', 'company.max' => 'The company name may not exceed 160 characters.',
+                'message.required' => 'Enter a message.', 'message.string' => 'Enter the message as text.', 'message.max' => 'The message may not exceed 5,000 characters.',
+                'website.prohibited' => 'Please check the form and try again.',
+            ],
+        ],
+    ],
     'cookies' => [
         'region' => 'Cookies',
         'banner' => 'We use cookies to measure how the website is used. Measurement starts only if you choose Accept.',
@@ -225,9 +247,13 @@ return [
         'unconfigured_contact' => 'Contact details for the data controller are not provided on this page.',
         'sections' => [
             ['title' => 'Data controller and contact', 'paragraphs' => ['Your information is handled by :controller. Contact us at :email with questions about your information.'], 'configured' => true],
-            ['title' => 'What we collect and why', 'paragraphs' => ['When you send an enquiry, you provide an email address and choose a work area. We also store the time of your consent and submission.', 'We use the information to handle your enquiry and contact you about Klartfoto and reports for completed work. Providing an address is optional; without it, we cannot reply to your enquiry. Processing is based on your consent, which you may withdraw at any time.']],
-            ['title' => 'Who can process the information', 'paragraphs' => ['People handling enquiries can access the information. Our hosting provider may process it as needed to store and protect the information.', 'We do not sell or publish enquiries. The form does not ask for your name, phone number, site photos or information about your customers.']],
+            ['title' => 'What we collect and why', 'paragraphs' => ['If an interest form is available and you submit it, you provide an email address and choose a work area. We also store the time of your consent and submission.', 'We use those details to handle the interest enquiry and contact you about Klartfoto and reports for completed work. Providing an address is optional; without it, we cannot reply. Processing is based on your consent, which you may withdraw at any time.']],
+            ['title' => 'Who can process the information', 'paragraphs' => ['People handling enquiries can access the information. Our hosting provider may process it as needed to store and protect the information.', 'We do not sell or publish enquiries. The interest form does not ask for your name, phone number, site photos or information about your customers.']],
             ['title' => 'How long we keep a registration', 'paragraphs' => ['We remove an enquiry no later than 12 months after submission. You can request earlier deletion. Information past the limit is removed during the daily cleanup.']],
+            ['title' => 'Contact messages', 'paragraphs' => [
+                'If you send a message through the contact form, we process your name, email address, optional company name and message so we can handle and reply to your enquiry.',
+                'The message is sent through our email service to Prodi Digital AB’s contact mailbox and handled there. The form does not store a copy in Klartfoto’s application database. We handle the correspondence as long as needed for the enquiry; you can ask us to delete it.',
+            ]],
             ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
                 'On the public pages we may use Google Analytics 4 to see how the website is used, for example which pages are opened. Measurement starts only if you choose Accept. Reject leaves it off.',
                 'The choice is stored for 180 days in the cookie klartfoto_cookie_consent. That cookie only remembers whether you accepted or refused. You can change it from Cookie settings in the footer.',

@@ -87,4 +87,13 @@ return [
             'signup' => 'yhteys',
         ],
     ],
+    'contact_message_slugs' => [
+        'sv' => 'meddelande',
+        'en' => 'message',
+        'pl' => 'wiadomosc',
+        'de' => 'nachricht',
+        'nb' => 'melding',
+        'da' => 'besked',
+        'fi' => 'viesti',
+    ],
 ];

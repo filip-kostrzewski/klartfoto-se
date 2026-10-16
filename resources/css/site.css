@@ -1875,8 +1875,13 @@ html.cookie-choice-saved .cookie-banner {
     padding-bottom: 58px;
 }
 
+.legal-hero .eyebrow {
+    color: var(--lime);
+}
+
 .legal-hero h1 {
     max-width: 800px;
+    font-weight: 560;
 }
 
 .legal-hero-inner > p:not(.eyebrow) {
@@ -1905,7 +1910,7 @@ html.cookie-choice-saved .cookie-banner {
 .legal-content h2 {
     margin: 0 0 9px;
     font-size: 19px;
-    font-weight: 710;
+    font-weight: 560;
     letter-spacing: -.04em;
 }
 
@@ -2733,6 +2738,24 @@ html.cookie-choice-saved .cookie-banner {
 
     .printable-photos img {
         height: 75mm;
+    }
+
+    .legal-hero,
+    .legal-content {
+        background: #fff !important;
+        color: #111 !important;
+    }
+
+    .legal-hero h1,
+    .legal-hero .eyebrow,
+    .legal-hero .breadcrumbs,
+    .legal-hero .breadcrumbs a,
+    .legal-hero-inner > p:not(.eyebrow) {
+        color: #111 !important;
+    }
+
+    .legal-hero .eyebrow-mark {
+        background: #111 !important;
     }
 }
 
@@ -4743,6 +4766,8 @@ html {
 }
 
 .signup-form input[type="email"],
+.signup-form input[type="text"],
+.signup-form textarea,
 .signup-form select {
     width: 100%;
     min-height: 50px;
@@ -4756,9 +4781,49 @@ html {
 }
 
 .signup-form input:focus-visible,
+.signup-form textarea:focus-visible,
 .signup-form select:focus-visible {
     outline: 3px solid var(--lime);
     outline-offset: 2px;
+}
+
+.contact-form-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.contact-form-wrap > h2 {
+    margin: 0 0 24px;
+    color: var(--white);
+    font-size: 24px;
+    font-weight: 560;
+    line-height: 1.2;
+}
+
+.contact-form textarea {
+    min-height: 170px;
+    padding-block: 12px;
+    resize: vertical;
+}
+
+.contact-honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.contact-direct-link {
+    margin: 20px auto 0;
+    color: #536057;
+    text-align: center;
+}
+
+.contact-direct-link a {
+    color: #3f5422;
+    font-weight: 650;
 }
 
 .field-hint {

@@ -7,7 +7,7 @@ return [
         'signup' => 'Kontakt os', 'start' => 'Kom i gang gratis', 'pricing' => 'Priser',
         'brand_home' => ':brand — forside', 'footer_slogan' => 'Tydelige billeder. En enklere overlevering.',
         'footer_cta' => 'Kom i gang gratis', 'footer_tagline' => 'Fotodokumentation til servicevirksomheder.',
-        'privacy' => 'Privatliv', 'language' => 'Sprog', 'choose_language' => 'Vælg sprog',
+        'contact' => 'Kontakt', 'privacy' => 'Privatliv', 'terms' => 'Vilkår (på svensk)', 'language' => 'Sprog', 'choose_language' => 'Vælg sprog',
         'login' => 'Log ind', 'wisegent' => 'Virksomhedsværktøjer fra Wisegent',
     ],
     'home' => [
@@ -189,6 +189,28 @@ return [
         'footer_brand' => ':brand · demonstrationseksempel', 'footer_desc' => 'Rapport med før- og efterbilleder',
         'after_note' => 'Billederne viser det samme AI-genererede køkken før og efter. Oplysningerne er illustrative.',
     ],
+    'contact' => [
+        'title' => 'Kontakt os | :brand', 'description' => 'Send et spørgsmål om Klartfoto til Prodi Digital AB.',
+        'breadcrumb' => 'Kontakt', 'eyebrow' => 'KONTAKT', 'h1' => 'Kontakt os',
+        'intro' => 'Har du et spørgsmål om Klartfoto? Send os en besked, så svarer vi via e-mail.',
+        'form_heading' => 'Send en besked', 'name_label' => 'Navn', 'email_label' => 'E-mailadresse',
+        'company_label' => 'Virksomhed (valgfrit)', 'message_label' => 'Besked', 'submit' => 'Send besked', 'sending' => 'Sender…',
+        'privacy_note' => 'Vi bruger oplysningerne til at behandle og svare på din henvendelse.', 'privacy_link' => 'Læs privatlivsinformationen',
+        'status_success' => 'Tak! Din besked er sendt.',
+        'status_failed' => 'Beskeden kunne ikke sendes. Prøv igen om lidt, eller skriv direkte til os:',
+        'status_direct_email' => 'Du kan også skrive til', 'direct_email_label' => 'Foretrækker du e-mail?',
+        'error_heading' => 'Kontrollér oplysningerne i formularen:', 'honeypot_label' => 'Lad dette felt stå tomt',
+        'validation' => [
+            'attributes' => ['name' => 'navn', 'email' => 'e-mailadresse', 'company' => 'virksomhedsnavn', 'message' => 'besked', 'website' => 'websted'],
+            'messages' => [
+                'name.required' => 'Skriv dit navn.', 'name.string' => 'Skriv dit navn som tekst.', 'name.max' => 'Navnet må højst være 120 tegn.',
+                'email.required' => 'Skriv din e-mailadresse.', 'email.string' => 'Skriv en gyldig e-mailadresse.', 'email.email' => 'Skriv en gyldig e-mailadresse.', 'email.max' => 'E-mailadressen må højst være 254 tegn.',
+                'company.string' => 'Skriv virksomhedsnavnet som tekst.', 'company.max' => 'Virksomhedsnavnet må højst være 160 tegn.',
+                'message.required' => 'Skriv en besked.', 'message.string' => 'Skriv beskeden som tekst.', 'message.max' => 'Beskeden må højst være 5.000 tegn.',
+                'website.prohibited' => 'Kontrollér formularen, og prøv igen.',
+            ],
+        ],
+    ],
     'cookies' => [
         'region' => 'Cookies',
         'banner' => 'Vi bruger cookies til at måle, hvordan websitet bruges. Målingen starter kun, hvis du vælger Acceptér.',
@@ -204,9 +226,13 @@ return [
         'unconfigured_contact' => 'Kontaktoplysninger til den dataansvarlige er ikke angivet på denne side.',
         'sections' => [
             ['title' => 'Dataansvarlig og kontakt', 'paragraphs' => ['Dine oplysninger behandles af :controller. Skriv til :email, hvis du har spørgsmål om dine oplysninger.'], 'configured' => true],
-            ['title' => 'Hvilke oplysninger indsamler vi, og hvorfor?', 'paragraphs' => ['Når du sender en henvendelse, oplyser du en e-mailadresse og vælger et arbejdsområde. Vi gemmer også tidspunktet for samtykke og indsendelse.', 'Vi bruger oplysningerne til at behandle din henvendelse og kontakte dig om Klartfoto og rapporter over udført arbejde. Det er frivilligt at oplyse adressen; uden den kan vi ikke svare. Behandlingen bygger på dit samtykke, som du kan trække tilbage når som helst.']],
-            ['title' => 'Hvem kan behandle oplysningerne?', 'paragraphs' => ['Personer, der behandler henvendelser, kan få adgang. Vores hostingudbyder kan behandle oplysningerne, når det er nødvendigt for opbevaring og beskyttelse.', 'Vi sælger eller offentliggør ikke henvendelser. Formularen spørger ikke efter navn, telefonnummer, arbejdsbilleder eller oplysninger om dine kunder.']],
+            ['title' => 'Hvilke oplysninger indsamler vi, og hvorfor?', 'paragraphs' => ['Hvis en formular til interessetilkendegivelse er tilgængelig, og du sender den, oplyser du en e-mailadresse og vælger et arbejdsområde. Vi gemmer også tidspunktet for samtykke og indsendelse.', 'Vi bruger disse oplysninger til at behandle interessetilkendegivelsen og kontakte dig om Klartfoto og rapporter over udført arbejde. Det er frivilligt at oplyse adressen; uden den kan vi ikke svare. Behandlingen bygger på dit samtykke, som du kan trække tilbage når som helst.']],
+            ['title' => 'Hvem kan behandle oplysningerne?', 'paragraphs' => ['Personer, der behandler henvendelser, kan få adgang. Vores hostingudbyder kan behandle oplysningerne, når det er nødvendigt for opbevaring og beskyttelse.', 'Vi sælger eller offentliggør ikke henvendelser. Formularen til interessetilkendegivelser spørger ikke efter navn, telefonnummer, arbejdsbilleder eller oplysninger om dine kunder.']],
             ['title' => 'Hvor længe gemmer vi en tilmelding?', 'paragraphs' => ['Vi sletter en henvendelse senest 12 måneder efter indsendelsen. Du kan bede om tidligere sletning. Oplysninger efter fristen slettes ved den daglige oprydning.']],
+            ['title' => 'Beskeder via kontaktformularen', 'paragraphs' => [
+                'Hvis du sender en besked via kontaktformularen, behandler vi dit navn, din e-mailadresse, eventuelt virksomhedsnavn og beskeden for at håndtere og besvare din henvendelse.',
+                'Beskeden sendes via vores e-mailtjeneste til Prodi Digital ABs kontaktindbakke og håndteres der. Formularen gemmer ikke en kopi i Klartfotos applikationsdatabase. Vi håndterer korrespondancen, så længe det er nødvendigt for henvendelsen; du kan bede os om at slette den.',
+            ]],
             ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
                 'På de offentlige sider kan vi bruge Google Analytics 4 til at se, hvordan websitet bruges, for eksempel hvilke sider der åbnes. Målingen starter kun, hvis du vælger Acceptér. Afvis lader den være slået fra.',
                 'Valget gemmes i 180 dage i cookien klartfoto_cookie_consent. Den husker kun, om du accepterede eller afviste. Du ændrer valget via Cookieindstillinger i sidefoden.',

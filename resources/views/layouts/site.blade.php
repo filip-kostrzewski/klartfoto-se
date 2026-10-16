@@ -68,7 +68,7 @@
                     <nav aria-label="{{ $copy['nav']['choose_language'] }}">
                         @foreach ($language_options as $optionLocale => $option)
                             @php
-                                $languagePage = in_array($page['route_key'] ?? '', ['home', 'cleaning', 'renovation', 'property', 'report', 'privacy'], true)
+                                $languagePage = in_array($page['route_key'] ?? '', ['home', 'cleaning', 'renovation', 'property', 'report', 'privacy', 'contact'], true)
                                     ? $page['route_key']
                                     : 'home';
                             @endphp
@@ -128,6 +128,8 @@
                 @if ($locale === 'sv')
                     <a href="{{ route('guides.index', absolute: false) }}">Guider</a>
                 @endif
+                <a href="{{ \App\LocalizedUrl::route('contact', $locale, false) }}">{{ $copy['nav']['contact'] }}</a>
+                <a href="{{ route('site.sv.terms', absolute: false) }}" lang="sv">{{ $copy['nav']['terms'] }}</a>
                 <a href="{{ \App\LocalizedUrl::route('privacy', $locale, false) }}">{{ $copy['nav']['privacy'] }}</a>
                 <button type="button" class="footer-cookie-settings" data-cookie-settings>{{ __('marketing.cookies.settings') }}</button>
             </nav>

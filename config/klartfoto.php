@@ -2,6 +2,9 @@
 
 $contactEmail = env('KLARTFOTO_CONTACT_EMAIL');
 $billingNotifyEmail = env('KLARTFOTO_BILLING_NOTIFY_EMAIL');
+$providerContactEmail = $contactEmail && filter_var($contactEmail, FILTER_VALIDATE_EMAIL)
+    ? $contactEmail
+    : 'filip@prodi.se';
 
 return [
     'trial_days' => (int) env('KLARTFOTO_TRIAL_DAYS', 30),
@@ -9,6 +12,7 @@ return [
     'contact_email' => $contactEmail && filter_var($contactEmail, FILTER_VALIDATE_EMAIL)
         ? $contactEmail
         : null,
+    'provider_contact_email' => $providerContactEmail,
     'billing_notify_email' => $billingNotifyEmail && filter_var($billingNotifyEmail, FILTER_VALIDATE_EMAIL)
         ? $billingNotifyEmail
         : ($contactEmail && filter_var($contactEmail, FILTER_VALIDATE_EMAIL) ? $contactEmail : null),

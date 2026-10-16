@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\CompanyInvitationController;
 use App\Http\Controllers\CompanySettingsController;
+use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\EarlyAccessController;
 use App\Http\Controllers\MarketingPageController;
 use App\Http\Controllers\PublicReportController;
@@ -141,6 +142,7 @@ Route::permanentRedirect('/rapportmall-fore-efter', '/exempel-rapport');
 Route::permanentRedirect('/priser', '/#priser');
 Route::permanentRedirect('/sv/integritet', '/integritetspolicy');
 Route::permanentRedirect('/sv/rapportmall-fore-efter', '/exempel-rapport');
+Route::get('/villkor', [MarketingPageController::class, 'terms'])->name('site.sv.terms');
 
 $pageActions = [
     'home' => 'home',
@@ -163,6 +165,12 @@ foreach (config('marketing.locales') as $locale => $metadata) {
         }
 
         $signupSlug = config("marketing.page_slugs.{$locale}.signup");
+        $contactMessageSlug = config("marketing.contact_message_slugs.{$locale}");
+
+        Route::get($signupSlug, [MarketingPageController::class, 'contact'])->name('contact');
+        Route::post("{$signupSlug}/{$contactMessageSlug}", ContactMessageController::class)
+            ->middleware('throttle:contact-message')
+            ->name('contact.message');
 
         Route::post($signupSlug, [EarlyAccessController::class, 'store'])
             ->middleware('throttle:5,1')

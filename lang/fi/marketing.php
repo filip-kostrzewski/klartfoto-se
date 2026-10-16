@@ -7,7 +7,7 @@ return [
         'signup' => 'Ota yhteyttä', 'start' => 'Aloita maksutta', 'pricing' => 'Hinnat',
         'brand_home' => ':brand – etusivu', 'footer_slogan' => 'Selkeät kuvat. Sujuvampi luovutus.',
         'footer_cta' => 'Aloita maksutta', 'footer_tagline' => 'Valokuvaraportit palveluyrityksille.',
-        'privacy' => 'Tietosuoja', 'language' => 'Kieli', 'choose_language' => 'Valitse kieli',
+        'contact' => 'Yhteystiedot', 'privacy' => 'Tietosuoja', 'terms' => 'Käyttöehdot (ruotsiksi)', 'language' => 'Kieli', 'choose_language' => 'Valitse kieli',
         'login' => 'Kirjaudu sisään', 'wisegent' => 'Wisegentin yritystyökalut',
     ],
     'home' => [
@@ -189,6 +189,28 @@ return [
         'footer_brand' => ':brand · havainnollistava esimerkki', 'footer_desc' => 'Raportti ennen ja jälkeen -kuvilla',
         'after_note' => 'Kuvat näyttävät saman tekoälyllä luodun keittiön ennen työtä ja sen jälkeen. Tiedot ovat havainnollistavia.',
     ],
+    'contact' => [
+        'title' => 'Ota yhteyttä | :brand', 'description' => 'Lähetä kysymys Klartfotosta Prodi Digital AB:lle.',
+        'breadcrumb' => 'Yhteystiedot', 'eyebrow' => 'YHTEYSTIEDOT', 'h1' => 'Ota yhteyttä',
+        'intro' => 'Onko sinulla kysyttävää Klartfotosta? Lähetä meille viesti, niin vastaamme sähköpostitse.',
+        'form_heading' => 'Lähetä viesti', 'name_label' => 'Nimi', 'email_label' => 'Sähköpostiosoite',
+        'company_label' => 'Yritys (valinnainen)', 'message_label' => 'Viesti', 'submit' => 'Lähetä viesti', 'sending' => 'Lähetetään…',
+        'privacy_note' => 'Käytämme tietoja yhteydenottosi käsittelyyn ja siihen vastaamiseen.', 'privacy_link' => 'Lue tietosuojatiedot',
+        'status_success' => 'Kiitos! Viestisi on lähetetty.',
+        'status_failed' => 'Viestin lähettäminen ei onnistunut. Yritä hetken kuluttua uudelleen tai lähetä meille sähköpostia:',
+        'status_direct_email' => 'Voit lähettää sähköpostia myös osoitteeseen', 'direct_email_label' => 'Haluatko mieluummin lähettää sähköpostia?',
+        'error_heading' => 'Tarkista lomakkeen tiedot:', 'honeypot_label' => 'Jätä tämä kenttä tyhjäksi',
+        'validation' => [
+            'attributes' => ['name' => 'nimi', 'email' => 'sähköpostiosoite', 'company' => 'yrityksen nimi', 'message' => 'viesti', 'website' => 'verkkosivusto'],
+            'messages' => [
+                'name.required' => 'Anna nimesi.', 'name.string' => 'Kirjoita nimesi tekstinä.', 'name.max' => 'Nimi voi olla enintään 120 merkkiä pitkä.',
+                'email.required' => 'Anna sähköpostiosoitteesi.', 'email.string' => 'Kirjoita kelvollinen sähköpostiosoite.', 'email.email' => 'Kirjoita kelvollinen sähköpostiosoite.', 'email.max' => 'Sähköpostiosoite voi olla enintään 254 merkkiä pitkä.',
+                'company.string' => 'Kirjoita yrityksen nimi tekstinä.', 'company.max' => 'Yrityksen nimi voi olla enintään 160 merkkiä pitkä.',
+                'message.required' => 'Kirjoita viesti.', 'message.string' => 'Kirjoita viesti tekstinä.', 'message.max' => 'Viesti voi olla enintään 5 000 merkkiä pitkä.',
+                'website.prohibited' => 'Tarkista lomake ja yritä uudelleen.',
+            ],
+        ],
+    ],
     'cookies' => [
         'region' => 'Evästeet',
         'banner' => 'Käytämme evästeitä mitataksemme, miten sivustoa käytetään. Mittaus alkaa vain, jos valitset Hyväksy.',
@@ -204,9 +226,13 @@ return [
         'unconfigured_contact' => 'Rekisterinpitäjän yhteystietoja ei ole ilmoitettu tällä sivulla.',
         'sections' => [
             ['title' => 'Rekisterinpitäjä ja yhteystiedot', 'paragraphs' => ['Tietojasi käsittelee :controller. Ota yhteyttä osoitteeseen :email, jos sinulla on kysyttävää tiedoistasi.'], 'configured' => true],
-            ['title' => 'Mitä tietoja keräämme ja miksi', 'paragraphs' => ['Yhteydenotossa annat sähköpostiosoitteen ja valitset työalueen. Tallennamme myös suostumuksen ja viestin lähetysajan.', 'Käytämme tietoja yhteydenottosi käsittelyyn ja yhteydenottoon Klartfotoa sekä tehdyn työn raportointia koskien. Osoitteen antaminen on vapaaehtoista; ilman sitä emme voi vastata. Käsittely perustuu suostumukseesi, jonka voit peruuttaa milloin tahansa.']],
-            ['title' => 'Kuka voi käsitellä tietoja', 'paragraphs' => ['Yhteydenottoja käsittelevät henkilöt voivat käyttää tietoja. Hosting-palveluntarjoajamme voi käsitellä niitä tietojen tallentamiseksi ja suojaamiseksi.', 'Emme myy tai julkaise yhteydenottoja. Lomake ei pyydä nimeä, puhelinnumeroa, työmaakuvia tai asiakkaidesi tietoja.']],
+            ['title' => 'Mitä tietoja keräämme ja miksi', 'paragraphs' => ['Jos kiinnostuslomake on käytössä ja lähetät sen, annat sähköpostiosoitteen ja valitset työalueen. Tallennamme myös suostumuksen ja viestin lähetysajan.', 'Käytämme näitä tietoja kiinnostuksen käsittelyyn ja yhteydenottoon Klartfotoa sekä tehdyn työn raportointia koskien. Osoitteen antaminen on vapaaehtoista; ilman sitä emme voi vastata. Käsittely perustuu suostumukseesi, jonka voit peruuttaa milloin tahansa.']],
+            ['title' => 'Kuka voi käsitellä tietoja', 'paragraphs' => ['Yhteydenottoja käsittelevät henkilöt voivat käyttää tietoja. Hosting-palveluntarjoajamme voi käsitellä niitä tietojen tallentamiseksi ja suojaamiseksi.', 'Emme myy tai julkaise yhteydenottoja. Kiinnostuslomake ei pyydä nimeä, puhelinnumeroa, työmaakuvia tai asiakkaidesi tietoja.']],
             ['title' => 'Kuinka kauan säilytämme ilmoittautumisen', 'paragraphs' => ['Poistamme yhteydenoton viimeistään 12 kuukauden kuluttua lähettämisestä. Voit pyytää tietojen poistamista aiemmin. Määräajan ylittäneet tiedot poistetaan päivittäisessä siivouksessa.']],
+            ['title' => 'Yhteydenottolomakkeen viestit', 'paragraphs' => [
+                'Jos lähetät viestin yhteydenottolomakkeella, käsittelemme nimeäsi, sähköpostiosoitettasi, mahdollisen yrityksen nimen ja viestin, jotta voimme käsitellä pyyntösi ja vastata siihen.',
+                'Viesti lähetetään sähköpostipalvelumme kautta Prodi Digital AB:n yhteydenottolaatikkoon ja käsitellään siellä. Lomake ei tallenna kopiota Klartfoton sovellustietokantaan. Käsittelemme kirjeenvaihtoa niin kauan kuin se on tarpeen pyynnön hoitamiseksi; voit pyytää meitä poistamaan sen.',
+            ]],
             ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
                 'Julkisilla sivuilla voimme käyttää Google Analytics 4:ää nähdäksemme, miten sivustoa käytetään, esimerkiksi mitkä sivut avataan. Mittaus alkaa vain, jos valitset Hyväksy. Hylkää jättää sen pois päältä.',
                 'Valinta tallennetaan 180 päiväksi evästeeseen klartfoto_cookie_consent. Eväste muistaa vain, hyväksyitkö vai kielsitkö mittauksen. Muutat valintaa alatunnisteen Evästeasetukset-painikkeesta.',

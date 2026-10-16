@@ -37,6 +37,10 @@ class AppServiceProvider extends ServiceProvider
             ];
         });
 
+        RateLimiter::for('contact-message', function (Request $request): Limit {
+            return Limit::perHour(5)->by('contact-message:'.($request->ip() ?? 'unknown'));
+        });
+
         Cashier::useCustomerModel(Company::class);
 
         $this->app->booted(function (): void {

@@ -28,6 +28,11 @@ class RegistrationTest extends TestCase
     {
         $this->travelTo('2026-10-15 12:00:00');
 
+        $this->get('/register')
+            ->assertOk()
+            ->assertSee('href="/villkor"', false)
+            ->assertSee('användarvillkoren', false);
+
         $response = $this->post('/register', [
             'company_name' => 'Glans Städ AB',
             'name' => 'Anna Andersson',

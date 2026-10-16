@@ -32,6 +32,11 @@ class ManualBillingTest extends TestCase
             'trial_ends_at' => now()->subDay(),
         ])->save();
 
+        $this->actingAs($owner)->get('/installningar/abonnemang')
+            ->assertOk()
+            ->assertSee('href="/villkor"', false)
+            ->assertSee('innan du begär faktura', false);
+
         $this->from(route('settings.billing', absolute: false))
             ->actingAs($owner)
             ->post(route('settings.billing.request', absolute: false), $this->validRequest())

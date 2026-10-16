@@ -7,7 +7,7 @@ return [
         'signup' => 'Kontakt aufnehmen', 'start' => 'Kostenlos starten', 'pricing' => 'Preise',
         'brand_home' => ':brand – Startseite', 'footer_slogan' => 'Klare Fotos. Einfachere Übergaben.',
         'footer_cta' => 'Kostenlos starten', 'footer_tagline' => 'Fotoberichte für Dienstleistungsbetriebe.',
-        'privacy' => 'Datenschutz', 'language' => 'Sprache', 'choose_language' => 'Sprache auswählen',
+        'contact' => 'Kontakt', 'privacy' => 'Datenschutz', 'terms' => 'Bedingungen (auf Schwedisch)', 'language' => 'Sprache', 'choose_language' => 'Sprache auswählen',
         'login' => 'Anmelden', 'wisegent' => 'Unternehmenswerkzeuge von Wisegent',
     ],
     'home' => [
@@ -190,6 +190,28 @@ return [
         'footer_brand' => ':brand · Demonstrationsbeispiel', 'footer_desc' => 'Bericht mit Vorher-Nachher-Fotos',
         'after_note' => 'Die Fotos zeigen dieselbe KI-generierte Küche vorher und nachher. Die Angaben sind beispielhaft.',
     ],
+    'contact' => [
+        'title' => 'Kontaktieren Sie uns | :brand', 'description' => 'Senden Sie eine Frage zu Klartfoto an Prodi Digital AB.',
+        'breadcrumb' => 'Kontakt', 'eyebrow' => 'KONTAKT', 'h1' => 'Kontaktieren Sie uns',
+        'intro' => 'Haben Sie eine Frage zu Klartfoto? Senden Sie uns eine Nachricht. Wir antworten per E-Mail.',
+        'form_heading' => 'Nachricht senden', 'name_label' => 'Name', 'email_label' => 'E-Mail-Adresse',
+        'company_label' => 'Unternehmen (optional)', 'message_label' => 'Nachricht', 'submit' => 'Nachricht senden', 'sending' => 'Wird gesendet…',
+        'privacy_note' => 'Wir verwenden diese Angaben, um Ihre Anfrage zu bearbeiten und zu beantworten.', 'privacy_link' => 'Datenschutzhinweise lesen',
+        'status_success' => 'Vielen Dank! Ihre Nachricht wurde gesendet.',
+        'status_failed' => 'Ihre Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es später erneut oder schreiben Sie uns direkt:',
+        'status_direct_email' => 'Sie können uns auch schreiben an', 'direct_email_label' => 'Möchten Sie lieber eine E-Mail schreiben?',
+        'error_heading' => 'Bitte prüfen Sie die Angaben im Formular:', 'honeypot_label' => 'Dieses Feld leer lassen',
+        'validation' => [
+            'attributes' => ['name' => 'Name', 'email' => 'E-Mail-Adresse', 'company' => 'Unternehmensname', 'message' => 'Nachricht', 'website' => 'Website'],
+            'messages' => [
+                'name.required' => 'Bitte geben Sie Ihren Namen ein.', 'name.string' => 'Bitte geben Sie Ihren Namen als Text ein.', 'name.max' => 'Der Name darf höchstens 120 Zeichen enthalten.',
+                'email.required' => 'Bitte geben Sie Ihre E-Mail-Adresse ein.', 'email.string' => 'Bitte geben Sie eine gültige E-Mail-Adresse ein.', 'email.email' => 'Bitte geben Sie eine gültige E-Mail-Adresse ein.', 'email.max' => 'Die E-Mail-Adresse darf höchstens 254 Zeichen enthalten.',
+                'company.string' => 'Bitte geben Sie den Unternehmensnamen als Text ein.', 'company.max' => 'Der Unternehmensname darf höchstens 160 Zeichen enthalten.',
+                'message.required' => 'Bitte geben Sie eine Nachricht ein.', 'message.string' => 'Bitte geben Sie die Nachricht als Text ein.', 'message.max' => 'Die Nachricht darf höchstens 5.000 Zeichen enthalten.',
+                'website.prohibited' => 'Bitte prüfen Sie das Formular und versuchen Sie es erneut.',
+            ],
+        ],
+    ],
     'cookies' => [
         'region' => 'Cookies',
         'banner' => 'Wir verwenden Cookies, um zu messen, wie die Website genutzt wird. Die Messung startet erst, wenn Sie Akzeptieren wählen.',
@@ -205,9 +227,13 @@ return [
         'unconfigured_contact' => 'Auf dieser Seite sind keine Kontaktdaten der verantwortlichen Stelle angegeben.',
         'sections' => [
             ['title' => 'Verantwortliche Stelle und Kontakt', 'paragraphs' => ['Ihre Angaben werden von :controller verarbeitet. Bei Fragen zu Ihren Daten schreiben Sie an :email.'], 'configured' => true],
-            ['title' => 'Welche Daten wir erheben und warum', 'paragraphs' => ['In Ihrer Anfrage geben Sie eine E-Mail-Adresse an und wählen einen Arbeitsbereich. Zusätzlich speichern wir den Zeitpunkt Ihrer Einwilligung und der Übermittlung.', 'Wir verwenden die Angaben, um Ihre Anfrage zu bearbeiten und Sie zu Klartfoto und Berichten über erledigte Arbeiten zu kontaktieren. Die Angabe einer Adresse ist freiwillig; ohne sie können wir nicht antworten. Die Verarbeitung beruht auf Ihrer Einwilligung, die Sie jederzeit widerrufen können.']],
-            ['title' => 'Wer die Daten verarbeiten kann', 'paragraphs' => ['Personen, die Anfragen bearbeiten, können auf die Angaben zugreifen. Unser Hostinganbieter kann sie soweit erforderlich speichern und schützen.', 'Wir verkaufen oder veröffentlichen keine Anfragen. Das Formular fragt weder nach Namen oder Telefonnummer noch nach Objektfotos oder Angaben zu Ihren Kunden.']],
+            ['title' => 'Welche Daten wir erheben und warum', 'paragraphs' => ['Wenn ein Formular für Interessensbekundungen verfügbar ist und Sie es absenden, geben Sie eine E-Mail-Adresse an und wählen einen Arbeitsbereich. Zusätzlich speichern wir den Zeitpunkt Ihrer Einwilligung und der Übermittlung.', 'Wir verwenden diese Angaben, um die Interessensbekundung zu bearbeiten und Sie zu Klartfoto und Berichten über erledigte Arbeiten zu kontaktieren. Die Angabe einer Adresse ist freiwillig; ohne sie können wir nicht antworten. Die Verarbeitung beruht auf Ihrer Einwilligung, die Sie jederzeit widerrufen können.']],
+            ['title' => 'Wer die Daten verarbeiten kann', 'paragraphs' => ['Personen, die Anfragen bearbeiten, können auf die Angaben zugreifen. Unser Hostinganbieter kann sie soweit erforderlich speichern und schützen.', 'Wir verkaufen oder veröffentlichen keine Anfragen. Das Formular für Interessensbekundungen fragt weder nach Namen oder Telefonnummer noch nach Objektfotos oder Angaben zu Ihren Kunden.']],
             ['title' => 'Wie lange wir eine Anmeldung speichern', 'paragraphs' => ['Wir löschen eine Anfrage spätestens 12 Monate nach ihrer Übermittlung. Sie können eine frühere Löschung beantragen. Angaben nach Ablauf der Frist werden bei der täglichen Bereinigung gelöscht.']],
+            ['title' => 'Kontaktanfragen', 'paragraphs' => [
+                'Wenn Sie über das Kontaktformular eine Nachricht senden, verarbeiten wir Ihren Namen, Ihre E-Mail-Adresse, optional den Unternehmensnamen und die Nachricht, um Ihre Anfrage zu bearbeiten und zu beantworten.',
+                'Die Nachricht wird über unseren E-Mail-Dienst an das Kontaktpostfach der Prodi Digital AB gesendet und dort bearbeitet. Das Formular speichert keine Kopie in der Anwendungsdatenbank von Klartfoto. Wir bearbeiten die Korrespondenz so lange, wie sie für die Anfrage benötigt wird; Sie können uns um Löschung bitten.',
+            ]],
             ['id' => 'cookies', 'title' => 'Cookies', 'paragraphs' => [
                 'Auf den öffentlichen Seiten können wir Google Analytics 4 verwenden, um zu sehen, wie die Website genutzt wird, zum Beispiel welche Seiten geöffnet werden. Die Messung startet erst, wenn Sie Akzeptieren wählen. Ablehnen lässt sie aus.',
                 'Die Wahl wird 180 Tage im Cookie klartfoto_cookie_consent gespeichert. Das Cookie merkt sich nur, ob Sie zugestimmt oder abgelehnt haben. Sie ändern die Wahl über Cookie-Einstellungen in der Fußzeile.',

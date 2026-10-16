@@ -256,9 +256,7 @@
             <div class="signup-cta-actions">
                 <a class="button button-lime" href="{{ route('register', absolute: false) }}">{{ $home['cta_primary'] }}</a>
                 <a class="text-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['sample_cta'] }}</a>
-                @if ($page['contact_email'])
-                    <a class="signup-contact-link" href="mailto:{{ $page['contact_email'] }}">{{ $cta['closed_contact'] }}</a>
-                @endif
+                <a class="signup-contact-link" href="{{ \App\LocalizedUrl::route('contact', $locale, false) }}">{{ $cta['closed_contact'] }}</a>
             </div>
         </div>
     </section>
