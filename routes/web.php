@@ -137,6 +137,9 @@ foreach (config('marketing.locales') as $locale => $metadata) {
     });
 }
 
+Route::get('/guider', [MarketingPageController::class, 'guideIndex'])->name('guides.index');
+Route::get('/guider/fotodokumentation-stadning', [MarketingPageController::class, 'cleaningPhotoGuide'])->name('guides.cleaning-photos');
+
 Route::get('/sitemap.xml', [MarketingPageController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [MarketingPageController::class, 'robots'])->name('robots');
 

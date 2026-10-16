@@ -93,6 +93,18 @@
         </section>
     @endif
 
+    @if (($page['route_key'] ?? null) === 'cleaning' && $locale === 'sv')
+        @php($guideLink = trans('guides.cleaning_link'))
+        <aside class="guide-promo section-pad">
+            <div class="guide-promo-copy">
+                <p class="section-kicker">{{ $guideLink['kicker'] }}</p>
+                <h2>{{ $guideLink['title'] }}</h2>
+                <p>{{ $guideLink['text'] }}</p>
+                <a class="text-link" href="{{ route('guides.cleaning-photos', absolute: false) }}">{{ $guideLink['label'] }} <span aria-hidden="true">↗</span></a>
+            </div>
+        </aside>
+    @endif
+
     <section class="industry-cta section-pad">
         <p class="section-kicker"><span>03</span> {{ $page['cta_eyebrow'] }}</p>
         <h2>{{ $page['cta_title'] }} <em>{{ $page['cta_emphasis'] }}</em></h2>

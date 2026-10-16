@@ -127,4 +127,74 @@ class SiteSeo
             '@graph' => $graph,
         ];
     }
+
+    /**
+     * @param  list<array{name: string, item: string}>  $breadcrumbs
+     * @param  list<array{question: string, answer: string}>  $faqs
+     * @return array<string, mixed>
+     */
+    public static function articleDocument(
+        string $canonical,
+        string $headline,
+        string $description,
+        string $publishedOn,
+        string $updatedOn,
+        string $locale,
+        string $homeUrl,
+        array $breadcrumbs,
+        array $faqs,
+    ): array {
+        $document = self::structuredData($canonical, $headline, false, $locale, $homeUrl);
+        $organizationId = self::canonical('/').'#organization';
+        $language = config("marketing.locales.{$locale}.schema", $locale);
+        $crumbs = [];
+
+        foreach (array_values($breadcrumbs) as $index => $crumb) {
+            $crumbs[] = [
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'name' => $crumb['name'],
+                'item' => $crumb['item'],
+            ];
+        }
+
+        $questions = [];
+
+        foreach ($faqs as $faq) {
+            $questions[] = [
+                '@type' => 'Question',
+                'name' => $faq['question'],
+                'acceptedAnswer' => [
+                    '@type' => 'Answer',
+                    'text' => $faq['answer'],
+                ],
+            ];
+        }
+
+        $document['@graph'][] = [
+            '@type' => 'BreadcrumbList',
+            '@id' => $canonical.'#breadcrumb',
+            'itemListElement' => $crumbs,
+        ];
+        $document['@graph'][] = [
+            '@type' => 'Article',
+            '@id' => $canonical.'#article',
+            'headline' => $headline,
+            'description' => $description,
+            'inLanguage' => $language,
+            'datePublished' => $publishedOn,
+            'dateModified' => $updatedOn,
+            'mainEntityOfPage' => $canonical,
+            'author' => ['@id' => $organizationId],
+            'publisher' => ['@id' => $organizationId],
+        ];
+        $document['@graph'][] = [
+            '@type' => 'FAQPage',
+            '@id' => $canonical.'#faq',
+            'inLanguage' => $language,
+            'mainEntity' => $questions,
+        ];
+
+        return $document;
+    }
 }

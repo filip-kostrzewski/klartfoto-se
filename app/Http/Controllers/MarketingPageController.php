@@ -11,6 +11,10 @@ class MarketingPageController extends Controller
 {
     private const INDEXABLE_PAGES = ['home', 'cleaning', 'renovation', 'property', 'report', 'privacy'];
 
+    private const GUIDE_INDEX_PATH = '/guider';
+
+    private const CLEANING_GUIDE_PATH = '/guider/fotodokumentation-stadning';
+
     public function home(): View
     {
         return $this->page('home', 'pages.home');
@@ -41,6 +45,57 @@ class MarketingPageController extends Controller
         return $this->page('privacy', 'pages.privacy');
     }
 
+    public function guideIndex(): View
+    {
+        $content = $this->prepareGuide('index');
+        $canonical = SiteSeo::canonical(self::GUIDE_INDEX_PATH);
+        $page = $this->pageData(
+            $content,
+            'guides',
+            $canonical,
+            $this->guideIsIndexable(),
+            SiteSeo::structuredData(
+                $canonical,
+                (string) $content['breadcrumb'],
+                true,
+                app()->getLocale(),
+                LocalizedUrl::route('home', app()->getLocale()),
+            ),
+        );
+
+        return view('pages.guides.index', [
+            ...$this->guideViewData($page),
+            'featured' => $this->prepareGuide('cleaning_photos'),
+        ]);
+    }
+
+    public function cleaningPhotoGuide(): View
+    {
+        $content = $this->prepareGuide('cleaning_photos');
+        $content['index_label'] = (string) trans('guides.index.breadcrumb');
+        $canonical = SiteSeo::canonical(self::CLEANING_GUIDE_PATH);
+        $homeUrl = LocalizedUrl::route('home', app()->getLocale());
+        $page = $this->pageData($content, 'guides', $canonical, $this->guideIsIndexable(), []);
+        $page['og_type'] = 'article';
+        $page['schema'] = SiteSeo::articleDocument(
+            $canonical,
+            (string) $page['h1'],
+            (string) $page['description'],
+            (string) $page['published_on'],
+            (string) $page['updated_on'],
+            app()->getLocale(),
+            $homeUrl,
+            [
+                ['name' => (string) trans('marketing.nav.brand_home', ['brand' => $page['brand']]), 'item' => $homeUrl],
+                ['name' => (string) $page['index_label'], 'item' => SiteSeo::canonical(self::GUIDE_INDEX_PATH)],
+                ['name' => (string) $page['breadcrumb'], 'item' => $canonical],
+            ],
+            $page['faqs'],
+        );
+
+        return view('pages.guides.show', $this->guideViewData($page));
+    }
+
     public function notFound(): Response
     {
         $copy = trans('marketing.not_found');
@@ -64,6 +119,10 @@ class MarketingPageController extends Controller
             foreach (self::INDEXABLE_PAGES as $page) {
                 $urls[] = LocalizedUrl::route($page, $locale);
             }
+        }
+
+        foreach ([self::GUIDE_INDEX_PATH, self::CLEANING_GUIDE_PATH] as $path) {
+            $urls[] = SiteSeo::canonical($path);
         }
 
         return response()
@@ -138,6 +197,69 @@ class MarketingPageController extends Controller
     private function localeIsIndexable(): bool
     {
         return in_array(app()->getLocale(), config('marketing.indexable_locales', []), true);
+    }
+
+    private function guideIsIndexable(): bool
+    {
+        return $this->localeIsIndexable() && SiteSeo::isIndexable();
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function prepareGuide(string $key): array
+    {
+        $content = trans("guides.{$key}");
+
+        if (! is_array($content) || ! isset($content['title'], $content['description'], $content['h1'])) {
+            abort(404);
+        }
+
+        if (isset($content['sections']) && is_array($content['sections'])) {
+            foreach ($content['sections'] as $index => $section) {
+                if (! is_array($section)) {
+                    continue;
+                }
+
+                $paragraphs = [];
+
+                foreach ($section['paragraphs'] ?? [] as $paragraph) {
+                    $paragraphs[] = $this->withInlineLinks((string) $paragraph);
+                }
+
+                $content['sections'][$index]['paragraphs'] = $paragraphs;
+            }
+        }
+
+        return $content;
+    }
+
+    private function withInlineLinks(string $paragraph): string
+    {
+        $locale = app()->getLocale();
+
+        return str_replace(
+            [':report', ':privacy'],
+            [
+                '<a href="'.e(LocalizedUrl::route('report', $locale, false)).'">'.e((string) trans('guides.links.report')).'</a>',
+                '<a href="'.e(LocalizedUrl::route('privacy', $locale, false)).'">'.e((string) trans('guides.links.privacy')).'</a>',
+            ],
+            e($paragraph),
+        );
+    }
+
+    /**
+     * @param  array<string, mixed>  $page
+     * @return array<string, mixed>
+     */
+    private function guideViewData(array $page): array
+    {
+        return [
+            'page' => $page,
+            'copy' => trans('marketing'),
+            'locale' => app()->getLocale(),
+            'language_options' => config('marketing.locales'),
+        ];
     }
 
     /**

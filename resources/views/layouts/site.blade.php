@@ -12,7 +12,11 @@
         <link rel="alternate" hreflang="{{ $hreflang }}" href="{{ $url }}">
     @endforeach
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{{ $page['og_type'] ?? 'website' }}">
+    @if (! empty($page['published_on']))
+        <meta property="article:published_time" content="{{ $page['published_on'] }}">
+        <meta property="article:modified_time" content="{{ $page['updated_on'] ?? $page['published_on'] }}">
+    @endif
     <meta property="og:locale" content="{{ $page['og_locale'] }}">
     <meta property="og:site_name" content="{{ $page['brand'] }}">
     <meta property="og:title" content="{{ $page['title'] }}">
@@ -115,6 +119,9 @@
                 @php($wisegentLocale = ['sv' => 'se', 'en' => 'en', 'pl' => 'pl'][$locale] ?? 'en')
                 <a href="https://wisegent.se/{{ $wisegentLocale }}" target="_blank" rel="noopener noreferrer">{{ $copy['nav']['wisegent'] }} <span aria-hidden="true">↗</span></a>
                 <a href="{{ route('login', absolute: false) }}">{{ $copy['nav']['login'] }}</a>
+                @if ($locale === 'sv')
+                    <a href="{{ route('guides.index', absolute: false) }}">Guider</a>
+                @endif
                 <a href="{{ \App\LocalizedUrl::route('privacy', $locale, false) }}">{{ $copy['nav']['privacy'] }}</a>
                 <button type="button" class="footer-cookie-settings" data-cookie-settings>{{ __('marketing.cookies.settings') }}</button>
             </nav>
