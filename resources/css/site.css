@@ -4099,6 +4099,11 @@ html {
     line-height: 1.6;
 }
 
+.workflow-video-link {
+    margin-top: 24px;
+    color: #315122;
+}
+
 .industries-section {
     background: var(--paper);
 }
@@ -4258,6 +4263,64 @@ html {
     grid-template-columns: minmax(0, .62fr) minmax(0, 1fr);
     align-items: center;
     gap: clamp(32px, 6vw, 86px);
+}
+
+.product-video {
+    margin-top: clamp(40px, 6vw, 72px);
+    padding-top: clamp(32px, 5vw, 56px);
+    border-top: 1px solid rgba(255, 255, 255, .2);
+}
+
+.product-video-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px 48px;
+}
+
+.product-video-heading .section-kicker {
+    color: #d4dfcf;
+}
+
+.product-video-heading h3 {
+    max-width: 23ch;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 500;
+    letter-spacing: -.04em;
+    line-height: 1.1;
+}
+
+.product-video-heading > p {
+    max-width: 43ch;
+    margin: 0;
+    color: #d2dccf;
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+.product-video-meta {
+    margin: 24px 0 12px;
+    color: var(--lime);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.product-video-player {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: var(--radius-card);
+    background: #111715;
+}
+
+.product-video-direct {
+    margin-top: 10px;
+    color: #d2dccf;
+    font-size: 13px;
 }
 
 .sample-explainer {
@@ -6044,6 +6107,12 @@ html {
     .sales-faq {
         grid-template-columns: 1fr;
         gap: 28px;
+    }
+
+    .product-video-heading {
+        align-items: start;
+        flex-direction: column;
+        gap: 16px;
     }
 
     .workflow-card {

@@ -59,6 +59,14 @@ return [
                 ['icon' => 'share', 'title' => 'Del rapportlinket', 'text' => 'Send linket, så kunden kan åbne rapporten i browseren.'],
             ],
         ],
+        'video' => [
+            'kicker' => 'Klartfoto i praksis',
+            'title' => 'Én opgave. Fra start til rapport.',
+            'description' => 'Se, hvordan du tilføjer en opgave, uploader billeder og deler rapporten med kunden.',
+            'meta' => '60 sekunder · På svensk',
+            'cta' => 'Se arbejdsgangen på 60 sekunder',
+            'fallback' => 'Åbn filmen i en separat fane',
+        ],
         'wisegent' => [
             'eyebrow' => 'Til rengøringsfirmaer', 'title' => 'Planlægning, personale og fakturering.',
             'text' => 'Wisegent hjælper rengøringsfirmaer med at planlægge opgaver, koordinere medarbejdere og håndtere fakturering. Wisegent er en separat tjeneste.',

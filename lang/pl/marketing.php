@@ -59,6 +59,14 @@ return [
                 ['icon' => 'share', 'title' => 'Udostępnij link do raportu', 'text' => 'Wyślij klientowi link, aby mógł otworzyć raport w przeglądarce.'],
             ],
         ],
+        'video' => [
+            'kicker' => 'Klartfoto w praktyce',
+            'title' => 'Jedno zlecenie. Od początku do raportu.',
+            'description' => 'Zobacz, jak dodać zlecenie, przesłać zdjęcia i udostępnić raport klientowi.',
+            'meta' => '60 sekund · Po szwedzku',
+            'cta' => 'Zobacz przebieg pracy w 60 sekund',
+            'fallback' => 'Otwórz film w osobnej karcie',
+        ],
         'wisegent' => [
             'eyebrow' => 'Dla firm sprzątających', 'title' => 'Planowanie, zespół i fakturowanie.',
             'text' => 'Wisegent pomaga firmom sprzątającym planować zlecenia, koordynować pracowników i obsługiwać fakturowanie. Wisegent to osobna usługa.',

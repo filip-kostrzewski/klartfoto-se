@@ -59,6 +59,14 @@ return [
                 ['icon' => 'share', 'title' => 'Berichtslink teilen', 'text' => 'Senden Sie dem Kunden den Link, damit der Bericht im Browser geöffnet werden kann.'],
             ],
         ],
+        'video' => [
+            'kicker' => 'Klartfoto in der Praxis',
+            'title' => 'Ein Auftrag. Vom Start bis zum Bericht.',
+            'description' => 'Sehen Sie, wie Sie einen Auftrag anlegen, Fotos hochladen und den Bericht mit dem Kunden teilen.',
+            'meta' => '60 Sekunden · Auf Schwedisch',
+            'cta' => 'Den Ablauf in 60 Sekunden ansehen',
+            'fallback' => 'Video in einem separaten Tab öffnen',
+        ],
         'wisegent' => [
             'eyebrow' => 'Für Reinigungsbetriebe', 'title' => 'Planung, Personal und Rechnungsstellung.',
             'text' => 'Wisegent hilft Reinigungsbetrieben bei der Auftragsplanung, Personalabstimmung und Rechnungsstellung. Wisegent ist ein eigener Dienst.',

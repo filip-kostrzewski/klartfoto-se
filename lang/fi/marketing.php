@@ -59,6 +59,14 @@ return [
                 ['icon' => 'share', 'title' => 'Jaa raporttilinkki', 'text' => 'Lähetä linkki, jotta asiakas voi avata raportin selaimessa.'],
             ],
         ],
+        'video' => [
+            'kicker' => 'Klartfoto käytännössä',
+            'title' => 'Yksi työ. Alusta raporttiin.',
+            'description' => 'Katso, miten lisäät työn, lataat kuvat ja jaat raportin asiakkaalle.',
+            'meta' => '60 sekuntia · Ruotsiksi',
+            'cta' => 'Katso työnkulku 60 sekunnissa',
+            'fallback' => 'Avaa video erilliseen välilehteen',
+        ],
         'wisegent' => [
             'eyebrow' => 'Siivousyrityksille', 'title' => 'Suunnittelu, henkilöstö ja laskutus.',
             'text' => 'Wisegent auttaa siivousyrityksiä suunnittelemaan töitä, koordinoimaan henkilöstöä ja hoitamaan laskutusta. Wisegent on erillinen palvelu.',

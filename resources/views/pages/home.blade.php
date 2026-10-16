@@ -118,6 +118,7 @@
                 </article>
             @endforeach
         </div>
+        <a class="text-link workflow-video-link" href="#se-video">{{ $home['video']['cta'] }} <span aria-hidden="true">↓</span></a>
     </section>
 
     <section class="industries-section section-pad" id="for-who">
@@ -186,6 +187,28 @@
                 </div>
                 <div class="report-card-footer"><span>{{ $home['report_footer'] }}</span><span aria-hidden="true">R/01</span></div>
             </article>
+        </div>
+        <div class="product-video" id="se-video" aria-labelledby="video-title">
+            <div class="product-video-heading">
+                <div>
+                    <p class="section-kicker">{{ $home['video']['kicker'] }}</p>
+                    <h3 id="video-title">{{ $home['video']['title'] }}</h3>
+                </div>
+                <p>{{ $home['video']['description'] }}</p>
+            </div>
+            <p class="product-video-meta" id="video-language">{{ $home['video']['meta'] }}</p>
+            <iframe
+                class="product-video-player"
+                src="https://player.mediadelivery.net/embed/781538/b62dea40-8f45-42cd-a9df-1d770297f50f?autoplay=false&amp;loop=false&amp;muted=false&amp;preload=false&amp;responsive=true"
+                title="{{ $home['video']['title'] }}"
+                loading="lazy"
+                width="1920"
+                height="1080"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowfullscreen
+                referrerpolicy="strict-origin-when-cross-origin"
+                aria-describedby="video-language"></iframe>
+            <a class="text-link product-video-direct" href="https://player.mediadelivery.net/play/781538/b62dea40-8f45-42cd-a9df-1d770297f50f" target="_blank" rel="noopener noreferrer">{{ $home['video']['fallback'] }} <span aria-hidden="true">↗</span></a>
         </div>
     </section>
 

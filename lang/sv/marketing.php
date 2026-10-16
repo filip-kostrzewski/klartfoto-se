@@ -61,6 +61,14 @@ return [
                 ['icon' => 'share', 'title' => 'Dela rapportlänken', 'text' => 'Skicka länken till kunden så att rapporten kan öppnas i webbläsaren.'],
             ],
         ],
+        'video' => [
+            'kicker' => 'Klartfoto i praktiken',
+            'title' => 'Ett uppdrag. Från början till rapport.',
+            'description' => 'Se hur du lägger till ett uppdrag, laddar upp bilder och delar rapporten med kunden.',
+            'meta' => '60 sekunder · På svenska',
+            'cta' => 'Se arbetsflödet på 60 sekunder',
+            'fallback' => 'Öppna filmen i en separat flik',
+        ],
         'wisegent' => [
             'eyebrow' => 'För städföretag', 'title' => 'Planering, personal och fakturering.',
             'text' => 'Wisegent hjälper städföretag att planera uppdrag, samordna personal och sköta faktureringen. Wisegent är en separat tjänst.',

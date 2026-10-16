@@ -59,6 +59,14 @@ return [
                 ['icon' => 'share', 'title' => 'Share the report link', 'text' => 'Send the link so the customer can open the report in a browser.'],
             ],
         ],
+        'video' => [
+            'kicker' => 'Klartfoto in action',
+            'title' => 'One job. From start to report.',
+            'description' => 'See how to add a job, upload photos and share the report with your customer.',
+            'meta' => '60 seconds · In Swedish',
+            'cta' => 'Watch the workflow in 60 seconds',
+            'fallback' => 'Open the video in a separate tab',
+        ],
         'wisegent' => [
             'eyebrow' => 'For cleaning businesses', 'title' => 'Planning, staffing and invoicing.',
             'text' => 'Wisegent helps cleaning businesses plan jobs, coordinate staff and manage invoicing. Wisegent is a separate service.',

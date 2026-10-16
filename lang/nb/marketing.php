@@ -59,6 +59,14 @@ return [
                 ['icon' => 'share', 'title' => 'Del rapportlenken', 'text' => 'Send lenken, så kunden kan åpne rapporten i nettleseren.'],
             ],
         ],
+        'video' => [
+            'kicker' => 'Klartfoto i praksis',
+            'title' => 'Ett oppdrag. Fra start til rapport.',
+            'description' => 'Se hvordan du legger til et oppdrag, laster opp bilder og deler rapporten med kunden.',
+            'meta' => '60 sekunder · På svensk',
+            'cta' => 'Se arbeidsflyten på 60 sekunder',
+            'fallback' => 'Åpne filmen i en egen fane',
+        ],
         'wisegent' => [
             'eyebrow' => 'For renholdsbedrifter', 'title' => 'Planlegging, bemanning og fakturering.',
             'text' => 'Wisegent hjelper renholdsbedrifter med å planlegge oppdrag, koordinere ansatte og håndtere fakturering. Wisegent er en egen tjeneste.',
