@@ -180,8 +180,8 @@ return [
         'cta_eyebrow' => 'Klartfoto',
         'cta_title' => 'Samla före och efter',
         'cta_emphasis' => 'i samma rapport.',
-        'cta_body' => 'Anmäl intresse om du vill lägga kundens namn, adress och datum bredvid bilderna och dela en länk som kunden öppnar i webbläsaren.',
-        'cta_label' => 'Anmäl intresse',
+        'cta_body' => 'Lägg kundens namn, adress och datum bredvid bilderna och dela en länk som kunden öppnar i webbläsaren.',
+        'cta_label' => 'Kom igång gratis',
         'card' => 'Vad du fotograferar vid en städning, hur före och efter hålls jämförbara, och hur rapporten delas med kunden.',
     ],
 ];

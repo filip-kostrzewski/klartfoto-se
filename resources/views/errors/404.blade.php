@@ -31,8 +31,8 @@
         <h1>{{ $page['h1'] }}</h1>
         <p>{{ $page['body'] }}</p>
         <div class="hero-actions">
-            <a class="button button-dark" href="{{ \App\LocalizedUrl::route('home', $locale, false) }}">{{ $page['home'] }} <span aria-hidden="true">↗</span></a>
-            <a class="button button-outline-dark" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $page['report'] }} <span aria-hidden="true">↗</span></a>
+            <a class="button button-dark" href="{{ \App\LocalizedUrl::route('home', $locale, false) }}">{{ $page['home'] }}</a>
+            <a class="button button-outline-dark" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $page['report'] }}</a>
         </div>
     </section>
 @endsection

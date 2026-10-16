@@ -429,9 +429,11 @@ class MarketingSiteTest extends TestCase
         $this->assertIsString($articleHtml);
         $this->assertStringContainsString('Av Klartfoto-teamet', $articleHtml);
         $this->assertStringContainsString('>Startsida</a>', $articleHtml);
-        $this->assertStringContainsString('href="/#signup"', $articleHtml);
-        $this->assertSame(2, substr_count($articleHtml, 'href="/#signup"'));
-        $this->assertStringNotContainsString('/register', $articleHtml);
+        $this->assertStringContainsString('href="/register"', $articleHtml);
+        $this->assertSame(2, substr_count($articleHtml, 'href="/register"'));
+        $this->assertSame(2, substr_count($articleHtml, 'Kom igång gratis'));
+        $this->assertStringNotContainsString('href="/#signup"', $articleHtml);
+        $this->assertStringNotContainsString('Anmäl intresse', $articleHtml);
         $this->assertStringNotContainsString('↗', $articleHtml);
         $this->assertStringNotContainsString('reklamation fastnar', $articleHtml);
         $this->assertStringNotContainsString('Bilden avgör inte hela avtalet', $articleHtml);
@@ -473,6 +475,25 @@ class MarketingSiteTest extends TestCase
         $this->get('/en/guider')->assertNotFound();
     }
 
+    public function test_marketing_calls_to_action_open_registration_without_an_arrow(): void
+    {
+        foreach (['/', '/guider', '/guider/fotodokumentation-stadning', '/for-stadforetag', '/exempel-rapport'] as $path) {
+            $html = $this->get($path)->assertOk()->getContent();
+
+            $this->assertStringContainsString('class="mobile-menu-signup" href="/register"', $html);
+            $this->assertStringContainsString('class="button button-small button-lime" href="/register"', $html);
+            $this->assertStringContainsString('class="footer-cta" href="/register"', $html);
+            $this->assertStringContainsString('Kom igång gratis', $html);
+            $this->assertStringNotContainsString('Anmäl intresse', $html);
+            $this->assertInternalLinksOmitTheExternalMark($html);
+        }
+
+        $home = $this->get('/')->assertOk()->getContent();
+        $this->assertStringContainsString('id="signup"', $home);
+        $this->assertStringContainsString('class="button button-lime" href="/register">Kom igång gratis</a>', $home);
+        $this->assertStringNotContainsString('<form class="signup-form"', $home);
+    }
+
     public function test_swedish_cleaning_page_and_footer_link_to_the_photo_guide(): void
     {
         $this->get('/for-stadforetag')->assertOk()
@@ -497,6 +518,23 @@ class MarketingSiteTest extends TestCase
         $this->assertIsArray($decoded);
 
         return $decoded;
+    }
+
+    private function assertInternalLinksOmitTheExternalMark(string $html): void
+    {
+        $anchors = (new DOMXPath($this->htmlDocument($html)))->query('//a[@href]');
+        $this->assertNotFalse($anchors);
+
+        foreach ($anchors as $anchor) {
+            $this->assertInstanceOf(DOMElement::class, $anchor);
+            $href = $anchor->getAttribute('href');
+
+            if (preg_match('#^(https?:)?//#', $href) === 1 || str_starts_with($href, 'mailto:') || str_starts_with($href, 'tel:')) {
+                continue;
+            }
+
+            $this->assertStringNotContainsString('↗', $anchor->textContent ?? '', $href);
+        }
     }
 
     private function htmlDocument(string $html): DOMDocument

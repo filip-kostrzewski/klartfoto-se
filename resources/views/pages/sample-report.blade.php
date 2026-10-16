@@ -11,7 +11,7 @@
             <p>{{ $page['intro'] }}</p>
             <div class="hero-actions">
                 <button class="button button-lime" type="button" data-print>{{ $page['print'] }} <span aria-hidden="true">↗</span></button>
-                <a class="button button-outline" href="{{ route('register', absolute: false) }}">{{ $copy['nav']['start'] }} <span aria-hidden="true">↗</span></a>
+                <a class="button button-outline" href="{{ route('register', absolute: false) }}">{{ $copy['nav']['start'] }}</a>
             </div>
             <p class="resource-note">{{ $page['print_note'] }}</p>
         </div>

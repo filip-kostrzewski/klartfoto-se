@@ -14,8 +14,8 @@
                     <h1>{{ $page['h1'] }}</h1>
                     <p class="industry-lead">{{ $home['lead'] }}</p>
                     <div class="hero-actions">
-                        <a class="button button-lime" href="{{ route('register', absolute: false) }}">{{ $copy['nav']['start'] }} <span aria-hidden="true">↗</span></a>
-                        <a class="text-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $copy['nav']['report'] }} <span aria-hidden="true">↗</span></a>
+                        <a class="button button-lime" href="{{ route('register', absolute: false) }}">{{ $copy['nav']['start'] }}</a>
+                        <a class="text-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $copy['nav']['report'] }}</a>
                     </div>
                 </div>
                 <div class="industry-hero-visual">
@@ -55,7 +55,7 @@
             <p class="section-kicker"><span>02</span> {{ $home['sample_kicker'] }}</p>
             <h2>{{ $home['sample_title'] }} <em>{{ $home['sample_emphasis'] }}</em></h2>
             <p>{{ $home['sample_intro'] }}</p>
-            <a class="text-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['sample_link'] }} <span aria-hidden="true">↗</span></a>
+            <a class="text-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['sample_link'] }}</a>
         </div>
         <article class="industry-report-preview">
             <div class="industry-report-preview-heading">
@@ -100,7 +100,7 @@
                 <p class="section-kicker">{{ $guideLink['kicker'] }}</p>
                 <h2>{{ $guideLink['title'] }}</h2>
                 <p>{{ $guideLink['text'] }}</p>
-                <a class="text-link" href="{{ route('guides.cleaning-photos', absolute: false) }}">{{ $guideLink['label'] }} <span aria-hidden="true">↗</span></a>
+                <a class="text-link" href="{{ route('guides.cleaning-photos', absolute: false) }}">{{ $guideLink['label'] }}</a>
             </div>
         </aside>
     @endif
@@ -109,6 +109,6 @@
         <p class="section-kicker"><span>03</span> {{ $page['cta_eyebrow'] }}</p>
         <h2>{{ $page['cta_title'] }} <em>{{ $page['cta_emphasis'] }}</em></h2>
         <p>{{ $page['cta_body'] }}</p>
-        <a class="button button-dark" href="{{ route('register', absolute: false) }}">{{ $page['cta_button'] }} <span aria-hidden="true">↗</span></a>
+        <a class="button button-dark" href="{{ route('register', absolute: false) }}">{{ $copy['nav']['start'] }}</a>
     </section>
 @endsection

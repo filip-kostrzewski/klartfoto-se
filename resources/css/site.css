@@ -5311,7 +5311,7 @@ html {
 .job-list li > a {
     display: grid;
     min-height: 80px;
-    grid-template-columns: 42px minmax(0, 1fr) minmax(130px, auto) 20px;
+    grid-template-columns: 42px minmax(0, 1fr) minmax(130px, auto);
     align-items: center;
     gap: 14px;
     padding: 13px 18px;
@@ -5372,10 +5372,6 @@ html {
 .job-list-meta span:last-child {
     color: #45594b;
     font-weight: 650;
-}
-
-.job-list-arrow {
-    color: #405d33;
 }
 
 .dashboard-empty-state {
@@ -6054,7 +6050,7 @@ html {
     }
 
     .job-list li > a {
-        grid-template-columns: 40px minmax(0, 1fr) 17px;
+        grid-template-columns: 40px minmax(0, 1fr);
         gap: 10px;
         padding-inline: 12px;
     }
@@ -6067,11 +6063,6 @@ html {
         flex-wrap: wrap;
         gap: 5px 14px;
         margin-top: -2px;
-    }
-
-    .job-list-arrow {
-        grid-column: 3;
-        grid-row: 1 / span 2;
     }
 
     .dashboard-empty-state {

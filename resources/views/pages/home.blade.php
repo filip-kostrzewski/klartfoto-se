@@ -11,8 +11,8 @@
                 <h1>{{ $home['h1_start'] }} <em>{{ $home['h1_emphasis'] }}</em></h1>
                 <p class="landing-hero-lead">{{ $home['lead'] }}</p>
                 <div class="hero-actions">
-                    <a class="button button-lime" href="{{ route('register', absolute: false) }}">{{ $home['cta_primary'] }} <span aria-hidden="true">↗</span></a>
-                    <a class="hero-sample-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['cta_secondary'] }} <span aria-hidden="true">↗</span></a>
+                    <a class="button button-lime" href="{{ route('register', absolute: false) }}">{{ $home['cta_primary'] }}</a>
+                    <a class="hero-sample-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['cta_secondary'] }}</a>
                 </div>
                 <p class="hero-footnote">{{ $home['footnote'] }}</p>
                 <div class="hero-proof">
@@ -122,7 +122,7 @@
                         <span class="industry-card-label">{{ $industry['label'] }}</span>
                         <strong>{{ $industry['title'] }}</strong>
                         <span>{{ $industry['text'] }}</span>
-                        <span class="industry-card-link">{{ $home['industry_link'] }} <span aria-hidden="true">↗</span></span>
+                        <span class="industry-card-link">{{ $home['industry_link'] }}</span>
                     </span>
                 </a>
             @endforeach
@@ -135,13 +135,13 @@
                 <p class="section-kicker"><span>03</span> {{ $home['sample_kicker'] }}</p>
                 <h2>{{ $home['sample_title'] }} <em>{{ $home['sample_emphasis'] }}</em></h2>
             </div>
-            <a class="text-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['sample_link'] }} <span aria-hidden="true">↗</span></a>
+            <a class="text-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['sample_link'] }}</a>
         </div>
         <div class="sample-layout">
             <div class="sample-explainer">
                 <p class="sample-disclaimer"><span aria-hidden="true">✳</span> {{ $home['sample_disclaimer'] }}</p>
                 <p>{{ $home['sample_intro'] }}</p>
-                <a class="button button-dark" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['sample_cta'] }} <span aria-hidden="true">↗</span></a>
+                <a class="button button-dark" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['sample_cta'] }}</a>
             </div>
             <article class="report-card">
                 <div class="report-card-header">
@@ -195,8 +195,8 @@
             <p>{{ $cta['body'] }}</p>
             <p class="signup-small">{{ $home['pricing']['note'] }}</p>
             <div class="signup-cta-actions">
-                <a class="button button-lime" href="{{ route('register', absolute: false) }}">{{ $home['cta_primary'] }} <span aria-hidden="true">↗</span></a>
-                <a class="text-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['sample_cta'] }} <span aria-hidden="true">↗</span></a>
+                <a class="button button-lime" href="{{ route('register', absolute: false) }}">{{ $home['cta_primary'] }}</a>
+                <a class="text-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['sample_cta'] }}</a>
                 @if ($page['contact_email'])
                     <a class="signup-contact-link" href="mailto:{{ $page['contact_email'] }}">{{ $cta['closed_contact'] }}</a>
                 @endif

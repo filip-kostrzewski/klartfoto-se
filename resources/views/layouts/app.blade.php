@@ -39,7 +39,7 @@
                 <div class="app-sidebar-footer">
                     <span class="app-sidebar-footer-icon"><x-icon name="camera" /></span>
                     <p>Samla bilderna. Dela rapporten.</p>
-                    <a href="{{ route('assignments.index', absolute: false) }}">Visa uppdrag <span aria-hidden="true">↗</span></a>
+                    <a href="{{ route('assignments.index', absolute: false) }}">Visa uppdrag</a>
                 </div>
             </aside>
 
@@ -92,7 +92,7 @@
                 </span>
                 <span class="brand-name">Klartfoto</span>
             </a>
-            <a href="{{ route('site.sv.home', absolute: false) }}">Till startsidan <span aria-hidden="true">↗</span></a>
+            <a href="{{ route('site.sv.home', absolute: false) }}">Till startsidan</a>
         </header>
         <main id="main" class="app-guest-main">
             @yield('content')

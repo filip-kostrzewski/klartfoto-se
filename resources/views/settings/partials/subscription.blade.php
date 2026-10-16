@@ -73,7 +73,7 @@
         @elseif (! $hasPendingInvoiceRequest && $isOwner && ! $canRequestInvoice)
             <p class="subscription-summary-note">Ett annat abonnemang är aktivt för kontot, så en Fortnox-faktura kan inte begäras just nu.</p>
         @endif
-        <a class="button button-outline-dark subscription-manage-link" href="{{ route('settings.billing', absolute: false) }}">Visa abonnemang <span aria-hidden="true">↗</span></a>
+        <a class="button button-outline-dark subscription-manage-link" href="{{ route('settings.billing', absolute: false) }}">Visa abonnemang</a>
     @else
         @if ($canRequestInvoice)
             <form class="billing-request-form app-form" method="post" action="{{ route('settings.billing.request', absolute: false) }}" data-submit-feedback>

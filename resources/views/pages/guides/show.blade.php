@@ -53,7 +53,7 @@
                         @endif
                         @if (! empty($section['show_cta']))
                             <p class="guide-inline-cta">
-                                <a class="button button-lime" href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#signup">{{ $page['cta_label'] }}</a>
+                                <a class="button button-lime" href="{{ route('register', absolute: false) }}">{{ $page['cta_label'] }}</a>
                             </p>
                         @endif
                     </section>
@@ -104,7 +104,7 @@
             <h2>{{ $page['cta_title'] }} <em>{{ $page['cta_emphasis'] }}</em></h2>
             <p>{{ $page['cta_body'] }}</p>
             <div class="hero-actions">
-                <a class="button button-dark" href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#signup">{{ $page['cta_label'] }}</a>
+                <a class="button button-dark" href="{{ route('register', absolute: false) }}">{{ $page['cta_label'] }}</a>
             </div>
         </section>
     </article>

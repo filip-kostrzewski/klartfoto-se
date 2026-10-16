@@ -3,15 +3,20 @@
 namespace Tests\Feature;
 
 use App\CompanyRole;
+use App\Models\Assignment;
 use App\Models\User;
 use App\Notifications\SwedishResetPassword;
+use App\PhotoPhase;
 use App\SiteSeo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Mail\Transport\ArrayTransport;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Symfony\Component\Mime\Email;
 use Tests\TestCase;
 
@@ -54,6 +59,78 @@ class RegistrationTest extends TestCase
             ->assertSee('Anna Andersson', false)
             ->assertSee('Ägare', false)
             ->assertSee('Glans Städ AB', false);
+    }
+
+    public function test_a_verified_registration_can_create_a_job_upload_photos_and_share_the_report(): void
+    {
+        Storage::fake('local');
+        Notification::fake();
+
+        $this->post('/register', [
+            'company_name' => 'Glans Städ AB',
+            'name' => 'Anna Andersson',
+            'email' => 'anna@glans.se',
+            'password' => 'hemligt-losen',
+            'password_confirmation' => 'hemligt-losen',
+            'privacy' => '1',
+        ])->assertRedirect(route('assignments.index'));
+
+        $user = User::query()->where('email', 'anna@glans.se')->first();
+        $this->assertNotNull($user);
+        $this->assertTrue($user->canManageJobs());
+        $this->get('/uppdrag')
+            ->assertOk()
+            ->assertSee('Nytt uppdrag', false)
+            ->assertSee('href="/uppdrag/nytt"', false);
+
+        $url = URL::temporarySignedRoute('verification.verify', now()->addMinutes(60), [
+            'id' => $user->id,
+            'hash' => sha1($user->email),
+        ]);
+
+        $this->get($url)
+            ->assertRedirect(route('assignments.index'))
+            ->assertSessionHas('status', 'E-postadressen är bekräftad.');
+        $this->assertNotNull($user->refresh()->email_verified_at);
+
+        $this->post('/uppdrag', [
+            'customer_name' => 'Kund Kundsson',
+            'address' => 'Storgatan 1, 111 22 Stockholm',
+            'performed_on' => '2026-10-16',
+            'before_photos' => [UploadedFile::fake()->image('fore.jpg', 120, 80)],
+            'after_photos' => [UploadedFile::fake()->image('efter.jpg', 120, 80)],
+        ])->assertRedirect();
+
+        $assignment = Assignment::query()->first();
+        $this->assertInstanceOf(Assignment::class, $assignment);
+        $this->assertSame($user->company_id, $assignment->company_id);
+        $photos = $assignment->photos()->orderBy('id')->get();
+        $this->assertCount(2, $photos);
+        $this->assertSame(PhotoPhase::Before, $photos[0]->phase);
+        $this->assertSame(PhotoPhase::After, $photos[1]->phase);
+        Storage::disk('local')->assertExists($photos[0]->path);
+        Storage::disk('local')->assertExists($photos[1]->path);
+
+        $this->post(route('assignments.share', $assignment))->assertRedirect();
+        $this->assertNotNull($assignment->refresh()->link_copied_at);
+
+        $this->post('/logout')->assertRedirect('/login');
+
+        $report = '/r/'.$assignment->public_token;
+        $this->get($report)
+            ->assertOk()
+            ->assertSee('Glans Städ AB', false)
+            ->assertSee('Kund Kundsson', false)
+            ->assertSee('Storgatan 1, 111 22 Stockholm', false)
+            ->assertSee($report.'/foton/'.$photos[0]->id, false)
+            ->assertSee($report.'/foton/'.$photos[1]->id, false);
+
+        $this->get($report.'/foton/'.$photos[0]->id)
+            ->assertOk()
+            ->assertHeader('content-type', 'image/jpeg');
+        $this->get($report.'/foton/'.$photos[1]->id)
+            ->assertOk()
+            ->assertHeader('content-type', 'image/jpeg');
     }
 
     public function test_runtime_routes_and_assets_use_app_url_while_seo_uses_public_origin(): void

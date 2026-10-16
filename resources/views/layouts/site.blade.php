@@ -87,13 +87,13 @@
                         @endif
                         <a href="{{ route('login', absolute: false) }}">{{ $copy['nav']['login'] }}</a>
                         <a class="mobile-menu-signup" href="{{ route('register', absolute: false) }}">
-                            {{ $copy['nav']['start'] }} <span aria-hidden="true">↗</span>
+                            {{ $copy['nav']['start'] }}
                         </a>
                     </nav>
                 </details>
                 <a class="header-login" href="{{ route('login', absolute: false) }}">{{ $copy['nav']['login'] }}</a>
                 <a class="button button-small button-lime" href="{{ route('register', absolute: false) }}">
-                    {{ $copy['nav']['start'] }} <span aria-hidden="true">↗</span>
+                    {{ $copy['nav']['start'] }}
                 </a>
             </div>
         </div>
@@ -116,7 +116,7 @@
                 <span class="brand-name">{{ $page['brand'] }}</span>
             </a>
             <p>{{ $copy['nav']['footer_slogan'] }}</p>
-            <a class="footer-cta" href="{{ route('register', absolute: false) }}">{{ $copy['nav']['footer_cta'] }} <span aria-hidden="true">↗</span></a>
+            <a class="footer-cta" href="{{ route('register', absolute: false) }}">{{ $copy['nav']['footer_cta'] }}</a>
         </div>
         <p class="footer-legal">Prodi Digital AB, org.nr 559214-9370, Tegelbrukets väg 41, 195 59 Märsta</p>
         <div class="footer-bottom">

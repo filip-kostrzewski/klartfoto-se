@@ -12,7 +12,7 @@
                 <p class="auth-lead">Samla bilder och dela rapporten efter varje besök.</p>
             </div>
             @if ($canManageJobs)
-                <a class="button button-lime" href="{{ route('assignments.create', absolute: false) }}"><x-icon name="camera" /> Nytt uppdrag <span aria-hidden="true">↗</span></a>
+                <a class="button button-lime" href="{{ route('assignments.create', absolute: false) }}"><x-icon name="camera" /> Nytt uppdrag</a>
             @endif
         </div>
 
@@ -42,7 +42,7 @@
             <div class="assignment-list-heading">
                 <div><h2 id="assignment-list-heading">Senaste uppdrag</h2><p>{{ $assignments->isEmpty() ? 'Dina sparade kundbesök visas här.' : 'Välj ett uppdrag för att öppna och dela rapporten.' }}</p></div>
                 @if ($canManageJobs && $assignments->isNotEmpty())
-                    <a class="text-link" href="{{ route('assignments.create', absolute: false) }}">Lägg till <span aria-hidden="true">↗</span></a>
+                    <a class="text-link" href="{{ route('assignments.create', absolute: false) }}">Lägg till</a>
                 @endif
             </div>
 
@@ -57,7 +57,7 @@
                         <h3>Här börjar nästa rapport</h3>
                         <p>Lägg till kundens namn, adress och datum. Ladda sedan upp bilder före och efter arbetet.</p>
                         @if ($canManageJobs)
-                            <a class="button button-dark" href="{{ route('assignments.create', absolute: false) }}">Skapa ditt första uppdrag <span aria-hidden="true">↗</span></a>
+                            <a class="button button-dark" href="{{ route('assignments.create', absolute: false) }}">Skapa ditt första uppdrag</a>
                         @endif
                     </div>
                 </div>
@@ -75,7 +75,6 @@
                                     <span>{{ $assignment->performed_on->locale('sv')->translatedFormat('j F Y') }}</span>
                                     <span>{{ $assignment->photos_count }} {{ $assignment->photos_count === 1 ? 'bild' : 'bilder' }}</span>
                                 </span>
-                                <span class="job-list-arrow" aria-hidden="true">↗</span>
                             </a>
                         </li>
                     @endforeach

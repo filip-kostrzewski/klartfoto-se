@@ -24,7 +24,7 @@
                     <span class="workflow-icon"><x-icon name="share" /></span>
                     <div><h2 id="share-heading">Dela rapporten</h2><p>Skicka länken till kunden när rapporten är klar.</p></div>
                 </div>
-                <a class="button button-outline-dark" href="{{ route('reports.show', ['token' => $assignment->public_token], false) }}" target="_blank" rel="noopener">Öppna rapport <span aria-hidden="true">↗</span></a>
+                <a class="button button-outline-dark" href="{{ route('reports.show', ['token' => $assignment->public_token], false) }}" target="_blank" rel="noopener">Öppna rapport</a>
             </div>
             <form method="post" action="{{ route('assignments.share', $assignment, false) }}">
                 @csrf
