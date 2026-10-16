@@ -10275,3 +10275,12 @@ html {
     font-weight: 600;
     line-height: 1.35;
 }
+
+/* Keep action labels readable without changing display type or CTA sizing. */
+body :is(button, a.button, a.mobile-menu-signup, label.photo-picker-trigger) {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500 !important;
+    letter-spacing: -.01em;
+    line-height: 1.25;
+}
