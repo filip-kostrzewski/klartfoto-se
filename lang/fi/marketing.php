@@ -80,7 +80,7 @@ return [
             'team_vat' => 'ilman alv:tä',
             'team_features' => ['Kaikki Startin ominaisuudet', 'Enintään 10 käyttäjää', 'Oma logo raportissa'],
             'note' => '30 päivää ilmaiseksi, ilman korttia. Ei sitoutumista.',
-            'invoice_note' => 'Maksu Fortnoxin kautta laskulla.',
+            'invoice_note' => 'Maksu laskulla.',
             'cta' => 'Aloita maksutta',
         ],
         'signup' => [

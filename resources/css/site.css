@@ -3663,6 +3663,21 @@ html {
     outline-color: var(--lime);
 }
 
+.hero-price {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin: 18px 0 0;
+    color: var(--ink);
+    font-size: 15px;
+}
+
+.hero-price strong {
+    font-size: 22px;
+    font-weight: 650;
+    letter-spacing: -.03em;
+}
+
 .hero-footnote {
     margin: 14px 0 0;
     color: #59655d;

@@ -170,7 +170,13 @@
                 </div>
                 @if ($latestReportVersion)
                     <span class="report-version-badge report-version-badge-{{ $latestReportVersion->status }}">
-                        {{ $latestReportVersion->status === 'sent' ? 'Skickad vidare' : 'Klar att dela' }}
+                        @if ($latestReportVersion->status === 'sent')
+                            Skickad vidare
+                        @elseif ($currentVersionIsReady)
+                            Klar att dela
+                        @else
+                            Inte aktuell
+                        @endif
                     </span>
                     <div class="report-version-actions" role="group" aria-label="Åtgärder för version {{ $latestReportVersion->version_number }}">
                         <a class="button button-outline-dark" href="{{ $reportUrl }}" target="_blank" rel="noopener">Öppna rapport <span aria-hidden="true">↗</span></a>
@@ -213,7 +219,7 @@
             <div class="share-box-top">
                 <div class="share-box-copy">
                     <span class="workflow-icon"><x-icon name="share" /></span>
-                    <div><p class="share-box-kicker">DELA RAPPORT</p><h2 id="share-heading">Skicka rapporten till kunden</h2><p>Skicka en länk till den aktuella rapportversionen.</p></div>
+                    <div><p class="share-box-kicker">DELA RAPPORT</p><h2 id="share-heading">Skicka rapporten till kunden</h2><p>Skicka en länk till uppdragets aktuella innehåll.</p></div>
                 </div>
                 <a class="button button-outline-dark" href="{{ $reportUrl }}" target="_blank" rel="noopener"><x-icon name="eye" /> Öppna rapport</a>
             </div>
@@ -226,7 +232,7 @@
             @endif
 
             @if ($hasUnpublishedDraftChanges && $latestReportVersion)
-                <p class="share-version-note">Utskicket och förhandsvisningen länkar till version {{ $latestReportVersion->version_number }}. Utkastets ändringar visas inte förrän du <a href="#create-report-version">skapar en ny rapportversion</a>.</p>
+                <p class="share-version-note">Förhandsvisningen visar version {{ $latestReportVersion->version_number }}. Skicka rapporten skapar och skickar en version av uppdragets aktuella innehåll.</p>
             @endif
 
             <div class="share-project-preview" role="group" aria-label="Publicerad rapportversion som delas">
@@ -235,7 +241,7 @@
                     <strong>{{ $shareProjectName }}</strong>
                     <span>{{ $shareProjectAddress }} · {{ \Illuminate\Support\Carbon::parse($shareProjectDate)->locale('sv')->translatedFormat('j F Y') }}@if ($shareProjectTime) · kl. {{ $shareProjectTime }}@endif</span>
                     @if ($latestReportVersion)
-                        <span>Version {{ $latestReportVersion->version_number }} · {{ $latestReportVersion->status === 'sent' ? 'skickad tidigare' : 'klar att dela' }}</span>
+                        <span>Version {{ $latestReportVersion->version_number }} · {{ $latestReportVersion->status === 'sent' ? 'skickad tidigare' : ($currentVersionIsReady ? 'klar att dela' : 'inte aktuell') }}</span>
                     @else
                         <span>Första rapportversionen skapas vid utskick.</span>
                     @endif
@@ -262,7 +268,7 @@
                     </details>
 
                     <div class="assignment-email-footer">
-                        <p>Rapporten innehåller kundens namn, adress, datum och bilderna i den aktuella versionen.</p>
+                        <p>Rapporten innehåller kundens namn, adress, datum och bilderna som finns i uppdraget just nu.</p>
                         <button class="button button-lime" type="submit" data-loading-text="Skickar rapporten…">Skicka rapporten <span aria-hidden="true">↗</span></button>
                     </div>
                     </form>
@@ -281,10 +287,6 @@
                         <strong>Lägg till minst en bild före utskick</strong>
                         <p>Kunden får rapporten med bilderna som finns i uppdraget.</p>
                         <a href="#assignment-upload-heading">Lägg till bilder <span aria-hidden="true">↓</span></a>
-                    @elseif ($hasUnpublishedDraftChanges && $latestReportVersion)
-                        <strong>Utkastet har ändrats</strong>
-                        <p>Förhandsvisningen och utskicket visar version {{ $latestReportVersion->version_number }}.</p>
-                        <a href="#create-report-version">Skapa en ny rapportversion <span aria-hidden="true">↓</span></a>
                     @elseif (($latestEmailAttempt['status'] ?? null) === 'sent')
                         <strong>Rapporten har skickats vidare.</strong>
                         <p>För att undvika dubbla mejl kan du skicka igen efter 60 sekunder. Uppdatera sidan då.</p>

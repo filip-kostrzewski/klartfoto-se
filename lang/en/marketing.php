@@ -81,7 +81,7 @@ return [
             'team_vat' => 'excl. VAT',
             'team_features' => ['Everything in Start', 'Up to 10 users', 'Your logo on the report'],
             'note' => '30 days free, no card. No commitment.',
-            'invoice_note' => 'Payment by invoice through Fortnox.',
+            'invoice_note' => 'Payment is by invoice.',
             'cta' => 'Get started free',
         ],
         'signup' => [

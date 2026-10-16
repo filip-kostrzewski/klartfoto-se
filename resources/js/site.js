@@ -806,6 +806,12 @@ document.querySelectorAll('form[data-photo-upload-mode]').forEach((form) => {
                 payload.append('place_name', placeName);
             }
 
+            const finalizeReportVersion = pendingItems.every((candidate) => candidate.accepted || candidate === item);
+
+            if (! finalizeReportVersion) {
+                payload.append('defer_report_version', '1');
+            }
+
             if (mode !== 'existing-pair' && placeField instanceof HTMLInputElement) {
                 placeField.readOnly = true;
             }

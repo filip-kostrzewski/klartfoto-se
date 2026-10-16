@@ -10,6 +10,12 @@
                 <p class="eyebrow"><x-icon name="camera" /> {{ $copy['nav']['announcement'] }}</p>
                 <h1>{{ $home['h1_start'] }} <em>{{ $home['h1_emphasis'] }}</em></h1>
                 <p class="landing-hero-lead">{{ $home['lead'] }}</p>
+                @if (config('klartfoto.pricing_visible'))
+                    <p class="hero-price">
+                        <span>{{ $home['pricing']['start_name'] }} <strong>{{ $home['pricing']['start_price'] }}</strong> {{ $home['pricing']['start_vat'] }}</span>
+                        <span>{{ $home['pricing']['team_name'] }} <strong>{{ $home['pricing']['team_price'] }}</strong> {{ $home['pricing']['team_vat'] }}</span>
+                    </p>
+                @endif
                 <div class="hero-actions">
                     <a class="button button-lime" href="{{ route('register', absolute: false) }}">{{ $home['cta_primary'] }}</a>
                     <a class="hero-sample-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['cta_secondary'] }}</a>

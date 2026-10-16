@@ -80,7 +80,7 @@ return [
             'team_vat' => 'ekskl. moms',
             'team_features' => ['Alt fra Start', 'Op til 10 brugere', 'Eget logo i rapporten'],
             'note' => '30 dage gratis, uden kort. Ingen binding.',
-            'invoice_note' => 'Betaling via faktura fra Fortnox.',
+            'invoice_note' => 'Betaling sker mod faktura.',
             'cta' => 'Kom i gang gratis',
         ],
         'signup' => [

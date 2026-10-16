@@ -24,6 +24,7 @@ class StoreAssignmentPhotoRequest extends FormRequest
         return [
             'place_name' => ['nullable', 'string', 'max:120'],
             'assignment_photo_pair_id' => ['nullable', 'integer', 'min:1'],
+            'defer_report_version' => ['sometimes', 'boolean'],
             ...$this->photoRules(),
         ];
     }

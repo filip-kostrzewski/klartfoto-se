@@ -7,8 +7,12 @@ use App\Models\AssignmentPhotoPair;
 use App\Models\User;
 use App\PhotoPhase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -184,6 +188,86 @@ class AssignmentPhotoUploadTest extends TestCase
         ], ['Accept' => 'application/json'])->assertForbidden();
 
         $this->assertDatabaseCount('assignment_photos', 0);
+    }
+
+    public function test_before_and_after_batch_publishes_one_complete_version_only_after_the_last_file(): void
+    {
+        Storage::fake('local');
+        config([
+            'app.url' => 'https://klartfoto.test',
+            'mail.default' => 'array',
+            'mail.from.address' => 'noreply@klartfoto.se',
+            'mail.from.name' => 'Klartfoto',
+            'services.report_pdf.url' => 'https://pdf.test/render',
+            'services.report_pdf.cache_store' => 'array',
+        ]);
+        URL::forceRootUrl('https://klartfoto.test');
+        URL::forceScheme('https');
+        Mail::purge();
+        Http::fake([
+            'https://pdf.test/render' => Http::response("%PDF-1.4\ncomplete\n%%EOF\n", 200, ['Content-Type' => 'application/pdf']),
+        ]);
+        $owner = User::factory()->create();
+        $assignment = Assignment::factory()->for($owner)->create();
+        $url = route('assignments.photos.store', $assignment, false);
+
+        $this->actingAs($owner)->post($url, [
+            'place_name' => 'Kök',
+            'before_photos' => [UploadedFile::fake()->image('fore.jpg', 40, 40)],
+            'before_upload_ids' => [Str::uuid()->toString()],
+            'defer_report_version' => '1',
+        ], ['Accept' => 'application/json'])->assertOk();
+
+        $this->assertSame(0, $assignment->reportVersions()->count());
+        $this->actingAs($owner)
+            ->get(route('assignments.show', $assignment, false))
+            ->assertOk()
+            ->assertDontSee('Klar att dela', false)
+            ->assertDontSee('klar att dela', false);
+
+        $pairId = $assignment->places()->firstOrFail()->photoPairs()->firstOrFail()->id;
+
+        $this->actingAs($owner)->post($url, [
+            'assignment_photo_pair_id' => $pairId,
+            'after_photos' => [UploadedFile::fake()->image('efter.jpg', 40, 40)],
+            'after_upload_ids' => [Str::uuid()->toString()],
+        ], ['Accept' => 'application/json'])->assertOk();
+
+        $version = $assignment->reportVersions()->sole();
+        $pair = $version->snapshot['places'][0]['pairs'][0];
+        $this->assertNotNull($pair['before']);
+        $this->assertNotNull($pair['after']);
+        $this->assertSame('ready', $version->status);
+        $this->actingAs($owner)
+            ->get(route('assignments.show', $assignment, false))
+            ->assertOk()
+            ->assertSee('Klar att dela', false);
+        $this->get(route('reports.show', ['token' => $version->token], false))
+            ->assertOk()
+            ->assertDontSee('Ingen efterbild', false);
+
+        $this->actingAs($owner)
+            ->from(route('assignments.show', $assignment, false))
+            ->post(route('assignments.email', $assignment, false), [
+                'recipient_email' => 'kund@example.test',
+            ])
+            ->assertRedirect(route('assignments.show', $assignment, false))
+            ->assertSessionHas('status');
+
+        $this->assertSame(1, $assignment->reportVersions()->count());
+        $messages = Mail::mailer()->getSymfonyTransport()->messages();
+        $this->assertCount(1, $messages);
+        $this->assertStringContainsString(
+            route('reports.show', ['token' => $version->token]),
+            $messages->first()->getOriginalMessage()->getHtmlBody(),
+        );
+        $this->get(route('reports.pdf', ['token' => $version->token], false))->assertOk();
+        Http::assertSent(function (Request $request): bool {
+            $html = (string) ($request->data()['html'] ?? '');
+
+            return str_contains($html, 'data:image/')
+                && ! str_contains($html, 'Efter saknas');
+        });
     }
 
     private function createPair(Assignment $assignment, string $placeName): AssignmentPhotoPair

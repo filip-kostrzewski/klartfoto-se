@@ -80,7 +80,7 @@ return [
             'team_vat' => 'bez VAT',
             'team_features' => ['Wszystko z planu Start', 'Do 10 użytkowników', 'Własne logo w raporcie'],
             'note' => '30 dni bez opłaty i bez karty. Bez zobowiązań.',
-            'invoice_note' => 'Płatność fakturą przez Fortnox.',
+            'invoice_note' => 'Płatność na fakturę.',
             'cta' => 'Zacznij za darmo',
         ],
         'signup' => [

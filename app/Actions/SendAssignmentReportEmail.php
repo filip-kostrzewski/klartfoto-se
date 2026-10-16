@@ -11,7 +11,6 @@ use Illuminate\Mail\SentMessage;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Validation\ValidationException;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Throwable;
 
@@ -63,14 +62,16 @@ class SendAssignmentReportEmail
             abort_unless($lockedAssignment->photos()->exists(), 403);
 
             $version = $lockedAssignment->reportVersions()->first();
+            $versionMatchesDraft = $version instanceof AssignmentReportVersion
+                && ! $versions->hasUnpublishedDraftChanges($lockedAssignment, $version);
 
-            if (! $version instanceof AssignmentReportVersion) {
-                $version = $versions->create($lockedAssignment, $lockedSender, preserveCurrentToken: true);
+            if (! $versionMatchesDraft) {
+                $version = $versions->create(
+                    $lockedAssignment,
+                    $lockedSender,
+                    preserveCurrentToken: ! $version instanceof AssignmentReportVersion,
+                );
                 $lockedAssignment->refresh();
-            } elseif ($versions->hasUnpublishedDraftChanges($lockedAssignment, $version)) {
-                throw ValidationException::withMessages([
-                    'email' => 'Skapa en ny rapportversion innan du skickar ändringarna.',
-                ]);
             }
 
             $latestAttempt = $lockedAssignment->emailAttempts()->lockForUpdate()->first();

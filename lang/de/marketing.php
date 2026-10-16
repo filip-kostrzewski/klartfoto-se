@@ -80,7 +80,7 @@ return [
             'team_vat' => 'zzgl. MwSt.',
             'team_features' => ['Alles aus Start', 'Bis zu 10 Nutzer', 'Eigenes Logo im Bericht'],
             'note' => '30 Tage kostenlos, ohne Karte. Keine Bindung.',
-            'invoice_note' => 'Zahlung per Rechnung über Fortnox.',
+            'invoice_note' => 'Zahlung per Rechnung.',
             'cta' => 'Kostenlos starten',
         ],
         'signup' => [

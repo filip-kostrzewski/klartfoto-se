@@ -11,11 +11,14 @@ use App\Models\AssignmentReportVersion;
 use App\Models\User;
 use App\PhotoPhase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Mail\PendingMail;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 use Mockery;
 use Symfony\Component\Mailer\Exception\TransportException;
 use Tests\TestCase;
@@ -445,6 +448,60 @@ class SendAssignmentEmailTest extends TestCase
 
         $this->assertDatabaseCount('assignment_email_attempts', 20);
         Mail::assertSent(AssignmentReportEmail::class, 20);
+    }
+
+    public function test_sending_publishes_and_emails_the_current_assignment_when_the_latest_version_misses_the_after_photo(): void
+    {
+        $this->useArrayMailer();
+        Storage::fake('local');
+        $owner = User::factory()->create();
+        $assignment = Assignment::factory()->for($owner)->create();
+        $url = route('assignments.photos.store', $assignment, false);
+
+        $this->actingAs($owner)->post($url, [
+            'place_name' => 'Hall',
+            'before_photos' => [UploadedFile::fake()->image('fore.jpg', 40, 40)],
+            'before_upload_ids' => [Str::uuid()->toString()],
+        ], ['Accept' => 'application/json'])->assertOk();
+
+        $firstVersion = $assignment->reportVersions()->sole();
+        $this->assertNull($firstVersion->snapshot['places'][0]['pairs'][0]['after']);
+        $pairId = $firstVersion->snapshot['places'][0]['pairs'][0]['id'];
+
+        $this->actingAs($owner)->post($url, [
+            'assignment_photo_pair_id' => $pairId,
+            'after_photos' => [UploadedFile::fake()->image('efter.jpg', 40, 40)],
+            'after_upload_ids' => [Str::uuid()->toString()],
+        ], ['Accept' => 'application/json'])->assertOk();
+
+        $this->assertSame(1, $assignment->reportVersions()->count());
+        $this->actingAs($owner)
+            ->get(route('assignments.show', $assignment, false))
+            ->assertOk()
+            ->assertSee('Inte aktuell', false)
+            ->assertDontSee('Klar att dela', false);
+
+        $this->actingAs($owner)
+            ->from(route('assignments.show', $assignment, false))
+            ->post(route('assignments.email', $assignment, false), [
+                'recipient_email' => 'kund@example.test',
+            ])
+            ->assertRedirect(route('assignments.show', $assignment, false))
+            ->assertSessionHas('status');
+
+        $sentVersion = $assignment->fresh()->latestReportVersion();
+        $attempt = AssignmentEmailAttempt::query()->sole();
+        $this->assertNotNull($sentVersion);
+        $this->assertSame(2, $sentVersion->version_number);
+        $this->assertNotNull($sentVersion->snapshot['places'][0]['pairs'][0]['after']);
+        $this->assertSame($sentVersion->id, $attempt->assignment_report_version_id);
+        $this->assertStringContainsString(
+            route('reports.show', ['token' => $sentVersion->token]),
+            Mail::mailer()->getSymfonyTransport()->messages()->first()->getOriginalMessage()->getHtmlBody(),
+        );
+        $this->get(route('reports.show', ['token' => $sentVersion->token], false))
+            ->assertOk()
+            ->assertDontSee('Ingen efterbild', false);
     }
 
     private function assignmentWithPhoto(User $owner, array $attributes = []): Assignment

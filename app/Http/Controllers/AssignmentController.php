@@ -347,11 +347,11 @@ class AssignmentController extends Controller
             'latestEmailAttempt' => $latestEmailAttempt === null
                 ? null
                 : $this->emailAttemptViewData($latestEmailAttempt),
+            'currentVersionIsReady' => $currentVersionIsReady,
             'canSendAssignmentEmail' => $user instanceof User
                 && $user->hasVerifiedEmail()
                 && $canManageJobs
                 && $assignment->photos->isNotEmpty()
-                && ! $hasUnpublishedDraftChanges
                 && $sendReportEmail->canStartAnotherAttempt($latestEmailAttempt),
             'canManageTeamAssignment' => $canManageTeamAssignment,
             'canReviewAssignment' => $canReviewAssignment,
@@ -417,7 +417,11 @@ class AssignmentController extends Controller
                 $lockedAssignment->markDraftChanged();
             }
 
-            if ($lockedAssignment->photos()->exists() && $lockedAssignment->reportVersions()->doesntExist()) {
+            if (
+                ! $request->boolean('defer_report_version')
+                && $lockedAssignment->photos()->exists()
+                && $lockedAssignment->reportVersions()->doesntExist()
+            ) {
                 $versions->create($lockedAssignment, $user, preserveCurrentToken: true);
             }
 

@@ -83,7 +83,7 @@ return [
             'team_vat' => 'exkl. moms',
             'team_features' => ['Allt i Start', 'upp till 10 användare', 'egen logga i rapporten'],
             'note' => '30 dagar gratis utan kort. Ingen bindningstid.',
-            'invoice_note' => 'Betalning via faktura från Fortnox.',
+            'invoice_note' => 'Betalning sker mot faktura.',
             'cta' => 'Kom igång gratis',
         ],
         'signup' => [
