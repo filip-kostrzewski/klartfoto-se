@@ -210,6 +210,20 @@
                 aria-describedby="video-language"></iframe>
             <a class="text-link product-video-direct" href="https://player.mediadelivery.net/play/781538/b62dea40-8f45-42cd-a9df-1d770297f50f" target="_blank" rel="noopener noreferrer">{{ $home['video']['fallback'] }} <span aria-hidden="true">↗</span></a>
         </div>
+        @if (empty($page['og_image']))
+            <meta property="og:image" content="{{ url('/images/video-miniatura.jpg') }}">
+        @endif
+        <script type="application/ld+json">{!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'VideoObject',
+            'name' => $home['video']['title'],
+            'description' => $home['video']['description'],
+            'thumbnailUrl' => url('/images/video-miniatura.jpg'),
+            'uploadDate' => '2026-10-16',
+            'duration' => 'PT1M',
+            'embedUrl' => 'https://iframe.mediadelivery.net/embed/781538/b62dea40-8f45-42cd-a9df-1d770297f50f',
+            'inLanguage' => 'sv',
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR) !!}</script>
     </section>
 
     <x-pricing-section :pricing="$home['pricing']" />

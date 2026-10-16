@@ -511,6 +511,40 @@ class MarketingSiteTest extends TestCase
         $this->get('/en')->assertOk()->assertDontSee('>Guider</a>', false);
     }
 
+    public function test_homepage_video_object_uses_the_swedish_thumbnail_and_keeps_the_page_schema(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+
+        preg_match_all('/<script type="application\/ld\+json">(.*?)<\/script>/s', $html, $matches);
+        $documents = array_map(function (string $json): array {
+            $decoded = json_decode($json, true);
+            $this->assertIsArray($decoded);
+
+            return $decoded;
+        }, $matches[1]);
+        $video = collect($documents)->firstWhere('@type', 'VideoObject');
+        $pageSchema = collect($documents)->first(fn (array $document): bool => array_key_exists('@graph', $document));
+
+        $this->assertIsArray($pageSchema);
+        $this->assertIsArray($video);
+        $this->assertSame('Ett uppdrag. Från början till rapport.', $video['name']);
+        $this->assertSame('Se hur du lägger till ett uppdrag, laddar upp bilder och delar rapporten med kunden.', $video['description']);
+        $this->assertSame(url('/images/video-miniatura.jpg'), $video['thumbnailUrl']);
+        $this->assertSame('2026-10-16', $video['uploadDate']);
+        $this->assertSame('PT1M', $video['duration']);
+        $this->assertSame('https://iframe.mediadelivery.net/embed/781538/b62dea40-8f45-42cd-a9df-1d770297f50f', $video['embedUrl']);
+        $this->assertSame('sv', $video['inLanguage']);
+        $this->assertArrayNotHasKey('contentUrl', $video);
+        $this->assertSame(1, substr_count($html, 'property="og:image"'));
+        $this->assertStringContainsString('property="og:image" content="'.url('/images/video-miniatura.jpg').'"', $html);
+
+        $image = getimagesize(public_path('images/video-miniatura.jpg'));
+        $this->assertIsArray($image);
+        $this->assertSame(1280, $image[0]);
+        $this->assertSame(720, $image[1]);
+        $this->assertSame('image/jpeg', $image['mime']);
+    }
+
     /**
      * @return array<string, mixed>
      */
