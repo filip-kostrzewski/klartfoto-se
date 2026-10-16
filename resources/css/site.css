@@ -10256,3 +10256,22 @@ html {
         width: 100%;
     }
 }
+
+/* Keep field labels readable across workspace, account and signup forms. */
+.app-form label:not(.plan-card):not(.photo-picker-trigger),
+.assignment-filters label,
+.assignment-pair-note-field label,
+.share-box form label,
+.verify-change-form label,
+.signup-form > label:not(.consent-label),
+.delete-form > label {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.billing-request-form legend {
+    font-weight: 600;
+    line-height: 1.35;
+}
