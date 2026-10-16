@@ -219,7 +219,7 @@
             'name' => $home['video']['title'],
             'description' => $home['video']['description'],
             'thumbnailUrl' => url('/images/video-miniatura.jpg'),
-            'uploadDate' => '2026-10-16',
+            'uploadDate' => '2026-10-16T14:48:02+02:00',
             'duration' => 'PT1M',
             'embedUrl' => 'https://iframe.mediadelivery.net/embed/781538/b62dea40-8f45-42cd-a9df-1d770297f50f',
             'inLanguage' => 'sv',

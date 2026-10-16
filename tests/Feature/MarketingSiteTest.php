@@ -531,7 +531,7 @@ class MarketingSiteTest extends TestCase
         $this->assertSame('Ett uppdrag. Från början till rapport.', $video['name']);
         $this->assertSame('Se hur du lägger till ett uppdrag, laddar upp bilder och delar rapporten med kunden.', $video['description']);
         $this->assertSame(url('/images/video-miniatura.jpg'), $video['thumbnailUrl']);
-        $this->assertSame('2026-10-16', $video['uploadDate']);
+        $this->assertSame('2026-10-16T14:48:02+02:00', $video['uploadDate']);
         $this->assertSame('PT1M', $video['duration']);
         $this->assertSame('https://iframe.mediadelivery.net/embed/781538/b62dea40-8f45-42cd-a9df-1d770297f50f', $video['embedUrl']);
         $this->assertSame('sv', $video['inLanguage']);
