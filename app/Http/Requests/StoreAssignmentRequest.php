@@ -11,6 +11,8 @@ class StoreAssignmentRequest extends FormRequest
 {
     use ValidatesJobPhotos;
 
+    public const START_TIME_REQUIRED = 'Ange en starttid när sluttiden är ifylld.';
+
     public function authorize(): bool
     {
         return $this->user() !== null;
@@ -36,8 +38,16 @@ class StoreAssignmentRequest extends FormRequest
         $validator->after(function (Validator $validator): void {
             $start = $this->input('performed_time');
             $end = $this->input('performed_end_time');
+            $startIsSet = is_string($start) && $start !== '';
+            $endIsSet = is_string($end) && $end !== '';
 
-            if (! is_string($start) || ! is_string($end) || $start === '' || $end === '') {
+            if ($endIsSet && ! $startIsSet) {
+                $validator->errors()->add('performed_time', self::START_TIME_REQUIRED);
+
+                return;
+            }
+
+            if (! $startIsSet || ! $endIsSet || ! preg_match('/^\d{2}:\d{2}$/', $start) || ! preg_match('/^\d{2}:\d{2}$/', $end)) {
                 return;
             }
 

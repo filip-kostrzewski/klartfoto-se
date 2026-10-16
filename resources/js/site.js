@@ -1,4 +1,5 @@
 import { fileLooksLikeHeic, heicFileToJpegFile, jpegFileName } from './heic.js';
+import { PHOTO_RESOLUTION, jobFormErrors } from './job-form.js';
 
 document.documentElement.classList.add('js-enhanced');
 
@@ -161,6 +162,196 @@ const preparePhoto = async (file) => {
     return heicFileToJpegFile(file);
 };
 
+const keptPhotoForms = new WeakSet();
+
+const escapeHtml = (value) => String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;');
+
+const restoreSubmitButton = (form) => {
+    form.removeAttribute('aria-busy');
+    form.querySelectorAll('button[data-original-content]').forEach((button) => {
+        if (! (button instanceof HTMLButtonElement)) {
+            return;
+        }
+
+        button.innerHTML = button.dataset.originalContent ?? button.innerHTML;
+        button.disabled = button.dataset.originalDisabled === 'true';
+    });
+};
+
+const filesFrom = (form, name) => {
+    const input = form.querySelector(`[name="${name}"]`);
+
+    if (! (input instanceof HTMLInputElement)) {
+        return [];
+    }
+
+    return Array.from(input.files ?? []);
+};
+
+const showFormErrors = (form, errors) => {
+    form.querySelectorAll('[data-field-error]').forEach((field) => {
+        const key = field.dataset.fieldError ?? '';
+        const message = errors[key]?.[0] ?? '';
+        field.hidden = message === '';
+        field.textContent = message;
+        const input = form.querySelector(`[name="${key}"]`);
+
+        if (input instanceof HTMLInputElement) {
+            input.setAttribute('aria-invalid', message === '' ? 'false' : 'true');
+        }
+    });
+
+    form.querySelectorAll('[data-photo-picker]').forEach((picker) => {
+        const error = picker.querySelector('[data-photo-error]');
+        const input = picker.querySelector('input[type="file"]');
+
+        if (! error || ! (input instanceof HTMLInputElement)) {
+            return;
+        }
+
+        const key = input.name.replace(/\[\]$/, '');
+        const message = Object.entries(errors).find(([name]) => name === key || name.startsWith(`${key}.`))?.[1]?.[0] ?? '';
+        error.hidden = message === '';
+        error.textContent = message;
+    });
+
+    const messages = [...new Set(Object.values(errors).flat().filter((message) => typeof message === 'string' && message !== ''))];
+    let box = form.querySelector('[data-form-errors]');
+
+    if (! (box instanceof HTMLElement)) {
+        box = document.createElement('div');
+        box.className = 'form-status form-status-error';
+        box.setAttribute('role', 'alert');
+        box.tabIndex = -1;
+        box.dataset.formErrors = '';
+        form.prepend(box);
+    }
+
+    if (messages.length === 0) {
+        box.hidden = true;
+        box.replaceChildren();
+
+        return;
+    }
+
+    const list = messages.map((message) => `<li>${escapeHtml(message)}</li>`).join('');
+    box.hidden = false;
+    box.innerHTML = `<strong>Kontrollera uppgifterna</strong><ul>${list}</ul>`;
+    box.focus();
+};
+
+const dimensionErrors = async (files, key, existing) => {
+    /** @type {Record<string, string[]>} */
+    const errors = {};
+
+    if (typeof createImageBitmap !== 'function') {
+        return errors;
+    }
+
+    for (let index = 0; index < files.length; index += 1) {
+        const field = `${key}.${index}`;
+
+        if (existing[field]) {
+            continue;
+        }
+
+        try {
+            const bitmap = await createImageBitmap(files[index]);
+            const tooBig = bitmap.width > 8000 || bitmap.height > 8000 || bitmap.width < 1 || bitmap.height < 1;
+            bitmap.close?.();
+
+            if (tooBig) {
+                errors[field] = [PHOTO_RESOLUTION];
+            }
+        } catch (error) {
+            // The server checks files this browser cannot measure. The page stays in place.
+        }
+    }
+
+    return errors;
+};
+
+const submitPhotosWithoutReload = async (form) => {
+    const beforeFiles = filesFrom(form, 'before_photos[]');
+    const afterFiles = filesFrom(form, 'after_photos[]');
+    const start = form.querySelector('[name="performed_time"]');
+    const end = form.querySelector('[name="performed_end_time"]');
+    const errors = jobFormErrors({
+        start: start instanceof HTMLInputElement ? start.value : '',
+        end: end instanceof HTMLInputElement ? end.value : '',
+        photosRequired: form.dataset.photosRequired === 'true',
+        beforeFiles,
+        afterFiles,
+    });
+
+    Object.assign(errors, await dimensionErrors(beforeFiles, 'before_photos', errors));
+    Object.assign(errors, await dimensionErrors(afterFiles, 'after_photos', errors));
+
+    if (Object.keys(errors).length > 0) {
+        showFormErrors(form, errors);
+        restoreSubmitButton(form);
+
+        return;
+    }
+
+    showFormErrors(form, {});
+
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                Accept: 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            credentials: 'same-origin',
+        });
+
+        if (response.ok) {
+            const payload = await response.json();
+
+            if (typeof payload.redirect === 'string' && payload.redirect !== '') {
+                window.location.assign(payload.redirect);
+
+                return;
+            }
+        }
+
+        if (response.status === 422) {
+            const payload = await response.json();
+            showFormErrors(form, payload.errors ?? {});
+            restoreSubmitButton(form);
+
+            return;
+        }
+    } catch (error) {
+        // The request failed before a response. Keep the selected files.
+    }
+
+    showFormErrors(form, { form: ['Något gick fel. Försök igen.'] });
+    restoreSubmitButton(form);
+};
+
+const bindPhotoForm = (form) => {
+    if (keptPhotoForms.has(form)) {
+        return;
+    }
+
+    keptPhotoForms.add(form);
+    form.addEventListener('submit', (event) => {
+        if (form.dataset.photoConverting) {
+            return;
+        }
+
+        event.preventDefault();
+        void submitPhotosWithoutReload(form);
+    });
+};
+
 document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
     const input = picker.querySelector('input[type="file"]');
     const list = picker.querySelector('[data-photo-list]');
@@ -178,6 +369,23 @@ document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
     let writing = false;
     let converting = false;
     let submitAfter = false;
+
+    const form = input.form;
+
+    const markConverting = (active) => {
+        if (! form) {
+            return;
+        }
+
+        const current = Number(form.dataset.photoConverting || '0');
+        const next = Math.max(0, current + (active ? 1 : -1));
+
+        if (next === 0) {
+            delete form.dataset.photoConverting;
+        } else {
+            form.dataset.photoConverting = String(next);
+        }
+    };
 
     const render = () => {
         previewUrls.forEach((url) => URL.revokeObjectURL(url));
@@ -241,6 +449,7 @@ document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
 
         const selected = Array.from(input.files ?? []);
         converting = true;
+        markConverting(true);
         count.hidden = false;
         count.textContent = 'Läser bilder…';
 
@@ -257,6 +466,7 @@ document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
                 }
             } finally {
                 converting = false;
+                markConverting(false);
                 showError(failed ? HEIC_CONVERSION_ERROR : '');
                 writeFiles();
 
@@ -276,6 +486,10 @@ document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
         event.preventDefault();
         submitAfter = true;
     });
+
+    if (form?.dataset.keepPhotos === 'true') {
+        bindPhotoForm(form);
+    }
 });
 
 const copyText = async (value) => {

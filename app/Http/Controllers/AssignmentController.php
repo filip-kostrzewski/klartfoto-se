@@ -11,6 +11,7 @@ use App\Models\AssignmentPhoto;
 use App\Models\AssignmentPhotoPair;
 use App\Models\User;
 use App\OnboardingChecklist;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -70,12 +71,10 @@ class AssignmentController extends Controller
         ]);
     }
 
-    public function store(StoreAssignmentRequest $request, StoreAssignmentPhotos $photos, OnboardingChecklist $checklist): RedirectResponse
+    public function store(StoreAssignmentRequest $request, StoreAssignmentPhotos $photos, OnboardingChecklist $checklist): JsonResponse|RedirectResponse
     {
         if (! Gate::allows('create', Assignment::class)) {
-            return back()->withInput()->withErrors([
-                'trial' => self::ACCESS_PAUSED_MESSAGE,
-            ]);
+            return $this->pausedAccess(withInput: true);
         }
 
         $user = $request->user();
@@ -100,14 +99,10 @@ class AssignmentController extends Controller
         });
 
         if ($user instanceof User && $checklist->finishedDuring($user, $wasComplete)) {
-            return redirect()
-                ->route('assignments.index')
-                ->with('toast', OnboardingChecklist::COMPLETED_MESSAGE);
+            return $this->jsonOrRedirect(route('assignments.index'), OnboardingChecklist::COMPLETED_MESSAGE);
         }
 
-        return redirect()
-            ->route('assignments.show', $assignment)
-            ->with('toast', 'Uppdraget är sparat.');
+        return $this->jsonOrRedirect(route('assignments.show', $assignment), 'Uppdraget är sparat.');
     }
 
     public function show(Assignment $assignment): View
@@ -122,15 +117,13 @@ class AssignmentController extends Controller
         ]);
     }
 
-    public function storePhotos(StoreAssignmentPhotoRequest $request, Assignment $assignment, StoreAssignmentPhotos $photos, OnboardingChecklist $checklist): RedirectResponse
+    public function storePhotos(StoreAssignmentPhotoRequest $request, Assignment $assignment, StoreAssignmentPhotos $photos, OnboardingChecklist $checklist): JsonResponse|RedirectResponse
     {
         Gate::authorize('update', $assignment);
 
         $user = $request->user();
         if (! $user instanceof User || ! $user->canManageJobs()) {
-            return back()->withErrors([
-                'trial' => self::ACCESS_PAUSED_MESSAGE,
-            ]);
+            return $this->pausedAccess(withInput: false);
         }
 
         $wasComplete = $checklist->isComplete($user);
@@ -144,14 +137,10 @@ class AssignmentController extends Controller
         });
 
         if ($checklist->finishedDuring($user, $wasComplete)) {
-            return redirect()
-                ->route('assignments.index')
-                ->with('toast', OnboardingChecklist::COMPLETED_MESSAGE);
+            return $this->jsonOrRedirect(route('assignments.index'), OnboardingChecklist::COMPLETED_MESSAGE);
         }
 
-        return redirect()
-            ->route('assignments.show', $assignment)
-            ->with('toast', 'Bilderna är uppladdade.');
+        return $this->jsonOrRedirect(route('assignments.show', $assignment), 'Bilderna är uppladdade.');
     }
 
     public function destroyPhoto(Assignment $assignment, AssignmentPhoto $photo): RedirectResponse
@@ -270,6 +259,35 @@ class AssignmentController extends Controller
         $record = $assignment->photoPairRecords->firstWhere('id', $pairId);
 
         return $record instanceof AssignmentPhotoPair ? $record : null;
+    }
+
+    private function pausedAccess(bool $withInput): JsonResponse|RedirectResponse
+    {
+        if (request()->expectsJson()) {
+            return response()->json([
+                'message' => self::ACCESS_PAUSED_MESSAGE,
+                'errors' => [
+                    'trial' => [self::ACCESS_PAUSED_MESSAGE],
+                ],
+            ], 422);
+        }
+
+        $redirect = $withInput ? back()->withInput() : back();
+
+        return $redirect->withErrors([
+            'trial' => self::ACCESS_PAUSED_MESSAGE,
+        ]);
+    }
+
+    private function jsonOrRedirect(string $url, string $toast): JsonResponse|RedirectResponse
+    {
+        if (request()->expectsJson()) {
+            session()->flash('toast', $toast);
+
+            return response()->json(['redirect' => $url]);
+        }
+
+        return redirect()->to($url)->with('toast', $toast);
     }
 
     private function blankToNull(string $value): ?string

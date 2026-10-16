@@ -296,18 +296,64 @@ class ReportEvidenceTest extends TestCase
         ])->assertRedirect('/uppdrag/nytt')
             ->assertSessionHasErrors(['performed_end_time' => 'Ange en giltig tid.']);
 
-        $this->actingAs($user)->post('/uppdrag', [
+        $this->actingAs($user)->from('/uppdrag/nytt')->post('/uppdrag', [
             'customer_name' => 'Anna Andersson',
             'address' => 'Storgatan 1, 111 22 Stockholm',
             'performed_on' => '2026-10-16',
             'performed_end_time' => '11:30',
-        ])->assertRedirect();
+        ])->assertRedirect('/uppdrag/nytt')
+            ->assertSessionHasErrors(['performed_time' => 'Ange en starttid när sluttiden är ifylld.']);
 
-        $endOnly = Assignment::query()->latest('id')->firstOrFail();
-        $this->get('/r/'.$endOnly->public_token)
+        $this->assertSame(1, Assignment::query()->count());
+    }
+
+    public function test_photo_forms_report_validation_errors_without_leaving_the_page(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->get('/uppdrag/nytt')
             ->assertOk()
-            ->assertSee('<p>16 oktober 2026 kl. 11:30</p>', false)
-            ->assertDontSee('16 oktober 2026 kl. 11:30–', false);
+            ->assertSee('data-keep-photos', false)
+            ->assertSee('data-form-errors', false)
+            ->assertDontSee('data-photos-required', false);
+
+        $this->actingAs($user)->postJson('/uppdrag', [
+            'customer_name' => 'Anna Andersson',
+            'address' => 'Storgatan 1, 111 22 Stockholm',
+            'performed_on' => '2026-10-16',
+            'performed_end_time' => '11:30',
+        ])->assertUnprocessable()
+            ->assertJsonPath('errors.performed_time.0', 'Ange en starttid när sluttiden är ifylld.');
+        $this->assertDatabaseCount('assignments', 0);
+
+        $created = $this->actingAs($user)->postJson('/uppdrag', [
+            'customer_name' => 'Anna Andersson',
+            'address' => 'Storgatan 1, 111 22 Stockholm',
+            'performed_on' => '2026-10-16',
+            'performed_time' => '09:00',
+            'performed_end_time' => '11:30',
+        ])->assertOk()
+            ->assertSessionHas('toast', 'Uppdraget är sparat.');
+
+        $assignment = Assignment::query()->firstOrFail();
+        $created->assertJsonPath('redirect', route('assignments.show', $assignment));
+
+        $this->actingAs($user)->get(route('assignments.show', $assignment))
+            ->assertOk()
+            ->assertSee('data-keep-photos', false)
+            ->assertSee('data-photos-required', false);
+
+        $this->actingAs($user)->post(route('assignments.photos.store', $assignment), [
+            'before_photos' => [UploadedFile::fake()->create('anteckning.txt', 12, 'text/plain')],
+        ], [
+            'Accept' => 'application/json',
+        ])->assertUnprocessable()
+            ->assertJsonValidationErrors(['before_photos.0' => AcceptedJobPhoto::FORMAT_MESSAGE]);
+        $this->assertSame(0, $assignment->photos()->count());
+
+        $process = new Process(['node', 'tests/js/job-form.mjs'], base_path());
+        $process->mustRun();
+        $this->assertStringContainsString('ok', $process->getOutput());
     }
 
     public function test_the_report_footer_formats_a_swedish_mobile_and_the_company_name_can_be_edited(): void

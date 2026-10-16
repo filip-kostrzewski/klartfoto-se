@@ -26,8 +26,9 @@
         @endif
 
         @if ($canManageJobs)
-            <form class="app-form assignment-form" method="post" action="{{ route('assignments.store', absolute: false) }}" enctype="multipart/form-data" data-submit-feedback>
+            <form class="app-form assignment-form" method="post" action="{{ route('assignments.store', absolute: false) }}" enctype="multipart/form-data" data-submit-feedback data-keep-photos>
                 @csrf
+                <div class="form-status form-status-error" role="alert" tabindex="-1" data-form-errors hidden></div>
                 <fieldset class="assignment-details">
                     <legend>Kund och besök</legend>
                     <label for="customer_name">Kundens namn</label>
@@ -46,15 +47,17 @@
                         <div>
                             <label for="performed_time">Starttid</label>
                             <input id="performed_time" name="performed_time" type="time" value="{{ old('performed_time') }}" aria-invalid="{{ $errors->has('performed_time') ? 'true' : 'false' }}" @if ($errors->has('performed_time')) aria-describedby="performed-time-error" @endif>
+                            <span class="field-error" data-field-error="performed_time" hidden></span>
                             @error('performed_time') <span class="field-error" id="performed-time-error">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="performed_end_time">Sluttid</label>
                             <input id="performed_end_time" name="performed_end_time" type="time" value="{{ old('performed_end_time') }}" aria-invalid="{{ $errors->has('performed_end_time') ? 'true' : 'false' }}" @if ($errors->has('performed_end_time')) aria-describedby="performed-end-time-error" @endif>
+                            <span class="field-error" data-field-error="performed_end_time" hidden></span>
                             @error('performed_end_time') <span class="field-error" id="performed-end-time-error">{{ $message }}</span> @enderror
                         </div>
                     </div>
-                    <p class="assignment-time-hint">Valfritt. Ett intervall visas i rapporten som kl. 09:00–11:30.</p>
+                    <p class="assignment-time-hint">Valfritt. Ange både start och slut för ett intervall, till exempel kl. 09:00–11:30.</p>
                 </fieldset>
 
                 <div class="assignment-photo-section">

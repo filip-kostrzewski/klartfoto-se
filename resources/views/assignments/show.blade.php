@@ -67,8 +67,9 @@
                 <div class="assignment-section-heading">
                     <div><p class="section-kicker">Lägg till bilder</p><h2 id="assignment-upload-heading">Komplettera rapporten</h2></div>
                 </div>
-                <form class="app-form assignment-form assignment-upload-form" method="post" action="{{ route('assignments.photos.store', $assignment, false) }}" enctype="multipart/form-data" data-submit-feedback>
+                <form class="app-form assignment-form assignment-upload-form" method="post" action="{{ route('assignments.photos.store', $assignment, false) }}" enctype="multipart/form-data" data-submit-feedback data-keep-photos data-photos-required>
                     @csrf
+                    <div class="form-status form-status-error" role="alert" tabindex="-1" data-form-errors hidden></div>
                     <div class="assignment-photo-section">
                         @include('assignments.partials.photo-input', [
                             'inputId' => 'before_photos',
