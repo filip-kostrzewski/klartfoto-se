@@ -3647,6 +3647,22 @@ html {
     background: var(--white);
 }
 
+.resource-hero .hero-actions .button-outline {
+    border-color: rgba(255, 255, 255, .55);
+    color: var(--white);
+}
+
+.resource-hero .hero-actions .button-outline:hover,
+.resource-hero .hero-actions .button-outline:focus-visible {
+    border-color: var(--lime);
+    background: transparent;
+    color: var(--lime);
+}
+
+.resource-hero .hero-actions .button-outline:focus-visible {
+    outline-color: var(--lime);
+}
+
 .hero-footnote {
     margin: 14px 0 0;
     color: #59655d;
