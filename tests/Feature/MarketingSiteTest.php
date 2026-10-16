@@ -243,8 +243,9 @@ class MarketingSiteTest extends TestCase
         $this->assertInstanceOf(DOMElement::class, $descriptionNode);
         $this->assertSame('comparison-description', $descriptionNode->getAttribute('id'));
         $this->assertSame('sr-only', $descriptionNode->getAttribute('class'));
-        $this->assertSame('', trim($descriptionNode->textContent ?? ''));
-        $this->assertSame($description, $descriptionNode->getAttribute('aria-label'));
+        $this->assertSame($description, trim($descriptionNode->textContent ?? ''));
+        $this->assertSame('', $descriptionNode->getAttribute('aria-label'));
+        $this->assertSame('polite', $descriptionNode->getAttribute('aria-live'));
         $this->assertSame(0, $xpath->query('ancestor::*[contains(concat(" ", normalize-space(@class), " "), " comparison-frame ")]', $descriptionNode)->length);
         $this->assertSame(1, substr_count($html, $description));
 

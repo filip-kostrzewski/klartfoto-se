@@ -65,8 +65,7 @@ document.querySelectorAll('[data-comparison]').forEach((comparison) => {
         );
 
         if (description) {
-            description.setAttribute('aria-label', control.dataset.descriptionTemplate.replace(':percent', split));
-            description.replaceChildren();
+            description.textContent = control.dataset.descriptionTemplate.replace(':percent', split);
         }
     };
 

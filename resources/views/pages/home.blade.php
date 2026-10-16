@@ -64,7 +64,7 @@
                         <span class="comparison-divider" aria-hidden="true"></span>
                         <span class="comparison-handle" aria-hidden="true"><span></span></span>
                     </div>
-                    <span id="comparison-description" class="sr-only" data-comparison-description aria-live="polite" aria-label="{{ str_replace(':percent', '54', $home['slider_description']) }}"></span>
+                    <span id="comparison-description" class="sr-only" data-comparison-description aria-live="polite">{{ str_replace(':percent', '54', $home['slider_description']) }}</span>
                 </div>
                 <div class="comparison-caption">
                     <span><span class="caption-live-dot" aria-hidden="true"></span> {{ $home['same_view'] }}</span>
