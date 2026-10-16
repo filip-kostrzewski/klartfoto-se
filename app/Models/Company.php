@@ -119,6 +119,16 @@ class Company extends Model
         return $value === '' ? null : $value;
     }
 
+    public function customers(): HasMany
+    {
+        return $this->hasMany(Customer::class);
+    }
+
+    public function customerProperties(): HasMany
+    {
+        return $this->hasMany(CustomerProperty::class);
+    }
+
     public function stripeEmail(): ?string
     {
         return $this->users()->where('role', CompanyRole::Owner)->value('email');

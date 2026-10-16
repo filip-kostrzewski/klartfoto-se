@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Actions\CreateAssignmentReportVersion;
 use App\Models\Assignment;
 use App\Models\AssignmentPhoto;
 use App\Models\User;
@@ -10,6 +11,7 @@ use App\Rules\AcceptedJobPhoto;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\Process;
 use Tests\TestCase;
 
@@ -33,6 +35,7 @@ class ReportEvidenceTest extends TestCase
             'address' => 'Storgatan 1, 111 22 Stockholm',
             'performed_on' => '2026-10-16',
             'performed_time' => '14:30',
+            'performed_end_time' => '15:00',
             'before_photos' => [UploadedFile::fake()->image('fore.jpg', 80, 60)],
             'after_photos' => [UploadedFile::fake()->image('efter.jpg', 80, 60)],
         ])->assertRedirect();
@@ -42,37 +45,52 @@ class ReportEvidenceTest extends TestCase
         $after = $assignment->photos()->where('phase', PhotoPhase::After)->firstOrFail();
         $this->assertNotNull($before->assignment_photo_pair_id);
         $this->assertSame($before->assignment_photo_pair_id, $after->assignment_photo_pair_id);
+        $pair = $before->photoPair()->firstOrFail();
+        $place = $pair->place()->firstOrFail();
+        $firstVersion = $assignment->reportVersions()->sole();
+        $this->assertSame('14:30', $firstVersion->snapshot['performed_time']);
+        $this->assertSame('15:00', $firstVersion->snapshot['performed_end_time']);
+        $this->assertSame('14:30–15:00', $firstVersion->snapshot['performed_time_label']);
 
-        $this->actingAs($user)->put(route('assignments.pairs.update', $assignment), [
-            'pair_key' => (string) $before->assignment_photo_pair_id,
-            'pair_id' => $before->assignment_photo_pair_id,
-            'before_photo_id' => $before->id,
-            'after_photo_id' => $after->id,
-            'room_name' => 'Kök',
-            'note' => 'Bänken är ren.',
-        ])->assertRedirect()
-            ->assertSessionHas('toast', 'Uppgifterna om bildparet är sparade.');
+        $this->actingAs($user)
+            ->put(route('assignments.places.pairs.notes.update', [$assignment, $place, $pair], false), [
+                'label' => 'Kök',
+                'customer_comment' => 'Bänken är ren.',
+            ])->assertRedirect();
 
-        $report = $this->get('/r/'.$assignment->public_token)->assertOk();
-        $report->assertSee('16 oktober 2026 kl. 14:30', false)
-            ->assertSee('Kök', false)
-            ->assertSee('Bänken är ren.', false)
-            ->assertSee('Den som har länken kan se bilderna. Kontakta Kriti Städ.', false)
+        $this->get(route('reports.show', ['token' => $firstVersion->token], false))
+            ->assertOk()
+            ->assertSee('16 oktober 2026', false)
+            ->assertSee('kl. 14:30–15:00', false)
             ->assertSee('Rapporten skapades 16 oktober 2026 kl. 09:30', false)
-            ->assertSee('>Före</figcaption>', false)
-            ->assertSee('>Efter</figcaption>', false)
+            ->assertSee('<figcaption>Före', false)
+            ->assertSee('<figcaption>Efter', false)
+            ->assertDontSee('Kök', false)
+            ->assertDontSee('Bänken är ren.', false)
             ->assertDontSee('org.nr', false)
             ->assertDontSee('070', false);
 
-        $user->company->update([
+        $this->actingAs($user)->put('/installningar/foretag', [
+            'company_name' => 'Kriti Städ',
             'phone' => '070-111 22 33',
             'organization_number' => '559000-0000',
-        ]);
+        ])->assertRedirect();
+        $this->assertSame('070-111 22 33', $user->company->refresh()->phone);
+        $this->assertSame('559000-0000', $user->company->reportOrganizationNumber());
 
-        $this->get('/r/'.$assignment->public_token)
+        $this->actingAs($user)
+            ->post(route('assignments.versions.store', $assignment, false))
+            ->assertRedirect(route('assignments.show', $assignment, false));
+        $secondVersion = $assignment->fresh()->reportVersions()->firstOrFail();
+        $this->assertSame(2, $secondVersion->version_number);
+        $this->assertSame('14:30–15:00', $secondVersion->snapshot['performed_time_label']);
+
+        $this->get(route('reports.show', ['token' => $secondVersion->token], false))
             ->assertOk()
-            ->assertSee('Den som har länken kan se bilderna. Kontakta Kriti Städ, 070-111 22 33.', false)
-            ->assertSee('Kriti Städ · 070-111 22 33 · org.nr 559000-0000', false)
+            ->assertSee('16 oktober 2026', false)
+            ->assertSee('kl. 14:30–15:00', false)
+            ->assertSee('Kök', false)
+            ->assertSee('Bänken är ren.', false)
             ->assertSee('org.nr 559000-0000', false)
             ->assertSee('070-111 22 33', false);
 
@@ -85,55 +103,64 @@ class ReportEvidenceTest extends TestCase
 
         $this->assertNull($user->company->refresh()->reportPhone());
         $this->assertNull($user->company->reportOrganizationNumber());
-        $this->get('/r/'.$assignment->public_token)
+        $this->get(route('reports.show', ['token' => $secondVersion->token], false))
             ->assertOk()
-            ->assertDontSee('070-111 22 33', false)
-            ->assertDontSee('org.nr', false)
-            ->assertDontSee('559000-0000', false);
+            ->assertSee('070-111 22 33', false)
+            ->assertSee('org.nr 559000-0000', false);
     }
 
-    public function test_a_room_note_can_be_added_to_photos_that_were_saved_before_pairs_existed(): void
+    public function test_a_legacy_unpaired_report_can_be_published_without_changing_source_photos(): void
     {
+        Storage::fake('local');
         $user = User::factory()->create();
         $assignment = Assignment::factory()->for($user)->create([
             'performed_on' => '2026-10-02',
             'performed_time' => null,
         ]);
+        $beforePath = 'assignments/legacy/fore.jpg';
+        $afterPath = 'assignments/legacy/efter.jpg';
+        Storage::disk('local')->put($beforePath, 'legacy before bytes');
+        Storage::disk('local')->put($afterPath, 'legacy after bytes');
         $before = $assignment->photos()->create([
             'phase' => PhotoPhase::Before,
-            'path' => 'assignments/legacy/fore.jpg',
+            'path' => $beforePath,
             'sort_order' => 1,
         ]);
         $after = $assignment->photos()->create([
             'phase' => PhotoPhase::After,
-            'path' => 'assignments/legacy/efter.jpg',
+            'path' => $afterPath,
             'sort_order' => 1,
         ]);
 
-        $this->actingAs($user)->put(route('assignments.pairs.update', $assignment), [
-            'pair_key' => 'new-0',
-            'before_photo_id' => $before->id,
-            'after_photo_id' => $after->id,
-            'room_name' => 'Hall',
-            'note' => '',
-        ])->assertRedirect();
+        $version = app(CreateAssignmentReportVersion::class)->create($assignment, $user, preserveCurrentToken: true);
 
-        $before->refresh();
-        $after->refresh();
-        $this->assertSame('assignments/legacy/fore.jpg', $before->path);
-        $this->assertSame('assignments/legacy/efter.jpg', $after->path);
-        $this->assertNotNull($before->assignment_photo_pair_id);
-        $this->assertSame($before->assignment_photo_pair_id, $after->assignment_photo_pair_id);
-        $this->assertSame('Hall', $before->pair?->room_name);
-        $this->assertNull($before->pair?->note);
+        $this->assertEquals([
+            'before' => $before->id,
+            'after' => $after->id,
+            'label' => null,
+            'customer_comment' => null,
+        ], collect($version->snapshot['places'][0]['pairs'][0])->only([
+            'before',
+            'after',
+            'label',
+            'customer_comment',
+        ])->all());
+        $this->assertSame($beforePath, $before->fresh()->path);
+        $this->assertSame($afterPath, $after->fresh()->path);
+        $this->assertNull($before->fresh()->assignment_photo_pair_id);
+        $this->assertNull($after->fresh()->assignment_photo_pair_id);
+        $this->assertSame('legacy before bytes', Storage::disk('local')->get($version->photoAssets()->where('source_photo_id', $before->id)->sole()->path));
+        $this->assertSame('legacy after bytes', Storage::disk('local')->get($version->photoAssets()->where('source_photo_id', $after->id)->sole()->path));
 
-        $legacyReport = $this->get('/r/'.$assignment->public_token)->assertOk()->getContent();
-        $this->assertStringContainsString('<p>2 oktober 2026</p>', $legacyReport);
-        $this->assertStringNotContainsString('2 oktober 2026 kl.', $legacyReport);
-        $this->assertStringContainsString('Hall', $legacyReport);
+        $publicReport = $this->get(route('reports.show', ['token' => $version->token], false))->assertOk();
+        preg_match('/<p class="customer-report-date">(.*?)<\/p>/s', $publicReport->getContent(), $dateMarkup);
+        $this->assertArrayHasKey(1, $dateMarkup);
+        $performedDate = trim(preg_replace('/\s+/', ' ', strip_tags($dateMarkup[1])) ?? '');
+        $this->assertStringContainsString('2 oktober 2026', $performedDate);
+        $this->assertStringNotContainsString('kl.', $performedDate);
     }
 
-    public function test_a_non_image_gets_one_format_error_and_a_heic_file_is_stored_as_jpeg(): void
+    public function test_a_non_image_gets_one_format_error_and_heic_is_converted_or_rejected_clearly(): void
     {
         Storage::fake('local');
         $user = User::factory()->create();
@@ -166,32 +193,34 @@ class ReportEvidenceTest extends TestCase
         $this->assertStringContainsString('för hög upplösning', $sizeErrors[0]);
         $this->assertStringNotContainsString('HEIC', $sizeErrors[0]);
 
-        $jpeg = sys_get_temp_dir().'/klart-evidence-src.jpg';
-        $heic = sys_get_temp_dir().'/klart-evidence-src.heic';
-        $image = imagecreatetruecolor(40, 30);
-        imagejpeg($image, $jpeg);
-        imagedestroy($image);
-        $process = new Process(['heif-enc', $jpeg, '-o', $heic]);
-        $process->mustRun();
+        $heicPath = base_path('tests/Fixtures/room.heic');
+        $this->assertFileExists($heicPath);
+        $heicUpload = new UploadedFile($heicPath, 'IMG_0001.heic', 'image/heic', null, true);
+        $converter = (new ExecutableFinder)->find('heif-convert')
+            ?? (new ExecutableFinder)->find('magick');
 
-        try {
-            $this->actingAs($user)->post('/uppdrag', [
-                'customer_name' => 'Anna Andersson',
-                'address' => 'Storgatan 1, 111 22 Stockholm',
-                'performed_on' => '2026-10-16',
-                'before_photos' => [new UploadedFile($heic, 'IMG_0001.heic', 'image/heic', null, true)],
-            ])->assertRedirect();
-        } finally {
-            @unlink($jpeg);
-            @unlink($heic);
+        $heicResponse = $this->actingAs($user)->post('/uppdrag', [
+            'customer_name' => 'Anna Andersson',
+            'address' => 'Storgatan 1, 111 22 Stockholm',
+            'performed_on' => '2026-10-16',
+            'before_photos' => [$heicUpload],
+        ]);
+
+        if ($converter === null) {
+            $heicResponse->assertRedirect('/uppdrag/nytt')
+                ->assertSessionHasErrors([
+                    'before_photos' => 'HEIC-bilden kunde inte läsas. Spara den som JPEG och försök igen.',
+                ]);
+            $this->assertDatabaseCount('assignments', 0);
+
+            return;
         }
 
+        $heicResponse->assertRedirect();
         $photo = AssignmentPhoto::query()->firstOrFail();
         $this->assertSame(PhotoPhase::Before, $photo->phase);
-        [$width, $height, $type] = getimagesize(Storage::disk('local')->path($photo->path));
-        $this->assertSame(IMAGETYPE_JPEG, $type);
-        $this->assertSame(40, $width);
-        $this->assertSame(30, $height);
+        $this->assertSame('jpg', pathinfo($photo->path, PATHINFO_EXTENSION));
+        $this->assertNotFalse(getimagesize(Storage::disk('local')->path($photo->path)));
     }
 
     public function test_pair_notes_and_company_details_stay_inside_the_company(): void
@@ -200,18 +229,20 @@ class ReportEvidenceTest extends TestCase
         $member = User::factory()->memberOf($owner->company)->create();
         $other = User::factory()->create();
         $assignment = Assignment::factory()->for($owner)->create();
-        $before = $assignment->photos()->create([
-            'phase' => PhotoPhase::Before,
-            'path' => 'assignments/legacy/fore.jpg',
-            'sort_order' => 1,
-        ]);
+        $place = $assignment->places()->create(['name' => 'Hall', 'sort_order' => 1]);
+        $pair = $place->photoPairs()->create(['sort_order' => 1]);
+        $foreignAssignment = Assignment::factory()->for($other)->create();
+        $foreignPlace = $foreignAssignment->places()->create(['name' => 'Kök', 'sort_order' => 1]);
+        $foreignPair = $foreignPlace->photoPairs()->create(['sort_order' => 1]);
 
-        $this->actingAs($other)->put(route('assignments.pairs.update', $assignment), [
-            'pair_key' => 'new-0',
-            'before_photo_id' => $before->id,
-            'room_name' => 'Kök',
-        ])->assertNotFound();
-        $this->assertNull($before->refresh()->assignment_photo_pair_id);
+        $this->actingAs($owner)
+            ->put(route('assignments.places.pairs.notes.update', [$assignment, $foreignPlace, $foreignPair], false), [
+                'label' => 'Kök',
+                'customer_comment' => 'Foreign customer comment',
+            ])
+            ->assertNotFound();
+        $this->assertNull($pair->fresh()->label);
+        $this->assertNull($foreignPair->fresh()->customer_comment);
 
         $this->actingAs($member)->put('/installningar/foretag', [
             'company_name' => 'Annat namn',
@@ -250,11 +281,11 @@ class ReportEvidenceTest extends TestCase
         $this->travelTo('2026-10-16 07:30:00');
         $this->actingAs($user)->get('/uppdrag/nytt')
             ->assertOk()
-            ->assertSee('>Spara uppdraget</button>', false)
+            ->assertSee('>Spara och lägg till bilder</button>', false)
             ->assertSee('name="performed_time"', false)
             ->assertSee('name="performed_end_time"', false)
-            ->assertSee('>Starttid</label>', false)
-            ->assertSee('>Sluttid</label>', false)
+            ->assertSee('Starttid', false)
+            ->assertSee('Sluttid', false)
             ->assertSee('type="time"', false)
             ->assertDontSee('value="09:30"', false)
             ->assertDontSee('↗', false);
@@ -313,7 +344,6 @@ class ReportEvidenceTest extends TestCase
 
         $this->actingAs($user)->get('/uppdrag/nytt')
             ->assertOk()
-            ->assertSee('data-keep-photos', false)
             ->assertSee('data-form-errors', false)
             ->assertDontSee('data-photos-required', false);
 
@@ -340,8 +370,8 @@ class ReportEvidenceTest extends TestCase
 
         $this->actingAs($user)->get(route('assignments.show', $assignment))
             ->assertOk()
-            ->assertSee('data-keep-photos', false)
-            ->assertSee('data-photos-required', false);
+            ->assertSee('data-photo-upload-mode="new-pairs"', false)
+            ->assertSee('data-upload-submit', false);
 
         $this->actingAs($user)->post(route('assignments.photos.store', $assignment), [
             'before_photos' => [UploadedFile::fake()->create('anteckning.txt', 12, 'text/plain')],

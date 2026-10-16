@@ -71,17 +71,19 @@
                             <div><h2 id="company-heading">Företag</h2><p>Uppgifter som kan visas i kundrapporten.</p></div>
                         </header>
                         <p class="settings-card-description">Namn, telefon och organisationsnummer visas i rapportens sidfot. Lämna telefon eller organisationsnummer tomt om det inte ska synas.</p>
-                        <form class="app-form settings-inline-form" method="post" action="{{ route('settings.company.update', absolute: false) }}">
+                        <form class="app-form settings-inline-form" method="post" action="{{ route('settings.company.update', absolute: false) }}" data-submit-feedback>
                             @csrf
                             @method('PUT')
                             <label for="company_name">Företagsnamn</label>
                             <input id="company_name" name="company_name" type="text" required maxlength="120" autocomplete="organization" value="{{ old('company_name', $company->name) }}" aria-invalid="{{ $errors->has('company_name') ? 'true' : 'false' }}" @if ($errors->has('company_name')) aria-describedby="company-name-error" @endif>
                             @error('company_name') <span class="field-error" id="company-name-error">{{ $message }}</span> @enderror
                             <label for="phone">Telefon</label>
-                            <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="40" value="{{ old('phone', $company->phone) }}">
+                            <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="40" value="{{ old('phone', $company->phone) }}" aria-invalid="{{ $errors->has('phone') ? 'true' : 'false' }}" @if ($errors->has('phone')) aria-describedby="company-phone-error" @endif>
+                            @error('phone') <span class="field-error" id="company-phone-error">{{ $message }}</span> @enderror
                             <label for="organization_number">Organisationsnummer</label>
-                            <input id="organization_number" name="organization_number" type="text" maxlength="32" value="{{ old('organization_number', $company->organization_number) }}" spellcheck="false">
-                            <button class="button button-lime" type="submit">Spara företagsuppgifter</button>
+                            <input id="organization_number" name="organization_number" type="text" maxlength="32" value="{{ old('organization_number', $company->organization_number) }}" spellcheck="false" aria-invalid="{{ $errors->has('organization_number') ? 'true' : 'false' }}" @if ($errors->has('organization_number')) aria-describedby="company-organization-number-error" @endif>
+                            @error('organization_number') <span class="field-error" id="company-organization-number-error">{{ $message }}</span> @enderror
+                            <button class="button button-lime" type="submit" data-loading-text="Sparar uppgifter…">Spara företagsuppgifter</button>
                         </form>
                     </section>
 

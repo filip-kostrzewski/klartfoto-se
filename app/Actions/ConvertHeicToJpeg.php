@@ -24,27 +24,41 @@ class ConvertHeicToJpeg
         $input = sys_get_temp_dir().'/'.Str::uuid()->toString().'.heic';
         $output = sys_get_temp_dir().'/'.Str::uuid()->toString().'.jpg';
 
-        if (! copy($file->getRealPath(), $input)) {
-            throw ValidationException::withMessages([
-                'before_photos' => 'HEIC-bilden kunde inte läsas. Spara den som JPEG och försök igen.',
-            ]);
-        }
+        $converted = false;
 
-        $process = new Process([$binary, $input, $output]);
-        $process->setTimeout(30);
-        $process->run();
-        @unlink($input);
+        try {
+            if (! copy($file->getRealPath(), $input)) {
+                throw ValidationException::withMessages([
+                    'before_photos' => 'HEIC-bilden kunde inte läsas. Spara den som JPEG och försök igen.',
+                ]);
+            }
 
-        if (! $process->isSuccessful() || ! is_file($output) || filesize($output) === 0) {
-            if (is_file($output)) {
-                @unlink($output);
+            $process = new Process([$binary, $input, $output]);
+            $process->setTimeout(30);
+            $process->run();
+
+            if (! $process->isSuccessful() || ! is_file($output) || filesize($output) === 0) {
+                throw ValidationException::withMessages([
+                    'before_photos' => 'HEIC-bilden kunde inte läsas. Spara den som JPEG och försök igen.',
+                ]);
+            }
+
+            $converted = true;
+
+            return $output;
+        } catch (\Throwable $exception) {
+            if ($exception instanceof ValidationException) {
+                throw $exception;
             }
 
             throw ValidationException::withMessages([
                 'before_photos' => 'HEIC-bilden kunde inte läsas. Spara den som JPEG och försök igen.',
             ]);
+        } finally {
+            @unlink($input);
+            if (! $converted && is_file($output)) {
+                @unlink($output);
+            }
         }
-
-        return $output;
     }
 }

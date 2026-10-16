@@ -46,7 +46,8 @@ class OnboardingChecklist
             [
                 'label' => 'Dela rapportlänken',
                 'done' => $assignments->contains(
-                    fn (Assignment $assignment): bool => $assignment->link_copied_at !== null,
+                    fn (Assignment $assignment): bool => $assignment->link_copied_at !== null
+                        || $assignment->report_shared_at !== null,
                 ),
                 'url' => $latestJob instanceof Assignment ? null : route('assignments.create', absolute: false),
                 'copyUrl' => $latestJob instanceof Assignment

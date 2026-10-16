@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\AssignmentTeamController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\GoogleAuthController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\CompanySettingsController;
 use App\Http\Controllers\EarlyAccessController;
 use App\Http\Controllers\MarketingPageController;
 use App\Http\Controllers\PublicReportController;
+use App\Http\Controllers\SendAssignmentEmailController;
 use App\LocalizedUrl;
 use Illuminate\Support\Facades\Route;
 
@@ -40,9 +42,22 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/uppdrag', [AssignmentController::class, 'store'])->name('assignments.store');
     Route::post('/uppdrag/kom-igang/dolj', [AssignmentController::class, 'dismissOnboarding'])->name('onboarding.dismiss');
     Route::post('/uppdrag/kom-igang/visa', [AssignmentController::class, 'restoreOnboarding'])->name('onboarding.restore');
+    Route::get('/uppdrag/{assignment}/redigera', [AssignmentController::class, 'edit'])->name('assignments.edit');
+    Route::put('/uppdrag/{assignment}', [AssignmentController::class, 'update'])->name('assignments.update');
+    Route::put('/uppdrag/{assignment}/team', [AssignmentTeamController::class, 'update'])->name('assignments.team.update');
+    Route::post('/uppdrag/{assignment}/versioner/{reportVersion}/granska', [AssignmentTeamController::class, 'review'])->name('assignments.review');
+    Route::post('/uppdrag/{assignment}/overlamna', [AssignmentTeamController::class, 'handoff'])->name('assignments.handoff');
+    Route::post('/uppdrag/{assignment}/versioner', [AssignmentController::class, 'storeVersion'])->name('assignments.versions.store');
+    Route::get('/uppdrag/{assignment}/foton/{photo}/podglad', [AssignmentController::class, 'photoPreview'])
+        ->name('assignments.photos.preview');
+    Route::put('/uppdrag/{assignment}/platser-sortering', [AssignmentController::class, 'reorderPlaces'])->name('assignments.places.reorder');
+    Route::put('/uppdrag/{assignment}/platser/{place}/par-sortering', [AssignmentController::class, 'reorderPhotoPairs'])->name('assignments.places.pairs.reorder');
+    Route::put('/uppdrag/{assignment}/platser/{place}/par/{pair}/kommentarer', [AssignmentController::class, 'updatePhotoPairNotes'])->name('assignments.places.pairs.notes.update');
     Route::get('/uppdrag/{assignment}', [AssignmentController::class, 'show'])->name('assignments.show');
+    Route::post('/uppdrag/{assignment}/e-post', SendAssignmentEmailController::class)
+        ->middleware('throttle:assignment-email')
+        ->name('assignments.email');
     Route::post('/uppdrag/{assignment}/foton', [AssignmentController::class, 'storePhotos'])->name('assignments.photos.store');
-    Route::put('/uppdrag/{assignment}/par', [AssignmentController::class, 'updatePair'])->name('assignments.pairs.update');
     Route::delete('/uppdrag/{assignment}/foton/{photo}', [AssignmentController::class, 'destroyPhoto'])->name('assignments.photos.destroy');
     Route::post('/uppdrag/{assignment}/delning', [AssignmentController::class, 'share'])->name('assignments.share');
     Route::get('/installningar', [CompanySettingsController::class, 'edit'])->name('settings.edit');
@@ -98,6 +113,21 @@ Route::get('/r/{token}/logotyp', [PublicReportController::class, 'logo'])
 Route::get('/r/{token}/foton/{photo}', [PublicReportController::class, 'photo'])
     ->where('token', '[A-Za-z0-9]{32,80}')
     ->name('reports.photos.show');
+
+Route::get('/r/{token}/pdf', [PublicReportController::class, 'pdf'])
+    ->where('token', '[A-Za-z0-9]{32,80}')
+    ->middleware('throttle:10,1')
+    ->name('reports.pdf');
+
+Route::get('/r/{token}/version-foton/{asset}', [PublicReportController::class, 'versionAsset'])
+    ->where('token', '[A-Za-z0-9]{32,80}')
+    ->whereNumber('asset')
+    ->name('reports.version-assets.show');
+
+Route::post('/r/{token}/responses', [PublicReportController::class, 'storeResponse'])
+    ->where('token', '[A-Za-z0-9]{32,80}')
+    ->middleware('throttle:5,1')
+    ->name('reports.responses.store');
 
 Route::get('/r/{token}', [PublicReportController::class, 'show'])
     ->where('token', '[A-Za-z0-9]{32,80}')

@@ -114,21 +114,25 @@ class RegistrationTest extends TestCase
         $this->post(route('assignments.share', $assignment))->assertRedirect();
         $this->assertNotNull($assignment->refresh()->link_copied_at);
 
+        $version = $assignment->latestReportVersion();
+        $this->assertNotNull($version);
+        $versionAssets = $version->photoAssets()->get()->keyBy('source_photo_id');
+
         $this->post('/logout')->assertRedirect('/login');
 
-        $report = '/r/'.$assignment->public_token;
+        $report = '/r/'.$version->token;
         $this->get($report)
             ->assertOk()
             ->assertSee('Glans Städ AB', false)
             ->assertSee('Kund Kundsson', false)
             ->assertSee('Storgatan 1, 111 22 Stockholm', false)
-            ->assertSee($report.'/foton/'.$photos[0]->id, false)
-            ->assertSee($report.'/foton/'.$photos[1]->id, false);
+            ->assertSee($report.'/version-foton/'.$versionAssets->get($photos[0]->id)->id, false)
+            ->assertSee($report.'/version-foton/'.$versionAssets->get($photos[1]->id)->id, false);
 
-        $this->get($report.'/foton/'.$photos[0]->id)
+        $this->get($report.'/version-foton/'.$versionAssets->get($photos[0]->id)->id)
             ->assertOk()
             ->assertHeader('content-type', 'image/jpeg');
-        $this->get($report.'/foton/'.$photos[1]->id)
+        $this->get($report.'/version-foton/'.$versionAssets->get($photos[1]->id)->id)
             ->assertOk()
             ->assertHeader('content-type', 'image/jpeg');
     }

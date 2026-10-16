@@ -21,7 +21,11 @@ class StoreAssignmentPhotoRequest extends FormRequest
      */
     public function rules(): array
     {
-        return $this->photoRules();
+        return [
+            'place_name' => ['nullable', 'string', 'max:120'],
+            'assignment_photo_pair_id' => ['nullable', 'integer', 'min:1'],
+            ...$this->photoRules(),
+        ];
     }
 
     /**
@@ -35,18 +39,12 @@ class StoreAssignmentPhotoRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {
-            if ($validator->errors()->isNotEmpty()) {
-                return;
-            }
-
-            $before = $this->file('before_photos', []);
-            $after = $this->file('after_photos', []);
-            $beforeCount = is_array($before) ? count($before) : 0;
-            $afterCount = is_array($after) ? count($after) : 0;
-
-            if ($beforeCount === 0 && $afterCount === 0) {
-                $validator->errors()->add('before_photos', 'Lägg till minst en före- eller efterbild.');
-            }
+            $this->validateUploadShape(
+                $validator,
+                requirePhotos: true,
+                singlePair: $this->filled('assignment_photo_pair_id'),
+            );
+            $this->validateTargetPhotoPairScope($validator);
         });
     }
 }

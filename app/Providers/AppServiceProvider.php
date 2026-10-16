@@ -5,6 +5,9 @@ namespace App\Providers;
 use App\Http\Middleware\EnsureStripeWebhookIsConfigured;
 use App\Models\Company;
 use App\SiteSeo;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -25,6 +28,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        RateLimiter::for('assignment-email', function (Request $request): array {
+            $user = $request->user();
+
+            return [
+                Limit::perHour(5)->by('assignment-email-user:'.($user?->getAuthIdentifier() ?? $request->ip())),
+                Limit::perHour(20)->by('assignment-email-company:'.($user?->company_id ?? $request->ip())),
+            ];
+        });
+
         Cashier::useCustomerModel(Company::class);
 
         $this->app->booted(function (): void {

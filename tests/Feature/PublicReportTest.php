@@ -42,6 +42,12 @@ class PublicReportTest extends TestCase
         $this->assertSame(800, $afterWidth);
         $this->assertSame(600, $afterHeight);
 
+        $version = $assignment->reportVersions()->sole();
+        $beforeAsset = $version->photoAssets()->where('phase', PhotoPhase::Before->value)->sole();
+        $afterAsset = $version->photoAssets()->where('phase', PhotoPhase::After->value)->sole();
+        $beforeUrl = route('reports.version-assets.show', ['token' => $version->token, 'asset' => $beforeAsset], false);
+        $afterUrl = route('reports.version-assets.show', ['token' => $version->token, 'asset' => $afterAsset], false);
+
         $report = $this->get('/r/'.$assignment->public_token);
         $report->assertOk()
             ->assertHeader('X-Robots-Tag', 'noindex, nofollow')
@@ -49,11 +55,11 @@ class PublicReportTest extends TestCase
             ->assertSee('Glans Städ AB', false)
             ->assertSee('1 oktober 2026', false)
             ->assertSee('Anna Andersson', false)
-            ->assertSee('/r/'.$assignment->public_token.'/foton/'.$photos[0]->id, false)
-            ->assertSee('/r/'.$assignment->public_token.'/foton/'.$photos[1]->id, false)
+            ->assertSee($beforeUrl, false)
+            ->assertSee($afterUrl, false)
             ->assertDontSee('Ta bort', false);
 
-        $this->get('/r/'.$assignment->public_token.'/foton/'.$photos[0]->id)
+        $this->get($beforeUrl)
             ->assertOk()
             ->assertHeader('content-type', 'image/jpeg');
     }

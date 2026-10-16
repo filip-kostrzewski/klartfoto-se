@@ -1,6 +1,6 @@
 @auth
     @if (! auth()->user()->hasVerifiedEmail())
-        <section class="verify-banner" aria-label="Bekräfta e-post">
+        <section id="email-verification" class="verify-banner" aria-label="Bekräfta e-post">
             <span class="verify-banner-icon" aria-hidden="true">!</span>
             <div class="verify-banner-content">
                 <p><strong>Bekräfta din e-postadress</strong><span>Vi skickade en länk till {{ auth()->user()->email }}. Du kan använda Klartfoto medan du väntar.</span></p>

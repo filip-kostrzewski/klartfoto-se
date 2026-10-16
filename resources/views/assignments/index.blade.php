@@ -22,10 +22,13 @@
             <div class="form-status form-status-error" role="status">Åtkomsten är pausad. Du kan fortfarande öppna rapporter som redan är skapade.</div>
         @endif
 
-        @if ($assignments->isNotEmpty())
-            <div class="dashboard-stats" aria-label="Översikt">
-                <div class="dashboard-stat"><span>Uppdrag</span><strong>{{ $assignments->count() }}</strong><x-icon name="report" /></div>
-                <div class="dashboard-stat"><span>Bilder</span><strong>{{ $assignments->sum('photos_count') }}</strong><x-icon name="camera" /></div>
+        @if ($assignmentTotal > 0 || $filters['q'] !== '' || $filters['status'] !== '' || $filters['from'] !== '' || $filters['to'] !== '')
+            <div class="dashboard-stats @isset($readyToSendCount) dashboard-stats-ready @endisset" aria-label="Översikt">
+                <div class="dashboard-stat"><span>Uppdrag i urvalet</span><strong>{{ $assignmentTotal }}</strong><x-icon name="report" /></div>
+                <div class="dashboard-stat"><span>Bilder i urvalet</span><strong>{{ $photoTotal }}</strong><x-icon name="camera" /></div>
+                @isset($readyToSendCount)
+                    <div class="dashboard-stat dashboard-stat-ready"><span>Redo att skicka totalt</span><strong>{{ $readyToSendCount }}</strong><x-icon name="check" /></div>
+                @endisset
             </div>
         @endif
 
@@ -40,27 +43,67 @@
 
         <section class="assignment-list-section" aria-labelledby="assignment-list-heading">
             <div class="assignment-list-heading">
-                <div><h2 id="assignment-list-heading">Senaste uppdrag</h2><p>{{ $assignments->isEmpty() ? 'Dina sparade kundbesök visas här.' : 'Välj ett uppdrag för att öppna och dela rapporten.' }}</p></div>
+                <div><h2 id="assignment-list-heading">Dina uppdrag</h2><p>{{ $assignments->isEmpty() ? 'Dina sparade kundbesök visas här.' : 'Sök bland kundbesök och öppna rapporten du behöver.' }}</p></div>
                 @if ($canManageJobs && $assignments->isNotEmpty())
                     <a class="text-link" href="{{ route('assignments.create', absolute: false) }}">Lägg till</a>
                 @endif
             </div>
 
-            @if ($assignments->isEmpty())
-                <div class="dashboard-empty-state">
-                    <div class="empty-state-image">
-                        <img src="{{ asset('images/cleaning-detail-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" width="768" height="512" alt="" loading="lazy" decoding="async">
-                        <span>AI-demo · inte kundarbete</span>
+            <div class="assignment-filters-panel">
+                <form class="assignment-filters" method="get" action="{{ route('assignments.index', absolute: false) }}" role="search" aria-label="Sök och filtrera uppdrag">
+                    <div class="assignment-filter-search">
+                        <label for="assignment-search">Sök kund eller adress</label>
+                        <input id="assignment-search" name="q" type="search" value="{{ $filters['q'] }}" maxlength="120" autocomplete="off" placeholder="Namn eller adress">
                     </div>
-                    <div class="empty-state-copy">
-                        <span class="empty-state-icon"><x-icon name="camera" /></span>
-                        <h3>Här börjar nästa rapport</h3>
-                        <p>Lägg till kundens namn, adress och datum. Ladda sedan upp bilder före och efter arbetet.</p>
-                        @if ($canManageJobs)
-                            <a class="button button-dark" href="{{ route('assignments.create', absolute: false) }}">Skapa ditt första uppdrag</a>
+                    <div class="assignment-filter-status">
+                        <label for="assignment-status">Rapportstatus</label>
+                        <select id="assignment-status" name="status">
+                            <option value="">Alla statusar</option>
+                            <option value="draft" @selected($filters['status'] === 'draft')>Utkast</option>
+                            <option value="ready" @selected($filters['status'] === 'ready')>Klar att skicka</option>
+                            <option value="sent" @selected($filters['status'] === 'sent')>Delad</option>
+                        </select>
+                    </div>
+                    <div class="assignment-filter-date">
+                        <label for="assignment-from">Från datum</label>
+                        <input id="assignment-from" name="from" type="date" value="{{ $filters['from'] }}">
+                    </div>
+                    <div class="assignment-filter-date">
+                        <label for="assignment-to">Till datum</label>
+                        <input id="assignment-to" name="to" type="date" value="{{ $filters['to'] }}">
+                    </div>
+                    <div class="assignment-filter-actions">
+                        <button class="button button-dark" type="submit">Visa uppdrag</button>
+                        @if ($filters['q'] !== '' || $filters['status'] !== '' || $filters['from'] !== '' || $filters['to'] !== '')
+                            <a class="assignment-filter-reset" href="{{ route('assignments.index', absolute: false) }}">Rensa filter</a>
                         @endif
                     </div>
-                </div>
+                </form>
+            </div>
+
+            @if ($assignments->isEmpty())
+                @if ($filters['q'] !== '' || $filters['status'] !== '' || $filters['from'] !== '' || $filters['to'] !== '')
+                    <div class="assignment-no-results" role="status">
+                        <span class="empty-state-icon"><x-icon name="search" /></span>
+                        <div><h3>Inga uppdrag matchar urvalet</h3><p>Prova ett annat namn, datum eller rapportstatus.</p></div>
+                        <a class="button button-outline-dark" href="{{ route('assignments.index', absolute: false) }}">Rensa filter</a>
+                    </div>
+                @else
+                    <div class="dashboard-empty-state">
+                        <div class="empty-state-image">
+                            <img src="{{ asset('images/cleaning-detail-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" width="768" height="512" alt="" loading="lazy" decoding="async">
+                            <span>AI-demo · inte kundarbete</span>
+                        </div>
+                        <div class="empty-state-copy">
+                            <span class="empty-state-icon"><x-icon name="camera" /></span>
+                            <h3>Här börjar nästa rapport</h3>
+                            <p>Lägg till kundens namn, adress och datum. Ladda sedan upp bilder före och efter arbetet.</p>
+                            @if ($canManageJobs)
+                                <a class="button button-dark" href="{{ route('assignments.create', absolute: false) }}">Skapa ditt första uppdrag</a>
+                            @endif
+                        </div>
+                    </div>
+                @endif
             @else
                 <ul class="job-list">
                     @foreach ($assignments as $assignment)
@@ -74,11 +117,26 @@
                                 <span class="job-list-meta">
                                     <span>{{ $assignment->performedLabel() }}</span>
                                     <span>{{ $assignment->photos_count }} {{ $assignment->photos_count === 1 ? 'bild' : 'bilder' }}</span>
+                                <span class="job-status job-status-{{ $assignment->status }}">
+                                    @if ($assignment->status === 'ready')
+                                        Klar att skicka
+                                    @elseif ($assignment->status === 'sent')
+                                        Skickad
+                                    @else
+                                        Utkast
+                                    @endif
+                                </span>
                                 </span>
                             </a>
                         </li>
                     @endforeach
                 </ul>
+
+                @if ($assignments->hasPages())
+                    <nav class="assignment-pagination" aria-label="Sidnavigering">
+                        {{ $assignments->onEachSide(1)->links() }}
+                    </nav>
+                @endif
             @endif
         </section>
     </section>

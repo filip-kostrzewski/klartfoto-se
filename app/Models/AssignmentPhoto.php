@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\PhotoPhase;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['phase', 'path', 'sort_order', 'assignment_photo_pair_id'])]
+#[Fillable(['assignment_photo_pair_id', 'phase', 'path', 'sort_order', 'uploaded_by_user_id', 'client_upload_id', 'upload_sha256'])]
+#[Hidden(['client_upload_id', 'upload_sha256'])]
 class AssignmentPhoto extends Model
 {
     /**
@@ -26,8 +28,13 @@ class AssignmentPhoto extends Model
         return $this->belongsTo(Assignment::class);
     }
 
-    public function pair(): BelongsTo
+    public function photoPair(): BelongsTo
     {
         return $this->belongsTo(AssignmentPhotoPair::class, 'assignment_photo_pair_id');
+    }
+
+    public function uploadedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'uploaded_by_user_id');
     }
 }

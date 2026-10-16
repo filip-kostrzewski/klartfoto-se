@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Assignment;
 use App\Models\AssignmentPhotoPair;
+use App\Models\AssignmentPlace;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -12,15 +12,18 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class AssignmentPhotoPairFactory extends Factory
 {
     /**
+     * Define the model's default state.
+     *
      * @return array<string, mixed>
      */
     public function definition(): array
     {
         return [
-            'assignment_id' => Assignment::factory(),
-            'position' => 0,
-            'room_name' => null,
-            'note' => null,
+            'assignment_place_id' => AssignmentPlace::factory(),
+            'label' => null,
+            'customer_comment' => null,
+            'internal_note' => null,
+            'sort_order' => fake()->numberBetween(1, 5),
         ];
     }
 }

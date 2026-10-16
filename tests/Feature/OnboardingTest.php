@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Assignment;
 use App\Models\User;
+use App\OnboardingChecklist;
 use App\PhotoPhase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -188,7 +189,6 @@ class OnboardingTest extends TestCase
         $owner = User::factory()->create();
         $member = User::factory()->memberOf($owner->company)->create();
         $assignment = Assignment::factory()->for($owner)->create();
-        $assignment->forceFill(['report_shared_at' => now()])->save();
         $assignment->photos()->create([
             'phase' => PhotoPhase::Before,
             'path' => 'photos/fore.jpg',
@@ -197,12 +197,35 @@ class OnboardingTest extends TestCase
 
         $this->get('/r/'.$assignment->public_token)->assertOk();
         $this->assertNull($assignment->fresh()->link_copied_at);
+        $this->assertNull($assignment->fresh()->report_shared_at);
 
         $this->actingAs($member)->get('/uppdrag')
             ->assertOk()
             ->assertSee('<h2>Kom igång</h2>', false)
             ->assertSee('data-copy-report="'.route('reports.show', ['token' => $assignment->public_token]).'"', false)
             ->assertDontSee('Visa Kom igång', false);
+    }
+
+    public function test_a_sent_report_finishes_the_share_step_without_marking_the_link_copied(): void
+    {
+        $owner = User::factory()->create();
+        $assignment = Assignment::factory()->for($owner)->create();
+        $assignment->photos()->create([
+            'phase' => PhotoPhase::Before,
+            'path' => 'photos/fore.jpg',
+            'sort_order' => 1,
+        ]);
+        $assignment->forceFill(['report_shared_at' => now()])->save();
+
+        $steps = app(OnboardingChecklist::class)->steps(
+            $owner,
+            $owner->company,
+            $owner->company->assignments()->withCount('photos')->get(),
+        );
+
+        $this->assertTrue($steps[2]['done']);
+        $this->assertNotNull($assignment->fresh()->report_shared_at);
+        $this->assertNull($assignment->fresh()->link_copied_at);
     }
 
     public function test_the_checklist_can_be_dismissed_before_every_step_is_done(): void

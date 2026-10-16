@@ -2,11 +2,15 @@
 
 namespace App\Actions;
 
+use App\Models\AssignmentReportVersionAsset;
 use App\Models\Company;
 use GdImage;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class StoreCompanyLogo
 {
@@ -31,11 +35,21 @@ class StoreCompanyLogo
 
     public function delete(Company $company): void
     {
-        if (filled($company->logo_path)) {
-            Storage::disk('local')->delete($company->logo_path);
-        }
+        $previousPath = DB::transaction(function () use ($company): ?string {
+            $lockedCompany = Company::query()
+                ->whereKey($company->getKey())
+                ->lockForUpdate()
+                ->firstOrFail();
+            $previousPath = $lockedCompany->logo_path;
 
-        $company->forceFill(['logo_path' => null])->save();
+            $lockedCompany->forceFill(['logo_path' => null])->save();
+
+            return $previousPath;
+        }, attempts: 3);
+
+        if (filled($previousPath)) {
+            $this->deleteIfUnreferenced($previousPath);
+        }
     }
 
     private function storeSvg(Company $company, string $contents): void
@@ -123,14 +137,43 @@ class StoreCompanyLogo
 
     private function replace(Company $company, string $extension, string $contents): void
     {
-        $path = 'companies/'.$company->id.'/logo.'.$extension;
-
-        if (filled($company->logo_path) && $company->logo_path !== $path) {
-            Storage::disk('local')->delete($company->logo_path);
-        }
+        $path = 'companies/'.$company->id.'/logos/'.Str::uuid()->toString().'.'.$extension;
 
         Storage::disk('local')->put($path, $contents);
-        $company->forceFill(['logo_path' => $path])->save();
+
+        try {
+            $previousPath = DB::transaction(function () use ($company, $path): ?string {
+                $lockedCompany = Company::query()
+                    ->whereKey($company->getKey())
+                    ->lockForUpdate()
+                    ->firstOrFail();
+                $previousPath = $lockedCompany->logo_path;
+
+                $lockedCompany->forceFill(['logo_path' => $path])->save();
+
+                return $previousPath;
+            }, attempts: 3);
+        } catch (Throwable $exception) {
+            Storage::disk('local')->delete($path);
+
+            throw $exception;
+        }
+
+        if (filled($previousPath) && $previousPath !== $path) {
+            $this->deleteIfUnreferenced($previousPath);
+        }
+    }
+
+    private function deleteIfUnreferenced(string $path): void
+    {
+        $referenced = AssignmentReportVersionAsset::query()
+            ->where('type', AssignmentReportVersionAsset::TYPE_LOGO)
+            ->where('path', $path)
+            ->exists();
+
+        if (! $referenced) {
+            Storage::disk('local')->delete($path);
+        }
     }
 
     private function applyOrientation(GdImage $image, UploadedFile $file): GdImage

@@ -46,4 +46,12 @@ return [
         'measurement_id' => env('GA_MEASUREMENT_ID', 'G-4T7EVVZLB2') ?: 'G-4T7EVVZLB2',
     ],
 
+    'report_pdf' => [
+        'url' => env('KLARTFOTO_PDF_URL', 'https://pdf.wisegent.se/get_pdf'),
+        'connect_timeout' => (int) env('KLARTFOTO_PDF_CONNECT_TIMEOUT', 5),
+        'timeout' => (int) env('KLARTFOTO_PDF_TIMEOUT', 60),
+        'cache_store' => 'file',
+        'cache_seconds' => 604800,
+    ],
+
 ];

@@ -27,6 +27,7 @@ class AssignmentTest extends TestCase
 
         $response = $this->actingAs($user)->post('/uppdrag', [
             'customer_name' => 'Anna Andersson',
+            'customer_email' => 'anna@example.test',
             'address' => 'Storgatan 1, 111 22 Stockholm',
             'performed_on' => '2026-10-01',
         ]);
@@ -36,6 +37,7 @@ class AssignmentTest extends TestCase
         $this->assertSame($user->id, $assignment->user_id);
         $this->assertSame($user->company_id, $assignment->company_id);
         $this->assertSame('Anna Andersson', $assignment->customer_name);
+        $this->assertSame('anna@example.test', $assignment->customer_email);
         $this->assertSame('Storgatan 1, 111 22 Stockholm', $assignment->address);
         $this->assertSame('2026-10-01', $assignment->performed_on->toDateString());
         $this->assertSame(48, strlen($assignment->public_token));
@@ -50,11 +52,53 @@ class AssignmentTest extends TestCase
             ->assertSee('Anna Andersson', false);
     }
 
-    public function test_job_form_is_built_for_phone_photos(): void
+    public function test_new_draft_can_be_created_without_photos_and_first_upload_publishes_its_initial_version(): void
+    {
+        Storage::fake('local');
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->post('/uppdrag', [
+            'customer_name' => 'Erik Eriksson',
+            'address' => 'Parkvägen 2, 111 22 Stockholm',
+            'performed_on' => '2026-10-16',
+        ])->assertRedirect();
+
+        $assignment = Assignment::query()->sole();
+        $this->assertSame(0, $assignment->photos()->count());
+        $this->assertSame(0, $assignment->places()->count());
+        $this->assertSame(0, $assignment->reportVersions()->count());
+        $initialToken = $assignment->public_token;
+
+        $this->actingAs($user)->post(route('assignments.photos.store', $assignment, false), [
+            'place_name' => 'Hall',
+            'before_photos' => [UploadedFile::fake()->image('hall.jpg', 40, 40)],
+        ], ['Accept' => 'application/json'])->assertOk();
+
+        $version = $assignment->reportVersions()->sole();
+        $this->assertSame(1, $version->version_number);
+        $this->assertSame($initialToken, $version->token);
+        $this->assertSame($initialToken, $assignment->fresh()->public_token);
+        $this->assertSame('Hall', $version->snapshot['places'][0]['name']);
+    }
+
+    public function test_photo_upload_form_is_available_after_saving_a_draft(): void
     {
         $user = User::factory()->create();
 
         $this->actingAs($user)->get('/uppdrag/nytt')
+            ->assertOk()
+            ->assertDontSee('name="before_photos[]"', false)
+            ->assertDontSee('name="after_photos[]"', false);
+
+        $this->actingAs($user)->post('/uppdrag', [
+            'customer_name' => 'Erik Eriksson',
+            'address' => 'Parkvägen 2, 111 22 Stockholm',
+            'performed_on' => '2026-10-16',
+        ])->assertRedirect();
+
+        $assignment = Assignment::query()->sole();
+
+        $this->actingAs($user)->get(route('assignments.show', $assignment, false))
             ->assertOk()
             ->assertSee('accept="image/*,.heic,.heif"', false)
             ->assertSee('class="photo-picker-input"', false)
@@ -129,7 +173,7 @@ class AssignmentTest extends TestCase
         $this->assertDatabaseCount('assignments', 0);
     }
 
-    public function test_owner_and_member_can_delete_a_photo_from_the_job_and_the_report(): void
+    public function test_owner_and_member_can_delete_a_draft_photo_without_rewriting_the_public_report(): void
     {
         Storage::fake('local');
         $owner = User::factory()->create();
@@ -147,6 +191,7 @@ class AssignmentTest extends TestCase
         $assignment = Assignment::query()->firstOrFail();
         $before = $assignment->photos()->where('phase', PhotoPhase::Before)->firstOrFail();
         $after = $assignment->photos()->where('phase', PhotoPhase::After)->firstOrFail();
+        $reportAssets = $assignment->reportVersions()->sole()->photoAssets()->get()->keyBy('source_photo_id');
         Storage::disk('local')->assertExists($before->path);
 
         $this->post('/logout')->assertRedirect('/login');
@@ -179,7 +224,7 @@ class AssignmentTest extends TestCase
             ->assertRedirect(route('assignments.show', $assignment))
             ->assertSessionHas('toast', 'Bilden är borttagen.');
 
-        Storage::disk('local')->assertMissing($before->path);
+        Storage::disk('local')->assertExists($before->path);
         $this->assertModelMissing($before);
         $this->assertModelExists($after);
 
@@ -191,8 +236,8 @@ class AssignmentTest extends TestCase
 
         $this->get('/r/'.$assignment->public_token)
             ->assertOk()
-            ->assertDontSee('/foton/'.$before->id, false)
-            ->assertSee('/foton/'.$after->id, false)
+            ->assertSee('/version-foton/'.$reportAssets->get($before->id)->id, false)
+            ->assertSee('/version-foton/'.$reportAssets->get($after->id)->id, false)
             ->assertDontSee('Ta bort', false);
     }
 }
