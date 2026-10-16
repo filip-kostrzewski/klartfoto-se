@@ -9,7 +9,7 @@
             <div>
                 <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> Uppdrag</p>
                 <h1>{{ $assignment->customer_name }}</h1>
-                <p class="auth-lead">{{ $assignment->address }} <span aria-hidden="true">·</span> {{ $assignment->performed_on->locale('sv')->translatedFormat('j F Y') }}</p>
+                <p class="auth-lead">{{ $assignment->address }} <span aria-hidden="true">·</span> {{ $assignment->performedLabel() }}</p>
             </div>
             <a class="button button-outline-dark" href="{{ route('assignments.index', absolute: false) }}">Alla uppdrag</a>
         </div>
@@ -53,7 +53,7 @@
                 <span class="photo-pair-count">{{ $assignment->photos->count() }} {{ $assignment->photos->count() === 1 ? 'bild' : 'bilder' }}</span>
             </div>
             @forelse ($assignment->photoPairs() as $pair)
-                @include('reports.partials.photo-pair', ['pair' => $pair, 'assignment' => $assignment, 'canDeletePhotos' => true])
+                @include('reports.partials.photo-pair', ['pair' => $pair, 'assignment' => $assignment, 'canDeletePhotos' => true, 'canEditPair' => $canManageJobs, 'pairIndex' => $loop->index])
             @empty
                 <div class="app-panel photo-empty-state">
                     <span class="empty-state-icon"><x-icon name="camera" /></span>
@@ -85,7 +85,7 @@
                     </div>
                     <div class="assignment-form-footer">
                         <p>De nya bilderna läggs till rapporten.</p>
-                        <button class="button button-lime" type="submit" data-loading-text="Laddar upp…">Ladda upp bilder <span aria-hidden="true">↗</span></button>
+                        <button class="button button-lime" type="submit" data-loading-text="Laddar upp…">Ladda upp bilder</button>
                     </div>
                 </form>
             </section>

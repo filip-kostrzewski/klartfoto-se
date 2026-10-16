@@ -15,6 +15,13 @@ class StoreAssignmentRequest extends FormRequest
         return $this->user() !== null;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->input('performed_time') === '') {
+            $this->merge(['performed_time' => null]);
+        }
+    }
+
     /**
      * @return array<string, ValidationRule|array<mixed>|string>
      */
@@ -24,6 +31,7 @@ class StoreAssignmentRequest extends FormRequest
             'customer_name' => ['required', 'string', 'max:120'],
             'address' => ['required', 'string', 'max:255'],
             'performed_on' => ['required', 'date', 'after:1990-01-01', 'before:2100-01-01'],
+            'performed_time' => ['nullable', 'date_format:H:i'],
             ...$this->photoRules(),
         ];
     }
@@ -42,6 +50,7 @@ class StoreAssignmentRequest extends FormRequest
             'performed_on.date' => 'Ange ett giltigt datum.',
             'performed_on.after' => 'Ange ett giltigt datum.',
             'performed_on.before' => 'Ange ett giltigt datum.',
+            'performed_time.date_format' => 'Ange en giltig tid.',
             ...$this->photoMessages(),
         ];
     }

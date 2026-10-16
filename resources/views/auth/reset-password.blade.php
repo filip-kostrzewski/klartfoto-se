@@ -46,7 +46,7 @@
                 </div>
                 @error('password_confirmation') <span class="field-error" id="password-confirmation-error">{{ $message }}</span> @enderror
 
-                <button class="button button-lime auth-submit" type="submit" data-loading-text="Sparar…">Spara nytt lösenord <span aria-hidden="true">↗</span></button>
+                <button class="button button-lime auth-submit" type="submit" data-loading-text="Sparar…">Spara nytt lösenord</button>
             </form>
         </section>
     </div>

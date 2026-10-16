@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\CompanyLogoResponse;
 use App\Actions\StoreCompanyLogo;
 use App\Http\Requests\StoreCompanyLogoRequest;
+use App\Http\Requests\UpdateCompanyDetailsRequest;
 use App\Http\Requests\UpdateProfileNameRequest;
 use App\Models\Company;
 use App\Models\User;
@@ -49,6 +50,16 @@ class CompanySettingsController extends Controller
                 && ! $company->hasPendingInvoiceRequest()
                 && ! $company->subscribed('default'),
         ]);
+    }
+
+    public function updateCompany(UpdateCompanyDetailsRequest $request): RedirectResponse
+    {
+        $company = $this->company($request->user());
+        Gate::authorize('update', $company);
+
+        $company->update($request->safe()->only(['phone', 'organization_number']));
+
+        return back()->with('toast', 'Företagsuppgifterna är sparade.');
     }
 
     public function updateProfile(UpdateProfileNameRequest $request): RedirectResponse

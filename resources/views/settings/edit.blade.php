@@ -50,6 +50,7 @@
             <div class="settings-layout">
                 <nav class="settings-internal-nav" aria-label="Avsnitt i inställningar">
                     <a href="#profil">Profil</a>
+                    <a href="#foretag">Företag</a>
                     <a href="#abonnemang">Abonnemang</a>
                     <a href="#logotyp">Logotyp</a>
                     <a href="#medlemmar">Team</a>
@@ -62,6 +63,23 @@
                             <div><h2 id="profile-heading">Din profil</h2><p>Uppgifterna för ditt konto.</p></div>
                         </header>
                         @include('settings.partials.profile-name')
+                    </section>
+
+                    <section class="settings-block settings-card" id="foretag" aria-labelledby="company-heading">
+                        <header class="settings-card-heading">
+                            <span class="workflow-icon"><x-icon name="home" /></span>
+                            <div><h2 id="company-heading">Företag</h2><p>Uppgifter som kan visas i kundrapporten.</p></div>
+                        </header>
+                        <p class="settings-card-description">Telefon och organisationsnummer visas i rapportens sidfot. Lämna ett fält tomt om det inte ska synas.</p>
+                        <form class="app-form settings-inline-form" method="post" action="{{ route('settings.company.update', absolute: false) }}">
+                            @csrf
+                            @method('PUT')
+                            <label for="phone">Telefon</label>
+                            <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="40" value="{{ old('phone', $company->phone) }}">
+                            <label for="organization_number">Organisationsnummer</label>
+                            <input id="organization_number" name="organization_number" type="text" maxlength="32" value="{{ old('organization_number', $company->organization_number) }}" spellcheck="false">
+                            <button class="button button-lime" type="submit">Spara företagsuppgifter</button>
+                        </form>
                     </section>
 
                     <section class="settings-block settings-card" id="abonnemang" aria-labelledby="subscription-heading">

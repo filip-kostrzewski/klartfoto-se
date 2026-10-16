@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Actions\StoreAssignmentPhotos;
 use App\Http\Requests\StoreAssignmentPhotoRequest;
 use App\Http\Requests\StoreAssignmentRequest;
+use App\Http\Requests\UpdateAssignmentPairRequest;
 use App\Models\Assignment;
 use App\Models\AssignmentPhoto;
+use App\Models\AssignmentPhotoPair;
 use App\Models\User;
 use App\OnboardingChecklist;
 use Illuminate\Http\RedirectResponse;
@@ -84,6 +86,7 @@ class AssignmentController extends Controller
                 'customer_name',
                 'address',
                 'performed_on',
+                'performed_time',
             ]));
 
             $photos->handle(
@@ -109,7 +112,7 @@ class AssignmentController extends Controller
     public function show(Assignment $assignment): View
     {
         Gate::authorize('view', $assignment);
-        $assignment->load('photos');
+        $assignment->load(['photos', 'photoPairRecords']);
 
         return view('assignments.show', [
             'assignment' => $assignment,
@@ -194,6 +197,32 @@ class AssignmentController extends Controller
         return $redirect;
     }
 
+    public function updatePair(UpdateAssignmentPairRequest $request, Assignment $assignment): RedirectResponse
+    {
+        Gate::authorize('update', $assignment);
+        $user = $request->user();
+
+        if (! $user instanceof User || ! $user->canManageJobs()) {
+            return back()->withInput()->withErrors([
+                'trial' => self::ACCESS_PAUSED_MESSAGE,
+            ]);
+        }
+
+        DB::transaction(function () use ($request, $assignment): void {
+            $assignment->materializeLegacyPairs();
+            $assignment->load(['photos', 'photoPairRecords']);
+            $record = $this->pairFromRequest($request, $assignment);
+            abort_if($record === null, 404);
+
+            $record->update([
+                'room_name' => $this->blankToNull($request->string('room_name')->toString()),
+                'note' => $this->blankToNull($request->string('note')->toString()),
+            ]);
+        });
+
+        return back()->with('toast', 'Uppgifterna om bildparet är sparade.');
+    }
+
     public function dismissOnboarding(): RedirectResponse
     {
         $user = request()->user();
@@ -210,6 +239,43 @@ class AssignmentController extends Controller
         $user->forceFill(['onboarding_dismissed_at' => null])->save();
 
         return redirect()->route('assignments.index');
+    }
+
+    private function pairFromRequest(UpdateAssignmentPairRequest $request, Assignment $assignment): ?AssignmentPhotoPair
+    {
+        $pairId = $request->integer('pair_id');
+
+        if ($pairId > 0) {
+            $record = $assignment->photoPairRecords->firstWhere('id', $pairId);
+
+            return $record instanceof AssignmentPhotoPair ? $record : null;
+        }
+
+        $before = $assignment->photos->firstWhere('id', $request->integer('before_photo_id'));
+        $after = $assignment->photos->firstWhere('id', $request->integer('after_photo_id'));
+        $before = $before instanceof AssignmentPhoto ? $before : null;
+        $after = $after instanceof AssignmentPhoto ? $after : null;
+
+        if ($before !== null && $after !== null && $before->assignment_photo_pair_id !== $after->assignment_photo_pair_id) {
+            return null;
+        }
+
+        $pairId = $before?->assignment_photo_pair_id ?? $after?->assignment_photo_pair_id;
+
+        if ($pairId === null) {
+            return null;
+        }
+
+        $record = $assignment->photoPairRecords->firstWhere('id', $pairId);
+
+        return $record instanceof AssignmentPhotoPair ? $record : null;
+    }
+
+    private function blankToNull(string $value): ?string
+    {
+        $value = trim($value);
+
+        return $value === '' ? null : $value;
     }
 
     /**

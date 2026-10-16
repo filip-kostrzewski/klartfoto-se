@@ -145,7 +145,7 @@
                             Planen aktiveras av oss när betalningen har registrerats.
                         @endif
                     </p>
-                    <button class="button button-lime" type="submit" aria-describedby="billing-request-note" data-loading-text="Skickar förfrågan…">{{ $isManualPlanActive ? 'Förnya eller ändra plan' : 'Begär faktura' }} <span aria-hidden="true">↗</span></button>
+                    <button class="button button-lime" type="submit" aria-describedby="billing-request-note" data-loading-text="Skickar förfrågan…">{{ $isManualPlanActive ? 'Förnya eller ändra plan' : 'Begär faktura' }}</button>
                 </div>
             </form>
         @elseif (! $isOwner)

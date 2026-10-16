@@ -17,7 +17,7 @@
             @endif
             <p class="report-overline">Fotorapport</p>
             <h1>{{ $companyName }}</h1>
-            <p>{{ $assignment->performed_on->locale('sv')->translatedFormat('j F Y') }}</p>
+            <p>{{ $assignment->performedLabel() }}</p>
         </header>
 
         <dl class="customer-report-meta">
@@ -32,12 +32,29 @@
         </dl>
 
         @forelse ($assignment->photoPairs() as $pair)
-            @include('reports.partials.photo-pair', ['pair' => $pair, 'assignment' => $assignment])
+            @include('reports.partials.photo-pair', ['pair' => $pair, 'assignment' => $assignment, 'pairIndex' => $loop->index])
         @empty
             <p class="empty-note">Inga bilder är tillagda i den här rapporten.</p>
         @endforelse
 
-        <footer class="customer-report-footer">Rapport via Klartfoto</footer>
+        @if ($companyName !== '')
+            <p class="customer-report-access">Den som har länken kan se bilderna. Kontakta {{ $companyName }}@if ($companyPhone), {{ $companyPhone }}@endif.</p>
+        @endif
+
+        <footer class="customer-report-footer">
+            <p>
+                @if ($companyName !== '')
+                    <span>{{ $companyName }}</span>
+                @endif
+                @if ($companyPhone)
+                    <span>{{ $companyPhone }}</span>
+                @endif
+                @if ($companyOrganizationNumber)
+                    <span>org.nr {{ $companyOrganizationNumber }}</span>
+                @endif
+            </p>
+            <p>Rapporten skapades {{ $assignment->reportCreatedLabel() }}</p>
+        </footer>
     </main>
 </body>
 </html>

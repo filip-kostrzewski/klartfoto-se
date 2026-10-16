@@ -109,6 +109,91 @@ document.querySelectorAll('[data-onboarding-done]').forEach((section) => {
     });
 });
 
+const heicPattern = /\.(heic|heif)$/i;
+
+const isHeicFile = (file) => {
+    const type = (file.type || '').toLowerCase();
+
+    return type === 'image/heic'
+        || type === 'image/heif'
+        || type === 'image/heic-sequence'
+        || type === 'image/heif-sequence'
+        || heicPattern.test(file.name);
+};
+
+const loadImage = (file) => new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+
+    image.onload = () => {
+        URL.revokeObjectURL(url);
+        resolve(image);
+    };
+
+    image.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('heic'));
+    };
+
+    image.src = url;
+});
+
+const canvasToJpeg = (width, height, draw) => new Promise((resolve) => {
+    const scale = Math.min(1, 2000 / Math.max(width, height, 1));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(width * scale));
+    canvas.height = Math.max(1, Math.round(height * scale));
+    const context = canvas.getContext('2d');
+
+    if (! context) {
+        resolve(null);
+
+        return;
+    }
+
+    draw(context, canvas.width, canvas.height);
+    canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.9);
+});
+
+const toJpegWhenHeic = async (file) => {
+    if (! isHeicFile(file)) {
+        return file;
+    }
+
+    const jpegName = (file.name.replace(heicPattern, '') || 'bild') + '.jpg';
+
+    try {
+        if (typeof createImageBitmap === 'function') {
+            const bitmap = await createImageBitmap(file);
+            const blob = await canvasToJpeg(bitmap.width, bitmap.height, (context, width, height) => {
+                context.drawImage(bitmap, 0, 0, width, height);
+            });
+            bitmap.close?.();
+
+            if (blob) {
+                return new File([blob], jpegName, { type: 'image/jpeg', lastModified: Date.now() });
+            }
+        }
+    } catch (error) {
+        // This browser cannot decode the HEIC file through createImageBitmap.
+    }
+
+    try {
+        const image = await loadImage(file);
+        const blob = await canvasToJpeg(image.naturalWidth, image.naturalHeight, (context, width, height) => {
+            context.drawImage(image, 0, 0, width, height);
+        });
+
+        if (blob) {
+            return new File([blob], jpegName, { type: 'image/jpeg', lastModified: Date.now() });
+        }
+    } catch (error) {
+        // Leave the original file so the server can convert it.
+    }
+
+    return file;
+};
+
 document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
     const input = picker.querySelector('input[type="file"]');
     const list = picker.querySelector('[data-photo-list]');
@@ -123,6 +208,8 @@ document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
     /** @type {string[]} */
     let previewUrls = [];
     let writing = false;
+    let converting = false;
+    let submitAfter = false;
 
     const render = () => {
         previewUrls.forEach((url) => URL.revokeObjectURL(url));
@@ -175,10 +262,33 @@ document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
             return;
         }
 
-        Array.from(input.files ?? []).forEach((file) => {
-            files.push(file);
-        });
-        writeFiles();
+        const selected = Array.from(input.files ?? []);
+        converting = true;
+
+        void (async () => {
+            try {
+                for (const file of selected) {
+                    files.push(await toJpegWhenHeic(file));
+                }
+            } finally {
+                converting = false;
+                writeFiles();
+
+                if (submitAfter) {
+                    submitAfter = false;
+                    input.form?.requestSubmit();
+                }
+            }
+        })();
+    });
+
+    input.form?.addEventListener('submit', (event) => {
+        if (! converting) {
+            return;
+        }
+
+        event.preventDefault();
+        submitAfter = true;
     });
 });
 

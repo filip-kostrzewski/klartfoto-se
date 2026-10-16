@@ -167,6 +167,7 @@ class MarketingSiteTest extends TestCase
         $this->get('/sv')->assertStatus(301)->assertRedirect('/');
         $this->get('/sv/for-stadforetag')->assertStatus(301)->assertRedirect('/for-stadforetag');
         $this->get('/rapportmall-fore-efter')->assertStatus(301)->assertRedirect('/exempel-rapport');
+        $this->get('/priser')->assertStatus(301)->assertRedirect('/#priser');
     }
 
     public function test_homepage_shows_prices_photo_demos_and_the_company_footer(): void

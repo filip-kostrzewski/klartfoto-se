@@ -62,7 +62,7 @@
                 </label>
                 @error('privacy') <span class="field-error" id="privacy-error">{{ $message }}</span> @enderror
 
-                <button class="button button-lime auth-submit" type="submit" data-loading-text="Skapar konto…">Skapa konto <span aria-hidden="true">↗</span></button>
+                <button class="button button-lime auth-submit" type="submit" data-loading-text="Skapar konto…">Skapa konto</button>
             </form>
             <p class="auth-switch">Har du redan konto? <a href="{{ route('login', absolute: false) }}">Logga in</a></p>
         </section>

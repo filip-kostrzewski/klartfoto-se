@@ -50,7 +50,7 @@
                     <span>Kom ihåg mig på den här telefonen</span>
                 </label>
 
-                <button class="button button-lime auth-submit" type="submit" data-loading-text="Loggar in…">Logga in <span aria-hidden="true">↗</span></button>
+                <button class="button button-lime auth-submit" type="submit" data-loading-text="Loggar in…">Logga in</button>
             </form>
             <p class="auth-switch">Nytt konto? <a href="{{ route('register', absolute: false) }}">Prova Klartfoto gratis i 30 dagar</a></p>
         </section>

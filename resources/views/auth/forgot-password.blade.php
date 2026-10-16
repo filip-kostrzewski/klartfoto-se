@@ -34,7 +34,7 @@
                 <label for="email">E-postadress</label>
                 <input id="email" name="email" type="email" inputmode="email" autocomplete="username" required maxlength="254" value="{{ old('email') }}" aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}" @if ($errors->has('email')) aria-describedby="email-error" @endif>
                 @error('email') <span class="field-error" id="email-error">{{ $message }}</span> @enderror
-                <button class="button button-lime auth-submit" type="submit" data-loading-text="Skickar…">Skicka länk <span aria-hidden="true">↗</span></button>
+                <button class="button button-lime auth-submit" type="submit" data-loading-text="Skickar…">Skicka länk</button>
             </form>
             <p class="auth-switch"><a href="{{ route('login', absolute: false) }}">Tillbaka till inloggningen</a></p>
         </section>

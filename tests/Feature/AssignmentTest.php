@@ -56,7 +56,9 @@ class AssignmentTest extends TestCase
 
         $this->actingAs($user)->get('/uppdrag/nytt')
             ->assertOk()
-            ->assertSee('accept="image/*"', false)
+            ->assertSee('accept="image/*,.heic,.heif"', false)
+            ->assertSee('class="photo-picker-input"', false)
+            ->assertSee('class="photo-picker-trigger"', false)
             ->assertSee('capture', false)
             ->assertSee('multiple', false)
             ->assertSee('name="before_photos[]"', false)

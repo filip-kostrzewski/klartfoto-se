@@ -3043,6 +3043,7 @@ html.cookie-choice-saved .cookie-banner {
 }
 
 .photo-picker {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -3089,6 +3090,62 @@ html.cookie-choice-saved .cookie-banner {
 .photo-pair {
     display: grid;
     gap: 12px;
+}
+
+.photo-pair {
+    grid-template-columns: 1fr 1fr;
+}
+
+.photo-pair-block {
+    display: grid;
+    gap: 10px;
+}
+
+.photo-pair-caption h2,
+.photo-pair-meta label span {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.photo-pair-caption p,
+.photo-pair-meta textarea {
+    margin: 4px 0 0;
+}
+
+.photo-pair-meta {
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid #dce2da;
+    border-radius: 15px;
+    background: var(--white);
+}
+
+.photo-pair-meta label {
+    display: grid;
+    gap: 4px;
+}
+
+.photo-pair-meta input,
+.photo-pair-meta textarea {
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 10px;
+    border: 1px solid #c5d0c4;
+    border-radius: 8px;
+    font: inherit;
+}
+
+.photo-pair-meta .button {
+    justify-self: start;
+}
+
+.customer-report-access {
+    margin: 22px 0 0;
+    color: #39493d;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 .owner-photos figure,
@@ -3229,7 +3286,6 @@ html.cookie-choice-saved .cookie-banner {
 
 @media (min-width: 720px) {
     .pricing-grid,
-    .photo-pair,
     .owner-photos {
         grid-template-columns: 1fr 1fr;
     }
@@ -6567,27 +6623,15 @@ html {
 }
 
 .photo-picker input[type="file"] {
-    width: 100%;
-    min-height: 58px;
-    padding: 8px;
-    border: 1px dashed #9baa99;
-    border-radius: 11px;
-    background: #fafbf7;
-    color: #39493d;
-    font-size: 13px;
-}
-
-.photo-picker input[type="file"]::file-selector-button {
-    min-height: 39px;
-    margin-right: 9px;
-    padding: 0 12px;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
     border: 0;
-    border-radius: 8px;
-    background: #e5eddc;
-    color: #2e492a;
-    font: inherit;
-    font-weight: 700;
-    cursor: pointer;
 }
 
 .photo-picker-count {
@@ -7492,6 +7536,20 @@ html {
     text-align: center;
 }
 
+.customer-report-footer p {
+    margin: 0;
+}
+
+.customer-report-footer p + p {
+    margin-top: 4px;
+}
+
+@media (max-width: 360px) {
+    .photo-pair {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 760px) {
     .assignment-form,
     .assignment-upload-form {
@@ -7572,11 +7630,6 @@ html {
     .assignment-photo-section,
     .assignment-upload-panel {
         padding: 16px;
-    }
-
-    .assignment-detail-page .photo-pair,
-    .customer-report .photo-pair {
-        grid-template-columns: 1fr;
     }
 
     .customer-report {

@@ -14,7 +14,7 @@ class PublicReportController extends Controller
     public function show(string $token): Response
     {
         $assignment = Assignment::query()
-            ->with(['photos', 'company'])
+            ->with(['photos', 'photoPairRecords', 'company'])
             ->where('public_token', $token)
             ->firstOrFail();
 
@@ -27,6 +27,8 @@ class PublicReportController extends Controller
             ->view('reports.public', [
                 'assignment' => $assignment,
                 'companyName' => $company?->name ?? '',
+                'companyPhone' => $company?->reportPhone(),
+                'companyOrganizationNumber' => $company?->reportOrganizationNumber(),
                 'logoUrl' => $logoUrl,
             ])
             ->header('X-Robots-Tag', 'noindex, nofollow');

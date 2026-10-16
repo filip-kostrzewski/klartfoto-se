@@ -72,7 +72,7 @@
                                     <span>{{ $assignment->address }}</span>
                                 </span>
                                 <span class="job-list-meta">
-                                    <span>{{ $assignment->performed_on->locale('sv')->translatedFormat('j F Y') }}</span>
+                                    <span>{{ $assignment->performedLabel() }}</span>
                                     <span>{{ $assignment->photos_count }} {{ $assignment->photos_count === 1 ? 'bild' : 'bilder' }}</span>
                                 </span>
                             </a>

@@ -2,14 +2,16 @@
 
 namespace App\Http\Requests\Concerns;
 
+use App\Rules\AcceptedJobPhoto;
+
 trait ValidatesJobPhotos
 {
     /**
-     * @return array<string, array<int, string>>
+     * @return array<string, array<int, mixed>>
      */
     protected function photoRules(): array
     {
-        $fileRules = ['image', 'mimes:jpg,jpeg,png,webp', 'max:15360', 'dimensions:max_width=8000,max_height=8000'];
+        $fileRules = ['file', new AcceptedJobPhoto];
 
         return [
             'before_photos' => ['nullable', 'array', 'max:10'],
@@ -27,14 +29,8 @@ trait ValidatesJobPhotos
         return [
             'before_photos.max' => 'Du kan ladda upp högst 10 förebilder åt gången.',
             'after_photos.max' => 'Du kan ladda upp högst 10 efterbilder åt gången.',
-            'before_photos.*.image' => 'Förebilderna behöver vara bildfiler.',
-            'after_photos.*.image' => 'Efterbilderna behöver vara bildfiler.',
-            'before_photos.*.mimes' => 'Använd JPEG, PNG eller WebP för förebilderna.',
-            'after_photos.*.mimes' => 'Använd JPEG, PNG eller WebP för efterbilderna.',
-            'before_photos.*.max' => 'Varje förebild får vara högst 15 MB.',
-            'after_photos.*.max' => 'Varje efterbild får vara högst 15 MB.',
-            'before_photos.*.dimensions' => 'En förebild har för hög upplösning. Prova en mindre bild.',
-            'after_photos.*.dimensions' => 'En efterbild har för hög upplösning. Prova en mindre bild.',
+            'before_photos.*.file' => AcceptedJobPhoto::FORMAT_MESSAGE,
+            'after_photos.*.file' => AcceptedJobPhoto::FORMAT_MESSAGE,
         ];
     }
 }

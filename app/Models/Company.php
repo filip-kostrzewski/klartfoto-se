@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Cashier\Billable;
 use Laravel\Cashier\Subscription;
 
-#[Fillable(['name', 'plan', 'trial_ends_at', 'logo_path', 'paid_until', 'requested_plan', 'requested_at', 'billing_details'])]
+#[Fillable(['name', 'plan', 'trial_ends_at', 'logo_path', 'paid_until', 'requested_plan', 'requested_at', 'billing_details', 'phone', 'organization_number'])]
 #[Hidden(['billing_details'])]
 class Company extends Model
 {
@@ -47,6 +47,27 @@ class Company extends Model
     public function assignments(): HasMany
     {
         return $this->hasMany(Assignment::class);
+    }
+
+    public function reportPhone(): ?string
+    {
+        return $this->filledReportText($this->phone);
+    }
+
+    public function reportOrganizationNumber(): ?string
+    {
+        return $this->filledReportText($this->organization_number);
+    }
+
+    private function filledReportText(mixed $value): ?string
+    {
+        if (! is_string($value)) {
+            return null;
+        }
+
+        $value = trim($value);
+
+        return $value === '' ? null : $value;
     }
 
     public function stripeEmail(): ?string

@@ -41,6 +41,10 @@
                     <label for="performed_on">Datum</label>
                     <input id="performed_on" name="performed_on" type="date" required value="{{ old('performed_on', now()->toDateString()) }}" aria-invalid="{{ $errors->has('performed_on') ? 'true' : 'false' }}" @if ($errors->has('performed_on')) aria-describedby="performed-on-error" @endif>
                     @error('performed_on') <span class="field-error" id="performed-on-error">{{ $message }}</span> @enderror
+
+                    <label for="performed_time">Tid</label>
+                    <input id="performed_time" name="performed_time" type="time" value="{{ old('performed_time', now()->timezone('Europe/Stockholm')->format('H:i')) }}" aria-invalid="{{ $errors->has('performed_time') ? 'true' : 'false' }}" @if ($errors->has('performed_time')) aria-describedby="performed-time-error" @endif>
+                    @error('performed_time') <span class="field-error" id="performed-time-error">{{ $message }}</span> @enderror
                 </fieldset>
 
                 <div class="assignment-photo-section">
@@ -71,7 +75,7 @@
 
                 <div class="assignment-form-footer">
                     <p>Bilderna optimeras innan de sparas.</p>
-                    <button class="button button-lime" type="submit" data-loading-text="Sparar uppdrag…">Spara uppdraget <span aria-hidden="true">↗</span></button>
+                    <button class="button button-lime" type="submit" data-loading-text="Sparar uppdrag…">Spara uppdraget</button>
                 </div>
             </form>
         @else

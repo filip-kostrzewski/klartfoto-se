@@ -4,6 +4,7 @@ namespace App\Actions;
 
 use App\Models\Assignment;
 use App\PhotoPhase;
+use App\Rules\AcceptedJobPhoto;
 use GdImage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -20,51 +21,103 @@ class StoreAssignmentPhotos
     public function handle(Assignment $assignment, array $before, array $after): void
     {
         $storedPaths = [];
+        $temporaryPaths = [];
 
         try {
-            $this->storePhase($assignment, PhotoPhase::Before, $before, $storedPaths);
-            $this->storePhase($assignment, PhotoPhase::After, $after, $storedPaths);
+            $assignment->materializeLegacyPairs();
+            $this->storePairs($assignment, $before, $after, $storedPaths, $temporaryPaths);
         } catch (Throwable $exception) {
             if ($storedPaths !== []) {
                 Storage::disk('local')->delete($storedPaths);
             }
 
             throw $exception;
+        } finally {
+            foreach ($temporaryPaths as $path) {
+                if (is_file($path)) {
+                    unlink($path);
+                }
+            }
         }
     }
 
     /**
-     * @param  array<int, UploadedFile>  $files
+     * @param  array<int, UploadedFile>  $before
+     * @param  array<int, UploadedFile>  $after
      * @param  list<string>  $storedPaths
+     * @param  list<string>  $temporaryPaths
      */
-    private function storePhase(Assignment $assignment, PhotoPhase $phase, array $files, array &$storedPaths): void
+    private function storePairs(Assignment $assignment, array $before, array $after, array &$storedPaths, array &$temporaryPaths): void
     {
-        $sortOrder = (int) $assignment->photos()->where('phase', $phase)->max('sort_order');
+        $count = max(count($before), count($after));
 
-        foreach ($files as $file) {
-            $sortOrder++;
-            $path = $this->storeResized($assignment, $file);
-            $storedPaths[] = $path;
+        if ($count === 0) {
+            return;
+        }
 
-            $assignment->photos()->create([
-                'phase' => $phase,
-                'path' => $path,
-                'sort_order' => $sortOrder,
+        $position = $assignment->photoPairRecords()->exists()
+            ? ((int) $assignment->photoPairRecords()->max('position')) + 1
+            : 0;
+
+        for ($index = 0; $index < $count; $index++) {
+            $pair = $assignment->photoPairRecords()->create([
+                'position' => $position + $index,
+                'room_name' => null,
+                'note' => null,
             ]);
+
+            $this->storeOne($assignment, $pair->id, PhotoPhase::Before, $before[$index] ?? null, $index + 1, $storedPaths, $temporaryPaths);
+            $this->storeOne($assignment, $pair->id, PhotoPhase::After, $after[$index] ?? null, $index + 1, $storedPaths, $temporaryPaths);
         }
     }
 
-    private function storeResized(Assignment $assignment, UploadedFile $file): string
+    /**
+     * @param  list<string>  $storedPaths
+     * @param  list<string>  $temporaryPaths
+     */
+    private function storeOne(Assignment $assignment, int $pairId, PhotoPhase $phase, ?UploadedFile $file, int $sortOrder, array &$storedPaths, array &$temporaryPaths): void
     {
-        $source = @imagecreatefromstring((string) file_get_contents($file->getRealPath()));
+        if (! $file instanceof UploadedFile) {
+            return;
+        }
+
+        $path = $this->storeResized($assignment, $file, $temporaryPaths);
+        $storedPaths[] = $path;
+
+        $assignment->photos()->create([
+            'phase' => $phase,
+            'path' => $path,
+            'sort_order' => $sortOrder,
+            'assignment_photo_pair_id' => $pairId,
+        ]);
+    }
+
+    /**
+     * @param  list<string>  $temporaryPaths
+     */
+    private function storeResized(Assignment $assignment, UploadedFile $file, array &$temporaryPaths): string
+    {
+        $sourcePath = $file->getRealPath();
+        $converted = false;
+
+        if ((new AcceptedJobPhoto)->isHeic($file)) {
+            $sourcePath = app(ConvertHeicToJpeg::class)->handle($file);
+            $temporaryPaths[] = $sourcePath;
+            $converted = true;
+        }
+
+        $source = @imagecreatefromstring((string) file_get_contents($sourcePath));
 
         if (! $source instanceof GdImage) {
             throw ValidationException::withMessages([
-                'before_photos' => 'En av bilderna gick inte att läsa. Prova en JPEG-, PNG- eller WebP-fil.',
+                'before_photos' => 'En av bilderna gick inte att läsa. Prova en JPEG-, PNG-, WebP- eller HEIC-fil.',
             ]);
         }
 
-        $source = $this->applyOrientation($source, $file);
+        if (! $converted) {
+            $source = $this->applyOrientation($source, $file);
+        }
+
         $width = imagesx($source);
         $height = imagesy($source);
         $maxEdge = max(1, (int) config('klartfoto.photo_max_edge', 1600));

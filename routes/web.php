@@ -42,10 +42,12 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/uppdrag/kom-igang/visa', [AssignmentController::class, 'restoreOnboarding'])->name('onboarding.restore');
     Route::get('/uppdrag/{assignment}', [AssignmentController::class, 'show'])->name('assignments.show');
     Route::post('/uppdrag/{assignment}/foton', [AssignmentController::class, 'storePhotos'])->name('assignments.photos.store');
+    Route::put('/uppdrag/{assignment}/par', [AssignmentController::class, 'updatePair'])->name('assignments.pairs.update');
     Route::delete('/uppdrag/{assignment}/foton/{photo}', [AssignmentController::class, 'destroyPhoto'])->name('assignments.photos.destroy');
     Route::post('/uppdrag/{assignment}/delning', [AssignmentController::class, 'share'])->name('assignments.share');
     Route::get('/installningar', [CompanySettingsController::class, 'edit'])->name('settings.edit');
     Route::put('/installningar/profil', [CompanySettingsController::class, 'updateProfile'])->name('settings.profile.update');
+    Route::put('/installningar/foretag', [CompanySettingsController::class, 'updateCompany'])->name('settings.company.update');
     Route::get('/installningar/abonnemang', [BillingController::class, 'show'])->name('settings.billing');
     Route::post('/installningar/abonnemang/faktura', [BillingController::class, 'requestInvoice'])
         ->middleware('throttle:5,60')
@@ -106,6 +108,7 @@ Route::permanentRedirect('/registrera', '/register');
 Route::permanentRedirect('/glomt-losenord', '/forgot-password');
 Route::permanentRedirect('/integritet', '/integritetspolicy');
 Route::permanentRedirect('/rapportmall-fore-efter', '/exempel-rapport');
+Route::permanentRedirect('/priser', '/#priser');
 Route::permanentRedirect('/sv/integritet', '/integritetspolicy');
 Route::permanentRedirect('/sv/rapportmall-fore-efter', '/exempel-rapport');
 
