@@ -57,7 +57,11 @@ class CompanySettingsController extends Controller
         $company = $this->company($request->user());
         Gate::authorize('update', $company);
 
-        $company->update($request->safe()->only(['phone', 'organization_number']));
+        $company->update([
+            'name' => $request->string('company_name')->toString(),
+            'phone' => $request->validated('phone'),
+            'organization_number' => $request->validated('organization_number'),
+        ]);
 
         return back()->with('toast', 'Företagsuppgifterna är sparade.');
     }

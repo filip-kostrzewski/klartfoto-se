@@ -28,7 +28,7 @@ class PublicReportController extends Controller
                 'assignment' => $assignment,
                 'companyName' => $company?->name ?? '',
                 'companyPhone' => $company?->reportPhone(),
-                'companyOrganizationNumber' => $company?->reportOrganizationNumber(),
+                'companyFooter' => $company?->reportFooter() ?? '',
                 'logoUrl' => $logoUrl,
             ])
             ->header('X-Robots-Tag', 'noindex, nofollow');

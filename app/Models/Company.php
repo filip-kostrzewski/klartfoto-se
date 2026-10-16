@@ -51,12 +51,61 @@ class Company extends Model
 
     public function reportPhone(): ?string
     {
-        return $this->filledReportText($this->phone);
+        $phone = $this->filledReportText($this->phone);
+
+        if ($phone === null) {
+            return null;
+        }
+
+        return $this->formatReportPhone($phone);
     }
 
     public function reportOrganizationNumber(): ?string
     {
         return $this->filledReportText($this->organization_number);
+    }
+
+    public function reportFooter(): string
+    {
+        $parts = [];
+        $name = $this->filledReportText($this->name);
+
+        if ($name !== null) {
+            $parts[] = $name;
+        }
+
+        $phone = $this->reportPhone();
+
+        if ($phone !== null) {
+            $parts[] = $phone;
+        }
+
+        $organizationNumber = $this->reportOrganizationNumber();
+
+        if ($organizationNumber !== null) {
+            $parts[] = 'org.nr '.$organizationNumber;
+        }
+
+        return implode(' · ', $parts);
+    }
+
+    private function formatReportPhone(string $phone): string
+    {
+        $digits = preg_replace('/\D+/', '', $phone) ?? '';
+
+        if (str_starts_with($digits, '0046') && strlen($digits) === 13) {
+            $digits = '0'.substr($digits, 4);
+        }
+
+        if (str_starts_with($digits, '46') && strlen($digits) === 11) {
+            $digits = '0'.substr($digits, 2);
+        }
+
+        if (strlen($digits) === 10 && str_starts_with($digits, '07')) {
+            return substr($digits, 0, 3).'-'.substr($digits, 3, 3).' '.substr($digits, 6, 2).' '.substr($digits, 8, 2);
+        }
+
+        return $phone;
     }
 
     private function filledReportText(mixed $value): ?string

@@ -1,3 +1,5 @@
+import { fileLooksLikeHeic, heicFileToJpegFile, jpegFileName } from './heic.js';
+
 document.documentElement.classList.add('js-enhanced');
 
 document.querySelectorAll('[data-password-toggle]').forEach((button) => {
@@ -109,40 +111,13 @@ document.querySelectorAll('[data-onboarding-done]').forEach((section) => {
     });
 });
 
-const heicPattern = /\.(heic|heif)$/i;
+const HEIC_CONVERSION_ERROR = 'HEIC-bilden kunde inte läsas. Spara den som JPEG och försök igen.';
 
-const isHeicFile = (file) => {
-    const type = (file.type || '').toLowerCase();
-
-    return type === 'image/heic'
-        || type === 'image/heif'
-        || type === 'image/heic-sequence'
-        || type === 'image/heif-sequence'
-        || heicPattern.test(file.name);
-};
-
-const loadImage = (file) => new Promise((resolve, reject) => {
-    const url = URL.createObjectURL(file);
-    const image = new Image();
-
-    image.onload = () => {
-        URL.revokeObjectURL(url);
-        resolve(image);
-    };
-
-    image.onerror = () => {
-        URL.revokeObjectURL(url);
-        reject(new Error('heic'));
-    };
-
-    image.src = url;
-});
-
-const canvasToJpeg = (width, height, draw) => new Promise((resolve) => {
-    const scale = Math.min(1, 2000 / Math.max(width, height, 1));
+const bitmapToJpeg = (bitmap) => new Promise((resolve) => {
+    const scale = Math.min(1, 2000 / Math.max(bitmap.width, bitmap.height, 1));
     const canvas = document.createElement('canvas');
-    canvas.width = Math.max(1, Math.round(width * scale));
-    canvas.height = Math.max(1, Math.round(height * scale));
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
     const context = canvas.getContext('2d');
 
     if (! context) {
@@ -151,53 +126,46 @@ const canvasToJpeg = (width, height, draw) => new Promise((resolve) => {
         return;
     }
 
-    draw(context, canvas.width, canvas.height);
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
     canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.9);
 });
 
-const toJpegWhenHeic = async (file) => {
-    if (! isHeicFile(file)) {
+const preparePhoto = async (file) => {
+    if (! await fileLooksLikeHeic(file)) {
         return file;
     }
-
-    const jpegName = (file.name.replace(heicPattern, '') || 'bild') + '.jpg';
 
     try {
         if (typeof createImageBitmap === 'function') {
             const bitmap = await createImageBitmap(file);
-            const blob = await canvasToJpeg(bitmap.width, bitmap.height, (context, width, height) => {
-                context.drawImage(bitmap, 0, 0, width, height);
-            });
-            bitmap.close?.();
 
-            if (blob) {
-                return new File([blob], jpegName, { type: 'image/jpeg', lastModified: Date.now() });
+            try {
+                if (bitmap.width > 0 && bitmap.height > 0) {
+                    const blob = await bitmapToJpeg(bitmap);
+
+                    if (blob) {
+                        return new File([blob], jpegFileName(file.name), {
+                            type: 'image/jpeg',
+                            lastModified: Date.now(),
+                        });
+                    }
+                }
+            } finally {
+                bitmap.close?.();
             }
         }
     } catch (error) {
-        // This browser cannot decode the HEIC file through createImageBitmap.
+        // This browser cannot decode HEIC natively. The wasm decoder runs next.
     }
 
-    try {
-        const image = await loadImage(file);
-        const blob = await canvasToJpeg(image.naturalWidth, image.naturalHeight, (context, width, height) => {
-            context.drawImage(image, 0, 0, width, height);
-        });
-
-        if (blob) {
-            return new File([blob], jpegName, { type: 'image/jpeg', lastModified: Date.now() });
-        }
-    } catch (error) {
-        // Leave the original file so the server can convert it.
-    }
-
-    return file;
+    return heicFileToJpegFile(file);
 };
 
 document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
     const input = picker.querySelector('input[type="file"]');
     const list = picker.querySelector('[data-photo-list]');
     const count = picker.querySelector('[data-photo-count]');
+    const error = picker.querySelector('[data-photo-error]');
 
     if (! (input instanceof HTMLInputElement) || ! list || ! count || typeof DataTransfer !== 'function') {
         return;
@@ -257,6 +225,15 @@ document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
         render();
     };
 
+    const showError = (message) => {
+        if (! error) {
+            return;
+        }
+
+        error.hidden = message === '';
+        error.textContent = message;
+    };
+
     input.addEventListener('change', () => {
         if (writing) {
             return;
@@ -264,14 +241,23 @@ document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
 
         const selected = Array.from(input.files ?? []);
         converting = true;
+        count.hidden = false;
+        count.textContent = 'Läser bilder…';
 
         void (async () => {
+            let failed = false;
+
             try {
                 for (const file of selected) {
-                    files.push(await toJpegWhenHeic(file));
+                    try {
+                        files.push(await preparePhoto(file));
+                    } catch (conversionError) {
+                        failed = true;
+                    }
                 }
             } finally {
                 converting = false;
+                showError(failed ? HEIC_CONVERSION_ERROR : '');
                 writeFiles();
 
                 if (submitAfter) {

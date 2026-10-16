@@ -42,17 +42,9 @@
         @endif
 
         <footer class="customer-report-footer">
-            <p>
-                @if ($companyName !== '')
-                    <span>{{ $companyName }}</span>
-                @endif
-                @if ($companyPhone)
-                    <span>{{ $companyPhone }}</span>
-                @endif
-                @if ($companyOrganizationNumber)
-                    <span>org.nr {{ $companyOrganizationNumber }}</span>
-                @endif
-            </p>
+            @if ($companyFooter !== '')
+                <p>{{ $companyFooter }}</p>
+            @endif
             <p>Rapporten skapades {{ $assignment->reportCreatedLabel() }}</p>
         </footer>
     </main>

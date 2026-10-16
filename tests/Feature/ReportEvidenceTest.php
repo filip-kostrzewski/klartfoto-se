@@ -72,10 +72,12 @@ class ReportEvidenceTest extends TestCase
         $this->get('/r/'.$assignment->public_token)
             ->assertOk()
             ->assertSee('Den som har länken kan se bilderna. Kontakta Kriti Städ, 070-111 22 33.', false)
+            ->assertSee('Kriti Städ · 070-111 22 33 · org.nr 559000-0000', false)
             ->assertSee('org.nr 559000-0000', false)
             ->assertSee('070-111 22 33', false);
 
         $this->actingAs($user)->put('/installningar/foretag', [
+            'company_name' => 'Kriti Städ',
             'phone' => '   ',
             'organization_number' => '',
         ])->assertRedirect()
@@ -212,12 +214,15 @@ class ReportEvidenceTest extends TestCase
         $this->assertNull($before->refresh()->assignment_photo_pair_id);
 
         $this->actingAs($member)->put('/installningar/foretag', [
+            'company_name' => 'Annat namn',
             'phone' => '070-111 22 33',
             'organization_number' => '559000-0000',
         ])->assertForbidden();
         $this->assertNull($owner->company->refresh()->phone);
+        $this->assertNotSame('Annat namn', $owner->company->name);
 
         $this->actingAs($owner)->put('/installningar/foretag', [
+            'company_name' => $owner->company->name,
             'phone' => '070-111 22 33',
             'organization_number' => '559000-0000',
         ])->assertRedirect();
@@ -242,10 +247,159 @@ class ReportEvidenceTest extends TestCase
         $this->get('/register')->assertOk()->assertDontSee('↗', false);
 
         $user = User::factory()->create();
+        $this->travelTo('2026-10-16 07:30:00');
         $this->actingAs($user)->get('/uppdrag/nytt')
             ->assertOk()
             ->assertSee('>Spara uppdraget</button>', false)
             ->assertSee('name="performed_time"', false)
+            ->assertSee('name="performed_end_time"', false)
+            ->assertSee('>Starttid</label>', false)
+            ->assertSee('>Sluttid</label>', false)
+            ->assertSee('type="time"', false)
+            ->assertDontSee('value="09:30"', false)
             ->assertDontSee('↗', false);
+    }
+
+    public function test_a_cleaning_time_range_is_shown_in_the_report_and_an_earlier_end_is_rejected(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->post('/uppdrag', [
+            'customer_name' => 'Anna Andersson',
+            'address' => 'Storgatan 1, 111 22 Stockholm',
+            'performed_on' => '2026-10-16',
+            'performed_time' => '09:00',
+            'performed_end_time' => '11:30',
+        ])->assertRedirect();
+
+        $assignment = Assignment::query()->firstOrFail();
+        $this->assertSame('09:00', substr((string) $assignment->performed_time, 0, 5));
+        $this->assertSame('11:30', substr((string) $assignment->performed_end_time, 0, 5));
+        $this->get('/r/'.$assignment->public_token)
+            ->assertOk()
+            ->assertSee('<p>16 oktober 2026 kl. 09:00–11:30</p>', false);
+
+        $this->actingAs($user)->from('/uppdrag/nytt')->post('/uppdrag', [
+            'customer_name' => 'Anna Andersson',
+            'address' => 'Storgatan 1, 111 22 Stockholm',
+            'performed_on' => '2026-10-16',
+            'performed_time' => '11:30',
+            'performed_end_time' => '09:00',
+        ])->assertRedirect('/uppdrag/nytt')
+            ->assertSessionHasErrors(['performed_end_time' => 'Sluttiden måste vara senare än starttiden.']);
+
+        $this->actingAs($user)->from('/uppdrag/nytt')->post('/uppdrag', [
+            'customer_name' => 'Anna Andersson',
+            'address' => 'Storgatan 1, 111 22 Stockholm',
+            'performed_on' => '2026-10-16',
+            'performed_end_time' => 'ab',
+        ])->assertRedirect('/uppdrag/nytt')
+            ->assertSessionHasErrors(['performed_end_time' => 'Ange en giltig tid.']);
+
+        $this->actingAs($user)->post('/uppdrag', [
+            'customer_name' => 'Anna Andersson',
+            'address' => 'Storgatan 1, 111 22 Stockholm',
+            'performed_on' => '2026-10-16',
+            'performed_end_time' => '11:30',
+        ])->assertRedirect();
+
+        $endOnly = Assignment::query()->latest('id')->firstOrFail();
+        $this->get('/r/'.$endOnly->public_token)
+            ->assertOk()
+            ->assertSee('<p>16 oktober 2026 kl. 11:30</p>', false)
+            ->assertDontSee('16 oktober 2026 kl. 11:30–', false);
+    }
+
+    public function test_the_report_footer_formats_a_swedish_mobile_and_the_company_name_can_be_edited(): void
+    {
+        $owner = User::factory()->create();
+        $owner->company->update([
+            'name' => 'Gammalt namn',
+            'phone' => null,
+            'organization_number' => null,
+        ]);
+        $assignment = Assignment::factory()->for($owner)->create([
+            'performed_on' => '2026-10-16',
+        ]);
+
+        $this->put('/installningar/foretag', [
+            'company_name' => 'Företag',
+        ])->assertRedirect(route('login'));
+        $this->assertSame('Gammalt namn', $owner->company->refresh()->name);
+
+        $this->actingAs($owner)->get('/installningar')
+            ->assertOk()
+            ->assertSee('Företagsnamn', false)
+            ->assertSee('name="company_name"', false)
+            ->assertSee('value="Gammalt namn"', false);
+
+        $this->actingAs($owner)->from('/installningar')->put('/installningar/foretag', [
+            'company_name' => '   ',
+            'phone' => '0700000095',
+            'organization_number' => '000000-0000',
+        ])->assertRedirect('/installningar')
+            ->assertSessionHasErrors(['company_name' => 'Ange företagsnamnet.']);
+
+        $this->actingAs($owner)->from('/installningar')->put('/installningar/foretag', [
+            'company_name' => str_repeat('a', 121),
+        ])->assertRedirect('/installningar')
+            ->assertSessionHasErrors(['company_name' => 'Företagsnamnet får vara högst 120 tecken.']);
+
+        $this->assertSame('Gammalt namn', $owner->company->refresh()->name);
+
+        $this->actingAs($owner)->put('/installningar/foretag', [
+            'company_name' => 'Företag',
+            'phone' => '0700000095',
+            'organization_number' => '000000-0000',
+        ])->assertRedirect()
+            ->assertSessionHas('toast', 'Företagsuppgifterna är sparade.');
+
+        $this->assertSame('Företag', $owner->company->refresh()->name);
+        $this->assertSame('0700000095', $owner->company->phone);
+        $this->get('/installningar')->assertOk()->assertSee('value="Företag"', false);
+        $this->get('/r/'.$assignment->public_token)
+            ->assertOk()
+            ->assertSee('Företag · 070-000 00 95 · org.nr 000000-0000', false)
+            ->assertSee('Kontakta Företag, 070-000 00 95.', false);
+
+        $this->actingAs($owner)->put('/installningar/foretag', [
+            'company_name' => 'Företag',
+            'phone' => '+46 70 000 00 95',
+            'organization_number' => '000000-0000',
+        ])->assertRedirect();
+
+        $this->get('/r/'.$assignment->public_token)
+            ->assertOk()
+            ->assertSee('Företag · 070-000 00 95 · org.nr 000000-0000', false);
+
+        $this->actingAs($owner)->put('/installningar/foretag', [
+            'company_name' => 'Företag',
+            'phone' => '08-12 34 56',
+            'organization_number' => '',
+        ])->assertRedirect();
+
+        $this->get('/r/'.$assignment->public_token)
+            ->assertOk()
+            ->assertSee('Företag · 08-12 34 56', false)
+            ->assertDontSee('org.nr', false);
+    }
+
+    public function test_a_real_heic_fixture_decodes_in_the_client_converter(): void
+    {
+        $fixture = base_path('tests/Fixtures/room.heic');
+        $this->assertFileExists($fixture);
+        $head = file_get_contents($fixture, false, null, 0, 32);
+        $this->assertIsString($head);
+        $this->assertTrue(str_contains($head, 'ftypheic') || str_contains($head, 'ftypmif1'));
+
+        $script = file_get_contents(resource_path('js/site.js'));
+        $this->assertIsString($script);
+        $this->assertStringContainsString('HEIC-bilden kunde inte läsas. Spara den som JPEG och försök igen.', $script);
+        $this->assertStringNotContainsString('Leave the original file', $script);
+
+        $process = new Process(['node', 'tests/js/heic-fixture.mjs'], base_path());
+        $process->setTimeout(30);
+        $process->mustRun();
+        $this->assertStringContainsString('ok', $process->getOutput());
     }
 }

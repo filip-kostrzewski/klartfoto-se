@@ -3055,6 +3055,13 @@ html.cookie-choice-saved .cookie-banner {
     font-weight: 700;
 }
 
+.photo-picker-error {
+    margin: 0;
+    color: #7c2c22;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
 .photo-picker-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
@@ -6564,6 +6571,23 @@ html {
     border-color: #4d6f35;
     outline: 3px solid rgba(91, 125, 57, .24);
     outline-offset: 1px;
+}
+
+.assignment-time-range {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.assignment-time-range label {
+    display: block;
+}
+
+.assignment-time-hint {
+    margin: 2px 0 0;
+    color: #57655b;
+    font-size: 13px;
+    line-height: 1.45;
 }
 
 .assignment-photo-section {

@@ -16,7 +16,10 @@ class UpdateCompanyDetailsRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
+        $name = $this->input('company_name');
+
         $this->merge([
+            'company_name' => is_string($name) ? trim($name) : $name,
             'phone' => $this->blank($this->input('phone')),
             'organization_number' => $this->blank($this->input('organization_number')),
         ]);
@@ -28,6 +31,7 @@ class UpdateCompanyDetailsRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'company_name' => ['required', 'string', 'max:120'],
             'phone' => ['nullable', 'string', 'max:40'],
             'organization_number' => ['nullable', 'string', 'max:32'],
         ];
@@ -39,6 +43,8 @@ class UpdateCompanyDetailsRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'company_name.required' => 'Ange företagsnamnet.',
+            'company_name.max' => 'Företagsnamnet får vara högst 120 tecken.',
             'phone.max' => 'Telefonnumret får vara högst 40 tecken.',
             'organization_number.max' => 'Organisationsnumret får vara högst 32 tecken.',
         ];

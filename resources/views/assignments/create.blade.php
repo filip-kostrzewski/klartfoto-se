@@ -42,9 +42,19 @@
                     <input id="performed_on" name="performed_on" type="date" required value="{{ old('performed_on', now()->toDateString()) }}" aria-invalid="{{ $errors->has('performed_on') ? 'true' : 'false' }}" @if ($errors->has('performed_on')) aria-describedby="performed-on-error" @endif>
                     @error('performed_on') <span class="field-error" id="performed-on-error">{{ $message }}</span> @enderror
 
-                    <label for="performed_time">Tid</label>
-                    <input id="performed_time" name="performed_time" type="time" value="{{ old('performed_time', now()->timezone('Europe/Stockholm')->format('H:i')) }}" aria-invalid="{{ $errors->has('performed_time') ? 'true' : 'false' }}" @if ($errors->has('performed_time')) aria-describedby="performed-time-error" @endif>
-                    @error('performed_time') <span class="field-error" id="performed-time-error">{{ $message }}</span> @enderror
+                    <div class="assignment-time-range">
+                        <div>
+                            <label for="performed_time">Starttid</label>
+                            <input id="performed_time" name="performed_time" type="time" value="{{ old('performed_time') }}" aria-invalid="{{ $errors->has('performed_time') ? 'true' : 'false' }}" @if ($errors->has('performed_time')) aria-describedby="performed-time-error" @endif>
+                            @error('performed_time') <span class="field-error" id="performed-time-error">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label for="performed_end_time">Sluttid</label>
+                            <input id="performed_end_time" name="performed_end_time" type="time" value="{{ old('performed_end_time') }}" aria-invalid="{{ $errors->has('performed_end_time') ? 'true' : 'false' }}" @if ($errors->has('performed_end_time')) aria-describedby="performed-end-time-error" @endif>
+                            @error('performed_end_time') <span class="field-error" id="performed-end-time-error">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                    <p class="assignment-time-hint">Valfritt. Ett intervall visas i rapporten som kl. 09:00–11:30.</p>
                 </fieldset>
 
                 <div class="assignment-photo-section">

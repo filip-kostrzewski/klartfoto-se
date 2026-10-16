@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
-#[Fillable(['customer_name', 'address', 'performed_on', 'performed_time', 'public_token'])]
+#[Fillable(['customer_name', 'address', 'performed_on', 'performed_time', 'performed_end_time', 'public_token'])]
 class Assignment extends Model
 {
     /** @use HasFactory<AssignmentFactory> */
@@ -79,8 +79,18 @@ class Assignment extends Model
 
     public function performedTimeLabel(): ?string
     {
-        $time = $this->performed_time;
+        $start = $this->clockLabel($this->performed_time);
+        $end = $this->clockLabel($this->performed_end_time);
 
+        if ($start !== null && $end !== null) {
+            return $start.'–'.$end;
+        }
+
+        return $start ?? $end;
+    }
+
+    private function clockLabel(mixed $time): ?string
+    {
         if (! is_string($time) || $time === '') {
             return null;
         }

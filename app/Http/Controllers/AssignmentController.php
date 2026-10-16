@@ -87,6 +87,7 @@ class AssignmentController extends Controller
                 'address',
                 'performed_on',
                 'performed_time',
+                'performed_end_time',
             ]));
 
             $photos->handle(

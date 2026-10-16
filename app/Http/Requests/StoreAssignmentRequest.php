@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Requests\Concerns\ValidatesJobPhotos;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class StoreAssignmentRequest extends FormRequest
 {
@@ -17,9 +18,33 @@ class StoreAssignmentRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        if ($this->input('performed_time') === '') {
-            $this->merge(['performed_time' => null]);
+        $times = [];
+
+        foreach (['performed_time', 'performed_end_time'] as $field) {
+            if ($this->input($field) === '') {
+                $times[$field] = null;
+            }
         }
+
+        if ($times !== []) {
+            $this->merge($times);
+        }
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            $start = $this->input('performed_time');
+            $end = $this->input('performed_end_time');
+
+            if (! is_string($start) || ! is_string($end) || $start === '' || $end === '') {
+                return;
+            }
+
+            if ($end <= $start) {
+                $validator->errors()->add('performed_end_time', 'Sluttiden måste vara senare än starttiden.');
+            }
+        });
     }
 
     /**
@@ -32,6 +57,7 @@ class StoreAssignmentRequest extends FormRequest
             'address' => ['required', 'string', 'max:255'],
             'performed_on' => ['required', 'date', 'after:1990-01-01', 'before:2100-01-01'],
             'performed_time' => ['nullable', 'date_format:H:i'],
+            'performed_end_time' => ['nullable', 'date_format:H:i'],
             ...$this->photoRules(),
         ];
     }
@@ -51,6 +77,7 @@ class StoreAssignmentRequest extends FormRequest
             'performed_on.after' => 'Ange ett giltigt datum.',
             'performed_on.before' => 'Ange ett giltigt datum.',
             'performed_time.date_format' => 'Ange en giltig tid.',
+            'performed_end_time.date_format' => 'Ange en giltig tid.',
             ...$this->photoMessages(),
         ];
     }

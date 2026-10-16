@@ -70,10 +70,13 @@
                             <span class="workflow-icon"><x-icon name="home" /></span>
                             <div><h2 id="company-heading">Företag</h2><p>Uppgifter som kan visas i kundrapporten.</p></div>
                         </header>
-                        <p class="settings-card-description">Telefon och organisationsnummer visas i rapportens sidfot. Lämna ett fält tomt om det inte ska synas.</p>
+                        <p class="settings-card-description">Namn, telefon och organisationsnummer visas i rapportens sidfot. Lämna telefon eller organisationsnummer tomt om det inte ska synas.</p>
                         <form class="app-form settings-inline-form" method="post" action="{{ route('settings.company.update', absolute: false) }}">
                             @csrf
                             @method('PUT')
+                            <label for="company_name">Företagsnamn</label>
+                            <input id="company_name" name="company_name" type="text" required maxlength="120" autocomplete="organization" value="{{ old('company_name', $company->name) }}" aria-invalid="{{ $errors->has('company_name') ? 'true' : 'false' }}" @if ($errors->has('company_name')) aria-describedby="company-name-error" @endif>
+                            @error('company_name') <span class="field-error" id="company-name-error">{{ $message }}</span> @enderror
                             <label for="phone">Telefon</label>
                             <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="40" value="{{ old('phone', $company->phone) }}">
                             <label for="organization_number">Organisationsnummer</label>
