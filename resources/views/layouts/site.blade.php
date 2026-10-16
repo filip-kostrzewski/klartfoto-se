@@ -120,7 +120,12 @@
             <p>{{ $copy['nav']['footer_slogan'] }}</p>
             <a class="footer-cta" href="{{ route('register', absolute: false) }}">{{ $copy['nav']['footer_cta'] }}</a>
         </div>
-        <p class="footer-legal">Prodi Digital AB, org.nr 559214-9370, Tegelbrukets väg 41, 195 59 Märsta</p>
+        <p class="footer-legal">
+            Prodi Digital AB, org.nr 559214-9370, Tegelbrukets väg 41, 195 59 Märsta
+            @if (is_string($providerContactEmail = config('klartfoto.provider_contact_email')) && filter_var($providerContactEmail, FILTER_VALIDATE_EMAIL))
+                · <a href="mailto:{{ $providerContactEmail }}">{{ $providerContactEmail }}</a>
+            @endif
+        </p>
         <div class="footer-bottom">
             <span>{{ $copy['nav']['footer_tagline'] }}</span>
             <nav class="footer-links" aria-label="{{ __('marketing.cookies.region') }}">

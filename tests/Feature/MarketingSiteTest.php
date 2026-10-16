@@ -27,7 +27,7 @@ class MarketingSiteTest extends TestCase
 
     public function test_swedish_terms_page_explains_trial_prices_and_manual_invoice_activation(): void
     {
-        config(['klartfoto.provider_contact_email' => 'filip@prodi.se']);
+        config(['klartfoto.provider_contact_email' => 'kontakt@klartfoto.se']);
 
         $html = $this->get('/villkor')->assertOk()->getContent();
 
@@ -35,7 +35,7 @@ class MarketingSiteTest extends TestCase
         $this->assertStringContainsString('<title>Användarvillkor | Klartfoto</title>', $html);
         $this->assertStringContainsString('<link rel="canonical" href="https://klartfoto.se/villkor">', $html);
         $this->assertStringContainsString('Uppdaterad 16 oktober 2026 · Version 1.0.', $html);
-        $this->assertStringContainsString('mailto:filip@prodi.se', $html);
+        $this->assertStringContainsString('mailto:kontakt@klartfoto.se', $html);
         $this->assertStringContainsString('30 dagar', $html);
         $this->assertStringContainsString('290 kr per månad exklusive moms', $html);
         $this->assertStringContainsString('590 kr per månad exklusive moms', $html);
@@ -241,6 +241,8 @@ class MarketingSiteTest extends TestCase
             ->assertSee('images/property-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertDontSee('images/demo/kitchen-before.svg', false)
             ->assertSee('Prodi Digital AB, org.nr 559214-9370, Tegelbrukets väg 41, 195 59 Märsta', false)
+            ->assertSee('mailto:kontakt@klartfoto.se', false)
+            ->assertDontSee('filip@prodi.se', false)
             ->assertSee('href="/integritetspolicy"', false);
 
         $this->get('/exempel-rapport')
@@ -282,12 +284,12 @@ class MarketingSiteTest extends TestCase
         config([
             'marketing.data_controller' => null,
             'marketing.data_contact' => null,
-            'klartfoto.provider_contact_email' => 'filip@prodi.se',
+            'klartfoto.provider_contact_email' => 'kontakt@klartfoto.se',
         ]);
 
         $this->get('/pl/polityka-prywatnosci')->assertOk()
             ->assertSee('Administratorem danych jest Prodi Digital AB', false)
-            ->assertSee('mailto:filip@prodi.se', false)
+            ->assertSee('mailto:kontakt@klartfoto.se', false)
             ->assertSee('Wiadomości z formularza kontaktowego', false)
             ->assertDontSee('Na tej stronie nie podano danych kontaktowych', false);
     }
@@ -406,6 +408,7 @@ class MarketingSiteTest extends TestCase
         $schema = $this->structuredData($html);
 
         $this->assertSame('https://klartfoto.se/', $schema['@graph'][0]['url']);
+        $this->assertSame('kontakt@klartfoto.se', $schema['@graph'][0]['email']);
         $this->assertStringContainsString('rel="canonical" href="https://klartfoto.se/"', $html);
         $this->assertStringContainsString('name="robots" content="index,follow,max-image-preview:large"', $html);
         $this->assertStringContainsString('property="og:url" content="https://klartfoto.se/"', $html);

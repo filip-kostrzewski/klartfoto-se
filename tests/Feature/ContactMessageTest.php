@@ -14,7 +14,7 @@ class ContactMessageTest extends TestCase
     public function test_valid_message_is_sent_to_provider_with_fixed_sender_and_escaped_content(): void
     {
         config([
-            'klartfoto.provider_contact_email' => 'filip@prodi.se',
+            'klartfoto.provider_contact_email' => 'kontakt@klartfoto.se',
             'mail.from.address' => 'noreply@klartfoto.se',
             'mail.from.name' => 'Klartfoto',
             'marketing.waitlist_enabled' => false,
@@ -34,8 +34,8 @@ class ContactMessageTest extends TestCase
             $envelope = $mail->envelope();
 
             $this->assertCount(1, $mail->to);
-            $this->assertSame('filip@prodi.se', $mail->to[0]['address']);
-            $this->assertTrue($mail->hasTo('filip@prodi.se'));
+            $this->assertSame('kontakt@klartfoto.se', $mail->to[0]['address']);
+            $this->assertTrue($mail->hasTo('kontakt@klartfoto.se'));
             $this->assertSame('noreply@klartfoto.se', $envelope->from?->address);
             $this->assertSame('Klartfoto', $envelope->from?->name);
             $this->assertSame('sender@example.com', $envelope->replyTo[0]->address);
@@ -62,10 +62,10 @@ class ContactMessageTest extends TestCase
 
     public function test_failed_delivery_shows_retry_and_direct_email_without_logging_submitted_data(): void
     {
-        config(['klartfoto.provider_contact_email' => 'filip@prodi.se']);
+        config(['klartfoto.provider_contact_email' => 'kontakt@klartfoto.se']);
         Mail::shouldReceive('to')
             ->once()
-            ->with('filip@prodi.se')
+            ->with('kontakt@klartfoto.se')
             ->andThrow(new RuntimeException('PRIVATE MESSAGE CONTENT'));
         Log::shouldReceive('warning')
             ->once()
@@ -84,7 +84,7 @@ class ContactMessageTest extends TestCase
 
         $this->get('/kontakt')->assertOk()
             ->assertSee('Meddelandet kunde inte skickas', false)
-            ->assertSee('mailto:filip@prodi.se', false)
+            ->assertSee('mailto:kontakt@klartfoto.se', false)
             ->assertSee('value="Private Name"', false)
             ->assertSee('value="private@example.com"', false)
             ->assertSee('PRIVATE MESSAGE CONTENT', false);

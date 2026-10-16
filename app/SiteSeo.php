@@ -85,13 +85,20 @@ class SiteSeo
         $brand = (string) config('marketing.brand');
         $organizationId = $baseUrl.'#organization';
 
+        $organization = [
+            '@type' => 'Organization',
+            '@id' => $organizationId,
+            'name' => $brand,
+            'url' => $baseUrl,
+        ];
+        $providerEmail = config('klartfoto.provider_contact_email');
+
+        if (is_string($providerEmail) && filter_var($providerEmail, FILTER_VALIDATE_EMAIL)) {
+            $organization['email'] = $providerEmail;
+        }
+
         $graph = [
-            [
-                '@type' => 'Organization',
-                '@id' => $organizationId,
-                'name' => $brand,
-                'url' => $baseUrl,
-            ],
+            $organization,
             [
                 '@type' => 'WebSite',
                 '@id' => $baseUrl.'#website',

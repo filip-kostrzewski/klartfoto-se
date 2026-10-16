@@ -4891,6 +4891,11 @@ html {
     font-size: 12px;
 }
 
+.footer-legal a {
+    color: inherit;
+    text-underline-offset: 2px;
+}
+
 .footer-bottom {
     display: flex;
     flex-wrap: wrap;
