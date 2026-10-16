@@ -14,7 +14,7 @@ return [
         'title' => 'Show customers the work with a photo report | :brand',
         'description' => 'Bring before-and-after photos together with a customer name, address and date in a report you can share by link.',
         'h1_start' => 'Job done.', 'h1_emphasis' => 'Show the result.',
-        'lead' => 'Give customers a clear handover after a move-out clean, post-construction clean or service visit. Bring before-and-after photos and job details together in one report link.',
+        'lead' => 'Bring before-and-after photos into one clear report. Share a single link with your customer.',
         'cta_primary' => 'Get started free', 'cta_secondary' => 'See a sample report',
         'footnote' => '30 days free, no card. No commitment.',
         'scope_label' => 'For service businesses', 'trust_1' => 'No customer account needed', 'trust_2' => 'Unlimited reports',

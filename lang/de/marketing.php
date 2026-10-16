@@ -14,7 +14,7 @@ return [
         'title' => 'Zeigen Sie Kunden die erledigte Arbeit im Fotobericht | :brand',
         'description' => 'Bündeln Sie Vorher-Nachher-Fotos mit Kundennamen, Adresse und Datum in einem Bericht, den Sie per Link teilen.',
         'h1_start' => 'Die Arbeit ist fertig.', 'h1_emphasis' => 'Zeigen Sie das Ergebnis.',
-        'lead' => 'Übergeben Sie nach einer Umzugsreinigung, Baureinigung oder einem Serviceeinsatz eine klare Dokumentation. Vorher-Nachher-Fotos und Auftragsdaten in einem Bericht, den Sie per Link teilen.',
+        'lead' => 'Vorher-Nachher-Fotos in einem klaren Bericht. Teilen Sie einen Link mit Ihrem Kunden.',
         'cta_primary' => 'Kostenlos starten', 'cta_secondary' => 'Beispielbericht ansehen',
         'footnote' => '30 Tage kostenlos, ohne Karte. Keine Bindung.',
         'scope_label' => 'Für Dienstleistungsbetriebe', 'trust_1' => 'Kein Kundenkonto nötig', 'trust_2' => 'Unbegrenzte Berichte',

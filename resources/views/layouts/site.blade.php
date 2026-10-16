@@ -57,6 +57,7 @@
                 @if (config('klartfoto.pricing_visible'))
                     <a href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#priser">{{ $copy['nav']['pricing'] }}</a>
                 @endif
+                <a href="{{ \App\LocalizedUrl::route('contact', $locale, false) }}">{{ $copy['nav']['contact'] }}</a>
             </nav>
 
             <div class="header-actions">
@@ -85,6 +86,7 @@
                         @if (config('klartfoto.pricing_visible'))
                             <a href="{{ \App\LocalizedUrl::route('home', $locale, false) }}#priser">{{ $copy['nav']['pricing'] }}</a>
                         @endif
+                        <a href="{{ \App\LocalizedUrl::route('contact', $locale, false) }}">{{ $copy['nav']['contact'] }}</a>
                         <a href="{{ route('login', absolute: false) }}">{{ $copy['nav']['login'] }}</a>
                         <a class="mobile-menu-signup" href="{{ route('register', absolute: false) }}">
                             {{ $copy['nav']['start'] }}

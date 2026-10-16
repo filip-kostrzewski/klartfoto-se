@@ -14,7 +14,7 @@ return [
         'title' => 'Vis kunden hva som ble gjort med en fotorapport | :brand',
         'description' => 'Samle før- og etterbilder med kundens navn, adresse og dato i en rapport du kan dele med en lenke.',
         'h1_start' => 'Jobben er ferdig.', 'h1_emphasis' => 'Vis resultatet.',
-        'lead' => 'Gi kunden en tydelig overlevering etter flyttevask, byggvask eller et serviceoppdrag. Samle før- og etterbilder med oppdragsopplysningene i én rapport som deles via lenke.',
+        'lead' => 'Samle før- og etterbilder i en tydelig rapport. Del én lenke med kunden.',
         'cta_primary' => 'Kom i gang gratis', 'cta_secondary' => 'Se eksempelrapport',
         'footnote' => '30 dager gratis, uten kort. Ingen binding.',
         'scope_label' => 'For tjenestebedrifter', 'trust_1' => 'Kunden trenger ingen konto', 'trust_2' => 'Ubegrenset antall rapporter',

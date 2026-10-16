@@ -14,7 +14,7 @@ return [
         'title' => 'Pokaż klientowi wykonane prace w raporcie zdjęciowym | :brand',
         'description' => 'Zbierz zdjęcia przed i po wraz z nazwą klienta, adresem i datą w raporcie udostępnianym przez link.',
         'h1_start' => 'Praca gotowa.', 'h1_emphasis' => 'Pokaż efekt.',
-        'lead' => 'Przekaż klientowi czytelną dokumentację po sprzątaniu przy wyprowadzce, remoncie lub usłudze. Zbierz zdjęcia przed i po wraz z danymi zlecenia w jednym raporcie udostępnianym linkiem.',
+        'lead' => 'Zbierz zdjęcia przed i po w czytelnym raporcie. Udostępnij klientowi jeden link.',
         'cta_primary' => 'Zacznij za darmo', 'cta_secondary' => 'Zobacz przykładowy raport',
         'footnote' => '30 dni bez opłaty i bez karty. Bez zobowiązań.',
         'scope_label' => 'Dla firm usługowych', 'trust_1' => 'Klient nie potrzebuje konta', 'trust_2' => 'Nielimitowane raporty',

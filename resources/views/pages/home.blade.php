@@ -12,8 +12,8 @@
                 <p class="landing-hero-lead">{{ $home['lead'] }}</p>
                 @if (config('klartfoto.pricing_visible'))
                     <p class="hero-price">
-                        <span>{{ $home['pricing']['start_name'] }} <strong>{{ $home['pricing']['start_price'] }}</strong> {{ $home['pricing']['start_vat'] }}</span>
-                        <span>{{ $home['pricing']['team_name'] }} <strong>{{ $home['pricing']['team_price'] }}</strong> {{ $home['pricing']['team_vat'] }}</span>
+                        <span>{{ $home['pricing']['start_name'] }} <strong>{{ $home['pricing']['start_price'] }}</strong> <span class="hero-price-vat">{{ $home['pricing']['start_vat'] }}</span></span>
+                        <span>{{ $home['pricing']['team_name'] }} <strong>{{ $home['pricing']['team_price'] }}</strong> <span class="hero-price-vat">{{ $home['pricing']['team_vat'] }}</span></span>
                     </p>
                 @endif
                 <div class="hero-actions">

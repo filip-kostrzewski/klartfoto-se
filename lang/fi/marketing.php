@@ -14,7 +14,7 @@ return [
         'title' => 'Näytä asiakkaalle työn tulos valokuvaraportissa | :brand',
         'description' => 'Kokoa ennen ja jälkeen -kuvat asiakkaan nimen, osoitteen ja päivämäärän kanssa raporttiin, jonka voi jakaa linkillä.',
         'h1_start' => 'Työ on valmis.', 'h1_emphasis' => 'Näytä lopputulos.',
-        'lead' => 'Anna asiakkaalle selkeä raportti muuttosiivouksen, rakennussiivouksen tai huoltokäynnin jälkeen. Kokoa ennen–jälkeen-kuvat ja työn tiedot yhteen linkillä jaettavaan raporttiin.',
+        'lead' => 'Kokoa ennen ja jälkeen -kuvat selkeäksi raportiksi. Jaa asiakkaalle yksi linkki.',
         'cta_primary' => 'Aloita maksutta', 'cta_secondary' => 'Katso esimerkkiraportti',
         'footnote' => '30 päivää ilmaiseksi, ilman korttia. Ei sitoutumista.',
         'scope_label' => 'Palveluyrityksille', 'trust_1' => 'Asiakas ei tarvitse tiliä', 'trust_2' => 'Rajattomasti raportteja',

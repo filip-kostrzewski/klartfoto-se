@@ -15,7 +15,7 @@ return [
         'title' => 'Visa kunden vad som blev gjort med en fotorapport | :brand',
         'description' => 'Samla bilder före och efter arbetet med kundens namn, adress och datum i en rapport som du delar via länk.',
         'h1_start' => 'Jobbet är klart.', 'h1_emphasis' => 'Visa resultatet.',
-        'lead' => 'Ge kunden en tydlig överlämning efter flyttstädning, byggstädning eller service. Samla före- och efterbilder med uppdragets uppgifter och dela en enda rapportlänk.',
+        'lead' => 'Samla före- och efterbilder i en tydlig rapport. Dela en enda länk med kunden.',
         'cta_primary' => 'Kom igång gratis', 'cta_secondary' => 'Se exempelrapport',
         'footnote' => '30 dagar gratis utan kort. Ingen bindningstid.',
         'scope_label' => 'För serviceföretag', 'trust_1' => 'Kunden behöver inget konto', 'trust_2' => 'Obegränsade rapporter',
