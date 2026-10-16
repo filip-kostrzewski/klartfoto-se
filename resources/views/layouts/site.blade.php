@@ -123,7 +123,7 @@
         <p class="footer-legal">
             Prodi Digital AB, org.nr 559214-9370, Tegelbrukets väg 41, 195 59 Märsta
             @if (is_string($providerContactEmail = config('klartfoto.provider_contact_email')) && filter_var($providerContactEmail, FILTER_VALIDATE_EMAIL))
-                · <a href="mailto:{{ $providerContactEmail }}">{{ $providerContactEmail }}</a>
+                · @include('partials.public-mailto', ['email' => $providerContactEmail])
             @endif
         </p>
         <div class="footer-bottom">

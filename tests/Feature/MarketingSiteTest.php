@@ -241,7 +241,8 @@ class MarketingSiteTest extends TestCase
             ->assertSee('images/property-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertDontSee('images/demo/kitchen-before.svg', false)
             ->assertSee('Prodi Digital AB, org.nr 559214-9370, Tegelbrukets väg 41, 195 59 Märsta', false)
-            ->assertSee('mailto:kontakt@klartfoto.se', false)
+            ->assertSee('<!--email_off--><a href="mailto:kontakt@klartfoto.se">kontakt@klartfoto.se</a><!--/email_off-->', false)
+            ->assertDontSee('/cdn-cgi/l/email-protection', false)
             ->assertDontSee('filip@prodi.se', false)
             ->assertSee('href="/integritetspolicy"', false);
 
@@ -277,6 +278,17 @@ class MarketingSiteTest extends TestCase
             ->assertOk()
             ->assertDontSee('id="priser"', false)
             ->assertDontSee('290 kr/mån', false);
+    }
+
+    public function test_contact_page_renders_the_public_address_as_a_server_side_mailto(): void
+    {
+        $anchor = '<!--email_off--><a href="mailto:kontakt@klartfoto.se">kontakt@klartfoto.se</a><!--/email_off-->';
+        $html = $this->get('/kontakt')->assertOk()->getContent();
+
+        $this->assertSame(2, substr_count($html, $anchor));
+        $this->assertStringNotContainsString('/cdn-cgi/l/email-protection', $html);
+        $this->assertStringNotContainsString('email-decode.min.js', $html);
+        $this->assertStringNotContainsString('filip@prodi.se', $html);
     }
 
     public function test_polish_privacy_page_uses_verified_provider_contact_when_optional_marketing_fields_are_empty(): void

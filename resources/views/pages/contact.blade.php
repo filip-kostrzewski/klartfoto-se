@@ -22,7 +22,7 @@
                 <div class="form-status form-status-error" role="alert" tabindex="-1" data-focus-status data-focus-on-load="true">
                     <p>{{ $page['status_failed'] }}</p>
                     @if (filled($page['provider_contact_email'] ?? null))
-                        <p>{{ $page['status_direct_email'] }} <a href="mailto:{{ $page['provider_contact_email'] }}">{{ $page['provider_contact_email'] }}</a></p>
+                        <p>{{ $page['status_direct_email'] }} @include('partials.public-mailto', ['email' => $page['provider_contact_email']])</p>
                     @endif
                 </div>
             @endif
@@ -76,7 +76,7 @@
         </div>
 
         @if (filled($page['provider_contact_email'] ?? null))
-            <p class="contact-direct-link">{{ $page['direct_email_label'] }} <a href="mailto:{{ $page['provider_contact_email'] }}">{{ $page['provider_contact_email'] }}</a></p>
+            <p class="contact-direct-link">{{ $page['direct_email_label'] }} @include('partials.public-mailto', ['email' => $page['provider_contact_email']])</p>
         @endif
     </section>
 @endsection
