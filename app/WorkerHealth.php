@@ -5,6 +5,7 @@ namespace App;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class WorkerHealth
 {
@@ -13,6 +14,8 @@ class WorkerHealth
     public function recordSchedulerRun(): void
     {
         Cache::forever(self::LAST_RUN_KEY, now()->utc()->toIso8601String());
+
+        Log::info($this->summary());
     }
 
     public function lastSchedulerRunAt(): ?CarbonImmutable

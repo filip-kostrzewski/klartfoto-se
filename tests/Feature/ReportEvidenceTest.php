@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Actions\CreateAssignmentReportVersion;
+use App\Http\Requests\StoreAssignmentRequest;
 use App\Models\Assignment;
 use App\Models\AssignmentPhoto;
 use App\Models\User;
@@ -477,5 +478,54 @@ class ReportEvidenceTest extends TestCase
         $process->setTimeout(30);
         $process->mustRun();
         $this->assertStringContainsString('ok', $process->getOutput());
+    }
+
+    public function test_a_job_is_not_saved_when_selected_photos_are_missing_from_the_upload(): void
+    {
+        $user = User::factory()->create();
+        $payload = [
+            'customer_name' => 'Anna Andersson',
+            'address' => 'Storgatan 1, 111 22 Stockholm',
+            'performed_on' => '2026-10-16',
+        ];
+
+        $this->actingAs($user)->postJson('/uppdrag', [
+            ...$payload,
+            'selected_before_count' => 1,
+        ])->assertUnprocessable()
+            ->assertJsonValidationErrors(['before_photos' => StoreAssignmentRequest::PHOTOS_NOT_ATTACHED]);
+        $this->assertDatabaseCount('assignments', 0);
+
+        $this->actingAs($user)->post('/uppdrag', [
+            ...$payload,
+            'selected_before_count' => 2,
+            'before_photos' => [UploadedFile::fake()->image('fore.jpg', 40, 40)],
+        ], ['Accept' => 'application/json'])->assertUnprocessable()
+            ->assertJsonValidationErrors(['before_photos' => StoreAssignmentRequest::PHOTOS_NOT_ATTACHED]);
+        $this->assertDatabaseCount('assignments', 0);
+
+        $created = $this->actingAs($user)->post('/uppdrag', [
+            ...$payload,
+            'selected_before_count' => 1,
+            'before_photos' => [UploadedFile::fake()->image('fore.jpg', 40, 40)],
+        ], ['Accept' => 'application/json'])->assertOk();
+
+        $assignment = Assignment::query()->firstOrFail();
+        $created->assertJsonPath('redirect', route('assignments.show', $assignment));
+        $this->assertSame(1, $assignment->photos()->count());
+
+        $this->actingAs($user)->post(route('assignments.photos.store', $assignment), [
+            'selected_after_count' => 1,
+        ], ['Accept' => 'application/json'])->assertUnprocessable()
+            ->assertJsonValidationErrors(['after_photos' => StoreAssignmentRequest::PHOTOS_NOT_ATTACHED]);
+        $this->assertSame(1, $assignment->photos()->count());
+
+        $script = file_get_contents(resource_path('js/site.js'));
+        $this->assertIsString($script);
+        $this->assertStringNotContainsString("dataset.keepPhotos === 'true'", $script);
+        $this->assertStringNotContainsString("dataset.photosRequired === 'true'", $script);
+        $formScript = file_get_contents(resource_path('js/job-form.js'));
+        $this->assertIsString($formScript);
+        $this->assertStringContainsString('bilder valda – max 10 per uppdrag. Ta bort', $formScript);
     }
 }

@@ -169,7 +169,6 @@
                             <p class="form-status form-status-error" role="status">Fler användare ingår i Team.</p>
                         @endif
                     </section>
-                    <p class="settings-health">{{ $workerHealth }}</p>
                 </div>
             </div>
         @endunless

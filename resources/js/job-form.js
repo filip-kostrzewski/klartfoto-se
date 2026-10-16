@@ -10,9 +10,43 @@ export const PHOTO_RESOLUTION = 'En bild har för hög upplösning. Prova en min
 
 export const PHOTO_REQUIRED = 'Lägg till minst en före- eller efterbild.';
 
-export const PHOTO_TOO_MANY_BEFORE = 'Du kan ladda upp högst 10 förebilder åt gången.';
+export const PHOTOS_NOT_ATTACHED = 'De valda bilderna följde inte med. Spara igen utan att lämna sidan.';
 
-export const PHOTO_TOO_MANY_AFTER = 'Du kan ladda upp högst 10 efterbilder åt gången.';
+export const tooManySelectedMessage = (count) => {
+    const selected = Number(count) || 0;
+
+    if (selected <= 10) {
+        return '';
+    }
+
+    const extra = selected - 10;
+
+    return `${selected} bilder valda – max 10 per uppdrag. Ta bort ${extra}.`;
+};
+
+export const oversizedSelectionMessage = (count) => {
+    const oversized = Number(count) || 0;
+
+    if (oversized <= 0) {
+        return '';
+    }
+
+    if (oversized === 1) {
+        return '1 bild är större än 15 MB. Ta bort den.';
+    }
+
+    return `${oversized} bilder är större än 15 MB. Ta bort dem.`;
+};
+
+export const selectionLimitMessage = (files) => {
+    const list = Array.isArray(files) ? files : [];
+    const messages = [
+        tooManySelectedMessage(list.length),
+        oversizedSelectionMessage(list.filter((file) => Number(file?.size || 0) > MAX_BYTES).length),
+    ].filter((message) => message !== '');
+
+    return messages.join(' ');
+};
 
 const IMAGE_EXTENSION = /\.(jpe?g|png|webp|heic|heif)$/i;
 
@@ -48,9 +82,9 @@ export const photoFileError = (file) => {
     return null;
 };
 
-const photoListErrors = (files, key, maxMessage) => {
+const photoListErrors = (files, key) => {
     if (files.length > 10) {
-        return { [key]: [maxMessage] };
+        return { [key]: [tooManySelectedMessage(files.length)] };
     }
 
     /** @type {Record<string, string[]>} */
@@ -87,8 +121,8 @@ export const jobFormErrors = (input) => {
         errors.performed_end_time = [END_AFTER_START];
     }
 
-    Object.assign(errors, photoListErrors(beforeFiles, 'before_photos', PHOTO_TOO_MANY_BEFORE));
-    Object.assign(errors, photoListErrors(afterFiles, 'after_photos', PHOTO_TOO_MANY_AFTER));
+    Object.assign(errors, photoListErrors(beforeFiles, 'before_photos'));
+    Object.assign(errors, photoListErrors(afterFiles, 'after_photos'));
 
     if (input.photosRequired && beforeFiles.length === 0 && afterFiles.length === 0 && ! errors.before_photos) {
         errors.before_photos = [PHOTO_REQUIRED];

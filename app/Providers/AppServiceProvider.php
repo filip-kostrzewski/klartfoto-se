@@ -62,6 +62,11 @@ class AppServiceProvider extends ServiceProvider
         config($config);
 
         URL::forceRootUrl($applicationUrl);
-        URL::forceScheme('https');
+
+        $host = parse_url($applicationUrl, PHP_URL_HOST);
+
+        if (! is_string($host) || preg_match('/(^localhost$|^127\.|\.local$|\.test$)/i', $host) !== 1) {
+            URL::forceScheme('https');
+        }
     }
 }

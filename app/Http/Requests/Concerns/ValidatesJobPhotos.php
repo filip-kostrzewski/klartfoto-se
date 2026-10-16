@@ -10,6 +10,8 @@ use Illuminate\Http\UploadedFile;
 
 trait ValidatesJobPhotos
 {
+    public const PHOTOS_NOT_ATTACHED = 'De valda bilderna följde inte med. Spara igen utan att lämna sidan.';
+
     /**
      * @return array<string, array<int, AcceptedJobPhoto|string>>
      */
@@ -26,6 +28,8 @@ trait ValidatesJobPhotos
             'before_upload_ids.*' => ['required', 'uuid'],
             'after_upload_ids' => ['sometimes', 'array', 'max:10'],
             'after_upload_ids.*' => ['required', 'uuid'],
+            'selected_before_count' => ['sometimes', 'integer', 'min:0'],
+            'selected_after_count' => ['sometimes', 'integer', 'min:0'],
         ];
     }
 
@@ -111,5 +115,24 @@ trait ValidatesJobPhotos
             'before_photos.*.file' => AcceptedJobPhoto::FORMAT_MESSAGE,
             'after_photos.*.file' => AcceptedJobPhoto::FORMAT_MESSAGE,
         ];
+    }
+
+    protected function rejectDroppedPhotos(Validator $validator): void
+    {
+        foreach ([
+            'before_photos' => 'selected_before_count',
+            'after_photos' => 'selected_after_count',
+        ] as $filesKey => $countKey) {
+            if (! $this->exists($countKey) || ! is_numeric($this->input($countKey))) {
+                continue;
+            }
+
+            $uploaded = $this->file($filesKey);
+            $uploadedCount = is_array($uploaded) ? count($uploaded) : 0;
+
+            if ((int) $this->input($countKey) > $uploadedCount) {
+                $validator->errors()->add($filesKey, self::PHOTOS_NOT_ATTACHED);
+            }
+        }
     }
 }

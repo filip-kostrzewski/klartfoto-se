@@ -39,6 +39,7 @@ class StoreAssignmentPhotoRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {
+            $this->rejectDroppedPhotos($validator);
             $this->validateUploadShape(
                 $validator,
                 requirePhotos: true,

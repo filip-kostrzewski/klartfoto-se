@@ -4,15 +4,17 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class SchedulerHealthTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_the_owner_sees_when_the_scheduler_last_ran_and_how_many_jobs_are_waiting(): void
+    public function test_the_scheduler_logs_its_heartbeat_and_settings_does_not_show_it(): void
     {
         $this->get('/installningar')->assertRedirect(route('login'));
 
@@ -21,16 +23,22 @@ class SchedulerHealthTest extends TestCase
 
         $this->actingAs($owner)->get('/installningar')
             ->assertOk()
-            ->assertSee('Schemaläggaren har inte körts. Inga jobb väntar.', false);
+            ->assertDontSee('Schemaläggaren', false)
+            ->assertDontSee('jobb väntar', false);
 
         $this->actingAs($member)->get('/installningar')
             ->assertOk()
             ->assertDontSee('Schemaläggaren', false)
             ->assertDontSee('jobb väntar', false);
 
-        $this->travelTo('2026-10-16 12:00:00');
-        Artisan::call('schedule:run');
+        $logged = null;
+        Event::listen(MessageLogged::class, function (MessageLogged $event) use (&$logged): void {
+            if (str_contains($event->message, 'Schemaläggaren kördes')) {
+                $logged = $event->message;
+            }
+        });
 
+        $this->travelTo('2026-10-16 12:00:00');
         DB::table('jobs')->insert([
             'queue' => 'default',
             'payload' => '{}',
@@ -39,10 +47,14 @@ class SchedulerHealthTest extends TestCase
             'available_at' => now()->timestamp,
             'created_at' => now()->timestamp,
         ]);
+        Artisan::call('schedule:run');
+
+        $this->assertSame('Schemaläggaren kördes 16 oktober 2026 kl. 14:00. 1 jobb väntar.', $logged);
 
         $this->actingAs($owner)->get('/installningar')
             ->assertOk()
-            ->assertSee('Schemaläggaren kördes 16 oktober 2026 kl. 14:00. 1 jobb väntar.', false);
+            ->assertDontSee('Schemaläggaren', false)
+            ->assertDontSee('jobb väntar', false);
 
         Artisan::call('schedule:list');
         $list = Artisan::output();

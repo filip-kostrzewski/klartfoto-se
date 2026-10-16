@@ -65,6 +65,8 @@ class StoreAssignmentRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {
+            $this->rejectDroppedPhotos($validator);
+
             $start = $this->input('performed_time');
             $end = $this->input('performed_end_time');
             $startIsSet = is_string($start) && $start !== '';

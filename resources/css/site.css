@@ -7292,13 +7292,6 @@ html {
     line-height: 1.55;
 }
 
-.settings-health {
-    margin: 4px 0 0;
-    color: #5b685f;
-    font-size: 13px;
-    line-height: 1.5;
-}
-
 .settings-card .app-form {
     max-width: 550px;
     gap: 9px;

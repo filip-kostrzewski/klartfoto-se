@@ -9,7 +9,6 @@ use App\Http\Requests\UpdateCompanyDetailsRequest;
 use App\Http\Requests\UpdateProfileNameRequest;
 use App\Models\Company;
 use App\Models\User;
-use App\WorkerHealth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
@@ -50,7 +49,6 @@ class CompanySettingsController extends Controller
             'canRequestInvoice' => $isOwner
                 && ! $company->hasPendingInvoiceRequest()
                 && ! $company->subscribed('default'),
-            'workerHealth' => $isOwner ? app(WorkerHealth::class)->summary() : null,
         ]);
     }
 

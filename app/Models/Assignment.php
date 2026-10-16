@@ -83,7 +83,7 @@ class Assignment extends Model
     public function photos(): HasMany
     {
         return $this->hasMany(AssignmentPhoto::class)
-            ->orderByRaw('case when phase = ? then 0 else 1 end', [PhotoPhase::Before->value])
+            ->orderByRaw("case when phase = '".PhotoPhase::Before->value."' then 0 else 1 end")
             ->orderBy('sort_order')
             ->orderBy('id');
     }

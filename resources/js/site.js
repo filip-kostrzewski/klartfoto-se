@@ -1,5 +1,5 @@
 import { fileLooksLikeHeic, heicFileToJpegFile, jpegFileName } from './heic.js';
-import { PHOTO_RESOLUTION, jobFormErrors } from './job-form.js';
+import { PHOTOS_NOT_ATTACHED, PHOTO_RESOLUTION, jobFormErrors, selectionLimitMessage } from './job-form.js';
 
 document.documentElement.classList.add('js-enhanced');
 
@@ -300,6 +300,18 @@ const dimensionErrors = async (files, key, existing) => {
     return errors;
 };
 
+const declaredCount = (form, name) => {
+    const field = form.querySelector(`[name="${name}"]`);
+
+    if (! (field instanceof HTMLInputElement) || field.value === '') {
+        return null;
+    }
+
+    const value = Number(field.value);
+
+    return Number.isFinite(value) ? value : null;
+};
+
 document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
     const input = picker.querySelector('input[type="file"]');
     const list = picker.querySelector('[data-photo-list]');
@@ -325,6 +337,7 @@ document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
     let writing = false;
     let converting = false;
     let submitAfter = false;
+    let conversionError = '';
 
     const form = input.form;
 
@@ -407,7 +420,8 @@ document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
                     availableSlotIndices.push(removedSlotIndex);
                     availableSlotIndices.sort((left, right) => left - right);
                 }
-                writeFiles();
+                conversionError = '';
+                publishSelection();
             });
 
             item.append(image, remove);
@@ -440,6 +454,35 @@ document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
         input.files = transfer.files;
         writing = false;
         render();
+    };
+
+    const rememberSelectedCount = () => {
+        if (! form) {
+            return;
+        }
+
+        const key = input.name.replace(/\[\]$/, '');
+        const fieldName = key === 'after_photos' ? 'selected_after_count' : 'selected_before_count';
+        let hidden = form.querySelector(`input[name="${fieldName}"]`);
+
+        if (! (hidden instanceof HTMLInputElement)) {
+            hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = fieldName;
+            form.append(hidden);
+        }
+
+        hidden.value = String(files.length);
+    };
+
+    const publishSelection = () => {
+        try {
+            writeFiles();
+        } finally {
+            rememberSelectedCount();
+            const messages = [conversionError, selectionLimitMessage(files)].filter((message) => message !== '');
+            showError(messages.join(' '));
+        }
     };
 
     const showError = (message) => {
@@ -485,16 +528,16 @@ document.querySelectorAll('[data-photo-picker]').forEach((picker) => {
                             uploadIds.push(createUploadId());
                             slotIndices.push(availableSlotIndices.shift() ?? nextSlotIndex++);
                         }
-                    } catch (conversionError) {
+                    } catch (conversionFailure) {
                         failed = true;
                     }
                 }
             } finally {
                 converting = false;
                 markConverting(false);
-                showError(failed ? HEIC_CONVERSION_ERROR : '');
+                conversionError = failed ? HEIC_CONVERSION_ERROR : '';
                 input.disabled = wasDisabled;
-                writeFiles();
+                publishSelection();
 
                 if (submitAfter) {
                     submitAfter = false;
@@ -636,6 +679,27 @@ document.querySelectorAll('form[data-photo-upload-mode]').forEach((form) => {
         const afterInput = form.querySelector('[name="after_photos[]"]');
         const beforeFiles = beforeInput instanceof HTMLInputElement ? Array.from(beforeInput.files ?? []) : [];
         const afterFiles = afterInput instanceof HTMLInputElement ? Array.from(afterInput.files ?? []) : [];
+        const beforeDeclared = declaredCount(form, 'selected_before_count');
+        const afterDeclared = declaredCount(form, 'selected_after_count');
+        /** @type {Record<string, string[]>} */
+        const dropped = {};
+
+        if (beforeDeclared !== null && beforeDeclared > beforeFiles.length) {
+            dropped.before_photos = [PHOTOS_NOT_ATTACHED];
+        }
+
+        if (afterDeclared !== null && afterDeclared > afterFiles.length) {
+            dropped.after_photos = [PHOTOS_NOT_ATTACHED];
+        }
+
+        if (Object.keys(dropped).length > 0) {
+            showFormErrors(form, dropped);
+            progressContainer.hidden = true;
+            restoreSubmitButton(form);
+
+            return;
+        }
+
         const start = form.querySelector('[name="performed_time"]');
         const end = form.querySelector('[name="performed_end_time"]');
         const errors = jobFormErrors({
@@ -716,6 +780,10 @@ document.querySelectorAll('form[data-photo-upload-mode]').forEach((form) => {
             const validationMessages = result.errors
                 ? Object.values(result.errors).flat().join(' ')
                 : null;
+
+            if (result.status === 422 && result.errors) {
+                showFormErrors(form, result.errors);
+            }
 
             showFailure(validationMessages || result.message || 'Uppladdningen kunde inte bekräftas. Försök igen med samma fil innan du ändrar den.');
 
