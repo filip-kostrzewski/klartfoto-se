@@ -6,4 +6,5 @@ return [
     'incomplete_warning' => 'Co najmniej jedno pomieszczenie ma zdjęcie przed, ale nie ma zdjęcia po. Klient zobaczy wtedy, że zdjęcia po brakuje.',
     'incomplete_confirm' => 'Wyślij mimo to',
     'incomplete_confirm_error' => 'Potwierdź, że raport ma zostać wysłany bez zdjęcia po.',
+    'email_rate_limit' => 'Wysłano za dużo raportów. Spróbuj ponownie za chwilę.',
 ];

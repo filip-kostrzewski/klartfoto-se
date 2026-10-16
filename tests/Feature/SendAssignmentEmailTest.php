@@ -441,10 +441,18 @@ class SendAssignmentEmailTest extends TestCase
 
         $anotherMember = User::factory()->memberOf($owner->company)->create();
         $this->actingAs($anotherMember)
+            ->from(route('assignments.show', $assignment, false))
             ->post(route('assignments.email', $assignment, false), [
                 'recipient_email' => 'customer@example.test',
             ])
-            ->assertTooManyRequests();
+            ->assertRedirect(route('assignments.show', $assignment, false))
+            ->assertSessionHas('error', 'Du har skickat för många rapporter, försök igen om en stund.');
+
+        $this->actingAs($anotherMember)
+            ->get(route('assignments.show', $assignment, false))
+            ->assertOk()
+            ->assertSee('Du har skickat för många rapporter, försök igen om en stund.', false)
+            ->assertDontSee('Too Many Requests', false);
 
         $this->assertDatabaseCount('assignment_email_attempts', 20);
         Mail::assertSent(AssignmentReportEmail::class, 20);
@@ -561,6 +569,10 @@ class SendAssignmentEmailTest extends TestCase
         $this->assertSame(
             'Co najmniej jedno pomieszczenie ma zdjęcie przed, ale nie ma zdjęcia po. Klient zobaczy wtedy, że zdjęcia po brakuje.',
             __('assignments.incomplete_warning'),
+        );
+        $this->assertSame(
+            'Wysłano za dużo raportów. Spróbuj ponownie za chwilę.',
+            __('assignments.email_rate_limit'),
         );
     }
 
