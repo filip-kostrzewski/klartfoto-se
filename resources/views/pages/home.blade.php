@@ -22,46 +22,49 @@
             </div>
 
             <div class="landing-hero-visual" data-reveal>
-                <div class="comparison-frame" data-comparison style="--split: 54%;">
-                    <img
-                        class="comparison-image comparison-after"
-                        src="{{ asset('images/demo/kitchen-after.webp') }}?v={{ config('klartfoto.demo_asset_version') }}"
-                        srcset="{{ asset('images/demo/kitchen-after-mobile.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 480w, {{ asset('images/demo/kitchen-after-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/demo/kitchen-after.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w"
-                        sizes="(max-width: 760px) calc(100vw - 32px), 52vw"
-                        width="1536"
-                        height="1024"
-                        alt="{{ $home['photo_alt'] }}"
-                        fetchpriority="high"
-                        decoding="async">
-                    <div class="comparison-before">
+                <div class="comparison-slider" data-comparison style="--split: 54%;">
+                    <div class="comparison-frame">
                         <img
-                            class="comparison-image"
-                            src="{{ asset('images/demo/kitchen-before.webp') }}?v={{ config('klartfoto.demo_asset_version') }}"
-                            srcset="{{ asset('images/demo/kitchen-before-mobile.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 480w, {{ asset('images/demo/kitchen-before-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/demo/kitchen-before.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w"
+                            class="comparison-image comparison-after"
+                            src="{{ asset('images/demo/kitchen-after.webp') }}?v={{ config('klartfoto.demo_asset_version') }}"
+                            srcset="{{ asset('images/demo/kitchen-after-mobile.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 480w, {{ asset('images/demo/kitchen-after-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/demo/kitchen-after.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w"
                             sizes="(max-width: 760px) calc(100vw - 32px), 52vw"
                             width="1536"
                             height="1024"
-                            alt=""
-                            aria-hidden="true"
+                            alt="{{ $home['photo_alt'] }}"
+                            fetchpriority="high"
                             decoding="async">
+                        <div class="comparison-before">
+                            <img
+                                class="comparison-image"
+                                src="{{ asset('images/demo/kitchen-before.webp') }}?v={{ config('klartfoto.demo_asset_version') }}"
+                                srcset="{{ asset('images/demo/kitchen-before-mobile.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 480w, {{ asset('images/demo/kitchen-before-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/demo/kitchen-before.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w"
+                                sizes="(max-width: 760px) calc(100vw - 32px), 52vw"
+                                width="1536"
+                                height="1024"
+                                alt=""
+                                aria-hidden="true"
+                                decoding="async">
+                        </div>
+                        <span class="photo-label photo-label-before">{{ $home['before'] }}</span>
+                        <span class="photo-label photo-label-after">{{ $home['after'] }}</span>
+                        <span class="demo-photo-badge"><span aria-hidden="true">✳</span> {{ $home['photo_note'] }}</span>
+                        <input
+                            class="comparison-control"
+                            type="range"
+                            min="0"
+                            max="100"
+                            value="54"
+                            aria-label="{{ $home['slider_label'] }}"
+                            aria-describedby="comparison-description"
+                            aria-valuetext="54 {{ $home['slider_before_text'] }}, {{ $home['slider_after_text'] }}"
+                            data-before-text="{{ $home['slider_before_text'] }}"
+                            data-after-text="{{ $home['slider_after_text'] }}"
+                            data-description-template="{{ $home['slider_description'] }}">
+                        <span class="comparison-divider" aria-hidden="true"></span>
+                        <span class="comparison-handle" aria-hidden="true"><span></span></span>
                     </div>
-                    <span class="photo-label photo-label-before">{{ $home['before'] }}</span>
-                    <span class="photo-label photo-label-after">{{ $home['after'] }}</span>
-                    <span class="demo-photo-badge"><span aria-hidden="true">✳</span> {{ $home['photo_note'] }}</span>
-                    <input
-                        class="comparison-control"
-                        type="range"
-                        min="0"
-                        max="100"
-                        value="54"
-                        aria-label="{{ $home['slider_label'] }}"
-                        aria-valuetext="54 {{ $home['slider_before_text'] }}, {{ $home['slider_after_text'] }}"
-                        data-before-text="{{ $home['slider_before_text'] }}"
-                        data-after-text="{{ $home['slider_after_text'] }}"
-                        data-description-template="{{ $home['slider_description'] }}">
-                    <span class="comparison-divider" aria-hidden="true"></span>
-                    <span class="comparison-handle" aria-hidden="true"><span></span></span>
-                    <span class="sr-only" data-comparison-description aria-live="polite">{{ str_replace(':percent', '54', $home['slider_description']) }}</span>
+                    <span id="comparison-description" class="sr-only" data-comparison-description aria-live="polite" aria-label="{{ str_replace(':percent', '54', $home['slider_description']) }}"></span>
                 </div>
                 <div class="comparison-caption">
                     <span><span class="caption-live-dot" aria-hidden="true"></span> {{ $home['same_view'] }}</span>

@@ -1987,12 +1987,17 @@ html.cookie-choice-saved .cookie-banner {
 
 .sr-only {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 1px;
     height: 1px;
+    padding: 0;
+    margin: -1px;
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
+    clip-path: none;
     white-space: nowrap;
-    clip-path: inset(50%);
+    border: 0;
 }
 
 @media (max-width: 1000px) {
@@ -3611,6 +3616,10 @@ html {
     position: relative;
     min-width: 0;
     padding: 0 0 30px 22px;
+}
+
+.comparison-slider {
+    position: relative;
 }
 
 .comparison-frame {

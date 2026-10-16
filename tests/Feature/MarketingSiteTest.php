@@ -4,6 +4,9 @@ namespace Tests\Feature;
 
 use App\LocalizedUrl;
 use App\SiteSeo;
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
 use Tests\TestCase;
 
 class MarketingSiteTest extends TestCase
@@ -219,6 +222,47 @@ class MarketingSiteTest extends TestCase
             ->assertOk()
             ->assertDontSee('id="priser"', false)
             ->assertDontSee('290 kr/mån', false);
+    }
+
+    public function test_homepage_slider_description_is_screen_reader_only(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+        $description = 'Till vänster visas 54 procent av bilden före arbetet och till höger bilden efter arbetet.';
+        $previous = libxml_use_internal_errors(true);
+        $document = new DOMDocument;
+        $document->loadHTML($html);
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+        $xpath = new DOMXPath($document);
+        $nodes = $xpath->query('//*[@data-comparison-description]');
+
+        $this->assertNotFalse($nodes);
+        $this->assertSame(1, $nodes->length);
+        $descriptionNode = $nodes->item(0);
+        $this->assertInstanceOf(DOMElement::class, $descriptionNode);
+        $this->assertSame('comparison-description', $descriptionNode->getAttribute('id'));
+        $this->assertSame('sr-only', $descriptionNode->getAttribute('class'));
+        $this->assertSame('', trim($descriptionNode->textContent ?? ''));
+        $this->assertSame($description, $descriptionNode->getAttribute('aria-label'));
+        $this->assertSame(0, $xpath->query('ancestor::*[contains(concat(" ", normalize-space(@class), " "), " comparison-frame ")]', $descriptionNode)->length);
+        $this->assertSame(1, substr_count($html, $description));
+
+        $control = $xpath->query('//*[@data-comparison]//input[@type="range"]')->item(0);
+        $this->assertInstanceOf(DOMElement::class, $control);
+        $this->assertSame('comparison-description', $control->getAttribute('aria-describedby'));
+        $this->assertSame('54 procent före, resten efter', $control->getAttribute('aria-valuetext'));
+
+        $css = file_get_contents(resource_path('css/site.css'));
+        $this->assertIsString($css);
+        $start = strpos($css, '.sr-only {');
+        $this->assertNotFalse($start);
+        $rule = substr($css, $start, strpos($css, '}', $start) - $start);
+        $this->assertStringContainsString('position: absolute;', $rule);
+        $this->assertStringContainsString('width: 1px;', $rule);
+        $this->assertStringContainsString('height: 1px;', $rule);
+        $this->assertStringContainsString('overflow: hidden;', $rule);
+        $this->assertStringContainsString('clip: rect(0, 0, 0, 0);', $rule);
+        $this->assertStringContainsString('clip-path: none;', $rule);
     }
 
     public function test_unknown_localized_slug_and_unknown_locale_are_real_404_responses(): void
