@@ -94,10 +94,7 @@ class EmailVerificationTest extends TestCase
             ->assertForbidden();
         $this->assertNull($user->refresh()->email_verified_at);
 
-        $url = URL::temporarySignedRoute('verification.verify', now()->addHour(), [
-            'id' => $user->id,
-            'hash' => sha1($user->email),
-        ]);
+        $url = (new SwedishVerifyEmail)->toMail($user)->actionUrl;
 
         $this->get($url)
             ->assertRedirect(route('login'))
@@ -108,6 +105,73 @@ class EmailVerificationTest extends TestCase
         $this->actingAs($user)->get('/uppdrag')
             ->assertOk()
             ->assertDontSee('Bekräfta din e-postadress', false);
+    }
+
+    public function test_expired_and_tampered_verification_links_show_a_safe_recovery_page(): void
+    {
+        $user = User::factory()->unverified()->create(['email' => 'anna@glans.se']);
+        $freshUrl = (new SwedishVerifyEmail)->toMail($user)->actionUrl;
+        $tamperedUrl = str_replace(sha1($user->email), sha1('annan@glans.se'), $freshUrl);
+        $expiredUrl = URL::temporarySignedRoute('verification.verify', now()->subMinute(), [
+            'id' => $user->id,
+            'hash' => sha1($user->email),
+        ]);
+
+        $this->get($expiredUrl)
+            ->assertForbidden()
+            ->assertSee('Bekräftelselänken är ogiltig eller har gått ut.', false)
+            ->assertSee(route('login', absolute: false), false)
+            ->assertDontSee(route('verification.send', absolute: false), false);
+
+        $this->get($tamperedUrl)
+            ->assertForbidden()
+            ->assertSee('Bekräftelselänken är ogiltig eller har gått ut.', false);
+
+        $this->assertNull($user->refresh()->email_verified_at);
+    }
+
+    public function test_authenticated_user_can_request_a_new_link_from_the_recovery_page(): void
+    {
+        Notification::fake();
+        $user = User::factory()->unverified()->create(['email' => 'anna@glans.se']);
+        $expiredUrl = URL::temporarySignedRoute('verification.verify', now()->subMinute(), [
+            'id' => $user->id,
+            'hash' => sha1($user->email),
+        ]);
+
+        $this->actingAs($user)->get($expiredUrl)
+            ->assertForbidden()
+            ->assertSee('Skicka en ny bekräftelselänk', false);
+
+        $this->actingAs($user)->from($expiredUrl)->post('/epost/skicka-igen')
+            ->assertRedirect($expiredUrl)
+            ->assertSessionHas('status', 'Vi har skickat en ny länk till anna@glans.se.');
+
+        $this->get($expiredUrl)
+            ->assertForbidden()
+            ->assertSee('Vi har skickat en ny länk till anna@glans.se.', false)
+            ->assertSee('Skicka en ny bekräftelselänk', false);
+
+        Notification::assertSentToTimes($user, SwedishVerifyEmail::class, 1);
+        $this->assertNull($user->refresh()->email_verified_at);
+    }
+
+    public function test_old_email_hash_cannot_verify_after_the_account_address_changes(): void
+    {
+        Notification::fake();
+        $user = User::factory()->unverified()->create(['email' => 'anna@glans.se']);
+        $oldEmailUrl = (new SwedishVerifyEmail)->toMail($user)->actionUrl;
+
+        $this->actingAs($user)->from('/uppdrag')->put('/epost', [
+            'account_email' => 'ny@glans.se',
+        ])->assertRedirect('/uppdrag');
+
+        $this->get($oldEmailUrl)
+            ->assertForbidden()
+            ->assertSee('Bekräftelselänken är ogiltig eller har gått ut.', false);
+
+        $this->assertSame('ny@glans.se', $user->refresh()->email);
+        $this->assertNull($user->email_verified_at);
     }
 
     public function test_guest_cannot_resend_or_change_the_address(): void
