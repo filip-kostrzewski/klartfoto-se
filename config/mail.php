@@ -116,4 +116,21 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Klartfoto'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Markdown Mail Settings
+    |--------------------------------------------------------------------------
+    |
+    | Published components override Laravel's default notification layout.
+    | Missing components still fall back to the framework views.
+    |
+    */
+
+    'markdown' => [
+        'theme' => 'default',
+        'paths' => [
+            resource_path('views/vendor/mail'),
+        ],
+    ],
+
 ];

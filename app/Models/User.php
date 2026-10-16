@@ -8,6 +8,7 @@ use App\Notifications\SwedishVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,7 +21,7 @@ use Throwable;
 
 #[Fillable(['company_id', 'role', 'name', 'email', 'password', 'google_id', 'trial_ends_at', 'email_verified_at'])]
 #[Hidden(['password', 'remember_token', 'google_id'])]
-class User extends Authenticatable implements MustVerifyEmailContract
+class User extends Authenticatable implements HasLocalePreference, MustVerifyEmailContract
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, MustVerifyEmail, Notifiable;
@@ -37,6 +38,22 @@ class User extends Authenticatable implements MustVerifyEmailContract
             'password' => 'hashed',
             'role' => CompanyRole::class,
         ];
+    }
+
+    /**
+     * Locale is not a stored column. A present locale attribute still selects
+     * the notification language, and every other recipient gets Swedish.
+     */
+    public function preferredLocale(): ?string
+    {
+        $locale = $this->getAttribute('locale');
+        $locales = config('marketing.locales', []);
+
+        if (is_string($locale) && array_key_exists($locale, $locales)) {
+            return $locale;
+        }
+
+        return config('marketing.default_locale', 'sv');
     }
 
     public function company(): BelongsTo
