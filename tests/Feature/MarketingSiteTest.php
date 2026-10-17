@@ -34,7 +34,9 @@ class MarketingSiteTest extends TestCase
         $this->assertStringContainsString('<html lang="sv">', $html);
         $this->assertStringContainsString('<title>Användarvillkor | Klartfoto</title>', $html);
         $this->assertStringContainsString('<link rel="canonical" href="https://klartfoto.se/villkor">', $html);
-        $this->assertStringContainsString('Uppdaterad 16 oktober 2026 · Version 1.0.', $html);
+        $this->assertStringContainsString('Uppdaterad 17 oktober 2026 · Version 1.1.', $html);
+        $this->assertStringContainsString('Den här provperioden är skild från feedbackpiloten.', $html);
+        $this->assertStringContainsString('Feedbackpiloten är gratis till 31 december 2026. Därefter 590 kr/mån exkl. moms (Team), ingen bindningstid och ingen automatisk debitering.', $html);
         $this->assertStringContainsString('mailto:kontakt@klartfoto.se', $html);
         $this->assertStringContainsString('30 dagar', $html);
         $this->assertStringContainsString('290 kr per månad exklusive moms', $html);
@@ -229,6 +231,7 @@ class MarketingSiteTest extends TestCase
             ->assertSee('upp till 10 användare', false)
             ->assertSee('egen logga i rapporten', false)
             ->assertSee('30 dagar gratis utan kort. Ingen bindningstid.', false)
+            ->assertSee('Feedbackpilot: gratis till 31 december 2026. Därefter 590 kr/mån exkl. moms (Team), ingen bindningstid och ingen automatisk debitering.', false)
             ->assertSee('Betalning sker mot faktura.', false)
             ->assertSee('class="hero-price"', false)
             ->assertDontSee('Fortnox', false)

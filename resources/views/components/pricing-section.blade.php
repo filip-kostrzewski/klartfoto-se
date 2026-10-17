@@ -35,5 +35,8 @@
             </article>
         </div>
         <p class="pricing-note">{{ $pricing['note'] }} {{ $pricing['invoice_note'] }}</p>
+        @if (filled($pricing['pilot_note'] ?? null))
+            <p class="pricing-pilot">{{ $pricing['pilot_note'] }}</p>
+        @endif
     </section>
 @endif

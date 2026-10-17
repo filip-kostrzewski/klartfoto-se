@@ -95,6 +95,7 @@ return [
             'team_vat' => 'exkl. moms',
             'team_features' => ['Allt i Start', 'upp till 10 användare', 'egen logga i rapporten'],
             'note' => '30 dagar gratis utan kort. Ingen bindningstid.',
+            'pilot_note' => 'Feedbackpilot: gratis till 31 december 2026. Därefter 590 kr/mån exkl. moms (Team), ingen bindningstid och ingen automatisk debitering.',
             'invoice_note' => 'Betalning sker mot faktura.',
             'cta' => 'Kom igång gratis',
         ],
@@ -299,7 +300,7 @@ return [
         'description' => 'Villkor för användning, kostnadsfri provperiod och betalplan med faktura i :brand.',
         'breadcrumb' => 'Användarvillkor', 'eyebrow' => 'AVTAL', 'h1' => 'Användarvillkor',
         'intro' => 'Här beskriver vi villkoren för företag som provar eller använder Klartfoto.',
-        'updated' => 'Uppdaterad 16 oktober 2026 · Version 1.0.',
+        'updated' => 'Uppdaterad 17 oktober 2026 · Version 1.1.',
         'sections' => [
             ['title' => '1. Tjänsten och avtalet', 'paragraphs' => [
                 'Klartfoto är en webbtjänst där företag samlar uppgifter och foton från utförda arbeten i rapporter som kan delas med kunden via en länk.',
@@ -307,8 +308,9 @@ return [
                 'Villkoren gäller mellan Prodi Digital AB och det företag som skapar och använder kontot. Personen som skapar kontot ska ha rätt att företräda företaget.',
             ]],
             ['title' => '2. Kostnadsfri provperiod', 'paragraphs' => [
-                'Företaget får prova Klartfoto kostnadsfritt i 30 dagar. Betalkort behövs inte. Provperiodens slutdatum visas i kontot.',
+                'Företaget får prova Klartfoto kostnadsfritt i 30 dagar. Betalkort behövs inte. Provperiodens slutdatum visas i kontot. Den här provperioden är skild från feedbackpiloten.',
                 'När provperioden löper ut startar ingen betald plan automatiskt och ingen faktura eller kortdebitering görs automatiskt. Om företaget inte väljer och betalar en plan kan befintliga rapporter visas i skrivskyddat läge.',
+                'Feedbackpiloten är gratis till 31 december 2026. Därefter 590 kr/mån exkl. moms (Team), ingen bindningstid och ingen automatisk debitering.',
             ]],
             ['title' => '3. Planer och priser', 'paragraphs' => [
                 'Start kostar 290 kr per månad exklusive moms och omfattar en användare. Team kostar 590 kr per månad exklusive moms och omfattar upp till tio användare samt företagets egen logotyp i rapporten. Båda planerna omfattar obegränsat antal rapporter.',
