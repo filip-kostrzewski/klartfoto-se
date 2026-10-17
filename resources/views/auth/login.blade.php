@@ -12,7 +12,7 @@
             <div class="auth-card-heading">
                 <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> Klartfoto</p>
                 <h1 id="auth-title">Välkommen tillbaka</h1>
-                <p class="auth-lead">Logga in för att hantera dina uppdrag och rapporter.</p>
+                <p class="auth-lead">Logga in för att hantera era uppdrag och rapporter.</p>
             </div>
 
             @if (session('status'))

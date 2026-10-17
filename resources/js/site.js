@@ -1099,6 +1099,10 @@ document.querySelectorAll('[data-open-dialog]').forEach((button) => {
         const dialog = document.getElementById(button.dataset.openDialog ?? '');
 
         if (dialog instanceof HTMLDialogElement && ! dialog.open) {
+            if (dialog.parentElement !== document.body) {
+                document.body.append(dialog);
+            }
+
             dialog.showModal();
             dialog.querySelector('[data-dialog-cancel]')?.focus();
         }

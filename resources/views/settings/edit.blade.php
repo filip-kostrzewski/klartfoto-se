@@ -128,6 +128,7 @@
                             <span class="workflow-icon"><x-icon name="share" /></span>
                             <div><h2 id="team-heading">Team</h2><p>Hantera vilka som kan arbeta i företagskontot.</p></div>
                         </header>
+                        <p class="settings-card-description settings-review-help">Ansvarig är den som utför besöket. En granskare kan kontrollera rapporten innan den skickas. Inte granskad betyder att ingen har markerat rapporten som kontrollerad.</p>
                         <p class="auth-lead settings-card-description">{{ $userCount }} av {{ $seatLimit }} användare{{ $pendingInvites === 1 ? ', 1 inbjudan väntar' : ($pendingInvites > 1 ? ', '.$pendingInvites.' inbjudningar väntar' : '') }}. @if ($company->onActiveFeedbackPilot()) Feedbackpilot – Team gratis till 31 december 2026. @elseif ($company->onTrial()) Under provperioden har ni allt i Team: upp till 10 användare och egen logotyp. @endif {{ $company->afterTrialAccessSummary() }}</p>
                         <ul class="member-list">
                             @foreach ($company->users as $member)

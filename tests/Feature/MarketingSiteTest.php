@@ -261,20 +261,38 @@ class MarketingSiteTest extends TestCase
             ->assertSee('images/cleaning-detail.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('AI-genererat demofoto av en person som torkar av en köksbänk', false)
             ->assertSee('Efter städning', false)
+            ->assertSee('Exempelkund', false)
+            ->assertSee('Exempelvägen 12', false)
+            ->assertSee('12 mars 2026', false)
+            ->assertSee('AI-demo · inte ett kundfoto', false)
+            ->assertSee('Fotodokumentation för städföretag.', false)
             ->assertSee('images/demo/kitchen-before-small.webp?v='.config('klartfoto.demo_asset_version'), false);
 
         $this->get('/for-hantverkare')
             ->assertOk()
             ->assertSee('Efter utfört arbete', false)
+            ->assertSee('Brf Lindgården', false)
+            ->assertSee('Badrumsrenovering', false)
+            ->assertSee('AI-demo · inte ett kundfoto', false)
+            ->assertSee('Fotodokumentation för hantverkare.', false)
             ->assertSee('images/renovation-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertDontSee('Efter städning', false)
+            ->assertDontSee('Exempelkund', false)
+            ->assertDontSee('Exempelvägen 12', false)
+            ->assertDontSee('Fotodokumentation för städföretag.', false)
             ->assertDontSee('images/demo/kitchen-before-small.webp', false);
 
         $this->get('/for-uthyrare')
             ->assertOk()
             ->assertSee('Inför nästa gäst', false)
+            ->assertSee('Lägenhet 3B', false)
+            ->assertSee('Incheckning 14:00', false)
+            ->assertSee('AI-demo · inte ett kundfoto', false)
+            ->assertSee('Fotodokumentation för uthyrare.', false)
             ->assertSee('images/property-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertDontSee('Efter städning', false)
+            ->assertDontSee('Exempelkund', false)
+            ->assertDontSee('Fotodokumentation för städföretag.', false)
             ->assertDontSee('images/demo/kitchen-after-small.webp', false);
 
         $this->get('/pl')
@@ -282,7 +300,7 @@ class MarketingSiteTest extends TestCase
             ->assertSee('290 kr/mies. bez VAT', false)
             ->assertSee('590 kr/mies. bez VAT', false)
             ->assertDontSee('kr/mån', false)
-            ->assertSee('Pilotaż (na zaproszenie): kilka firm otrzymuje Team bez opłat do 31 grudnia 2026 w zamian za szczerą opinię. Zainteresowany? Napisz na kontakt@klartfoto.se.', false)
+            ->assertSee('Pilotaż (na zaproszenie): kilka firm otrzymuje Team bez opłat do 31 grudnia 2026 w zamian za szczerą opinię. Zainteresowani? Napisz na kontakt@klartfoto.se.', false)
             ->assertSee('Usługa jest przeznaczona dla firm działających w Szwecji i rozliczana w koronach szwedzkich (SEK).', false)
             ->assertSee('firm sprzątających', false)
             ->assertDontSee('usługowych', false);

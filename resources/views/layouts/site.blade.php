@@ -127,7 +127,7 @@
             @endif
         </p>
         <div class="footer-bottom">
-            <span>{{ $copy['nav']['footer_tagline'] }}</span>
+            <span>{{ $page['footer_tagline'] ?? $copy['nav']['footer_tagline'] }}</span>
             <nav class="footer-links" aria-label="{{ __('marketing.cookies.region') }}">
                 @php($wisegentLocale = ['sv' => 'se', 'en' => 'en', 'pl' => 'pl'][$locale] ?? 'en')
                 <a href="https://wisegent.se/{{ $wisegentLocale }}" target="_blank" rel="noopener noreferrer">{{ $copy['nav']['wisegent'] }} <span aria-hidden="true">↗</span></a>

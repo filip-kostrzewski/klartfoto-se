@@ -24,5 +24,5 @@
         @if ($invalid && filled($errorId)) aria-describedby="{{ $errorId }}" @endif
     >
     <button class="button button-outline-dark swedish-date-open" type="button" data-swedish-date-open>Välj datum</button>
-    <input class="sr-only" type="date" data-swedish-date-picker tabindex="-1" aria-hidden="true">
+    <input class="swedish-date-picker" type="date" data-swedish-date-picker tabindex="-1" aria-hidden="true">
 </div>

@@ -71,7 +71,10 @@
                     @if ($isReviewed)
                         <span class="assignment-review-badge">Granskad</span>
                     @else
-                        <span class="assignment-review-badge assignment-review-badge-pending">Inte granskad</span>
+                        <span class="assignment-review-status">
+                            <span class="assignment-review-badge assignment-review-badge-pending">Inte granskad</span>
+                            <span class="assignment-review-hint">Inte granskad betyder att ingen har markerat rapporten som kontrollerad.</span>
+                        </span>
                     @endif
                 </summary>
                 <section class="assignment-team-panel" aria-labelledby="assignment-team-heading">
@@ -334,7 +337,7 @@
                         <p>Vänta tills det senaste försöket är klart innan du skickar igen.</p>
                     @else
                         <strong>Utskick kan inte startas just nu</strong>
-                        <p>Vänta en stund innan du försöker igen. Dina befintliga rapporter är kvar.</p>
+                        <p>Vänta en stund innan du försöker igen. Era befintliga rapporter är kvar.</p>
                     @endif
                 </div>
             @endif

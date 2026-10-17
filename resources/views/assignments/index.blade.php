@@ -50,7 +50,7 @@
 
         <section class="assignment-list-section" aria-labelledby="assignment-list-heading">
             <div class="assignment-list-heading">
-                <div><h2 id="assignment-list-heading">{{ $showingArchived ? 'Arkiverade uppdrag' : 'Dina uppdrag' }}</h2><p>{{ $assignments->isEmpty() ? ($showingArchived ? 'Arkiverade kundbesök visas här.' : 'Dina sparade kundbesök visas här.') : 'Sök bland kundbesök och öppna rapporten du behöver.' }}</p></div>
+                <div><h2 id="assignment-list-heading">{{ $showingArchived ? 'Arkiverade uppdrag' : 'Era uppdrag' }}</h2><p>{{ $assignments->isEmpty() ? ($showingArchived ? 'Arkiverade kundbesök visas här.' : 'Era sparade kundbesök visas här.') : 'Sök bland kundbesök och öppna rapporten ni behöver.' }}</p></div>
                 @if ($canManageJobs && $assignments->isNotEmpty())
                     <a class="text-link" href="{{ route('assignments.create', absolute: false) }}">Lägg till</a>
                 @endif
@@ -127,7 +127,7 @@
                             <h3>Här börjar nästa rapport</h3>
                             <p>Lägg till kundens namn, adress och datum. Ladda sedan upp bilder före och efter arbetet.</p>
                             @if ($canManageJobs)
-                                <a class="button button-dark" href="{{ route('assignments.create', absolute: false) }}">Skapa ditt första uppdrag</a>
+                                <a class="button button-dark" href="{{ route('assignments.create', absolute: false) }}">Skapa ert första uppdrag</a>
                             @endif
                         </div>
                     </div>

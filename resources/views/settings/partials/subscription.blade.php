@@ -60,7 +60,7 @@
         @if (! $hasPendingInvoiceRequest && $isManualPlanActive)
             <p class="subscription-summary-note">
                 @if ($isOwner && $canRequestInvoice)
-                    Du kan förnya eller ändra plan redan nu.
+                    Ni kan förnya eller ändra plan redan nu.
                 @elseif ($isOwner)
                     Ett annat abonnemang är aktivt för kontot, så en Fortnox-faktura kan inte begäras just nu.
                 @else
@@ -90,7 +90,7 @@
                     <legend>Välj plan</legend>
                     <p id="billing-plan-help" class="billing-field-help">
                         @if ($isManualPlanActive)
-                            Välj om du vill förnya din nuvarande plan eller ändra till en annan.
+                            Välj om ni vill förnya er nuvarande plan eller ändra till en annan.
                         @else
                             Planen aktiveras när betalningen har registrerats.
                         @endif
@@ -147,7 +147,7 @@
                     <p id="billing-request-note">
                         Förfrågan är inte en betalning. Fakturan skickas via Fortnox.
                         @if ($isManualPlanActive)
-                            Din nuvarande betalda period fortsätter till {{ $company->paid_until?->locale('sv')->translatedFormat('j F Y') }}. Förnyelse eller planändring aktiveras av oss när betalningen har registrerats.
+                            Er nuvarande betalda period fortsätter till {{ $company->paid_until?->locale('sv')->translatedFormat('j F Y') }}. Förnyelse eller planändring aktiveras av oss när betalningen har registrerats.
                         @else
                             Planen aktiveras av oss när betalningen har registrerats.
                         @endif

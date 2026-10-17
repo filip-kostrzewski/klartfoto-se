@@ -25,7 +25,9 @@ class SwedishDateInputTest extends TestCase
             ->assertSee('lang="sv-SE"', false)
             ->assertSee('inputmode="numeric"', false)
             ->assertSee('Välj datum', false)
+            ->assertSee('class="swedish-date-picker"', false)
             ->assertSee('data-swedish-date-picker', false)
+            ->assertDontSee('class="sr-only" type="date"', false)
             ->assertSee('value="17 okt 2026"', false)
             ->assertDontSee('value="2026-10-17"', false)
             ->assertDontSee('mm/dd/yyyy', false);

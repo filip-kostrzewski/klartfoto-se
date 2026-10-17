@@ -37,6 +37,13 @@ class AssignmentTeamWorkflowTest extends TestCase
             ->assertOk()
             ->assertSee('Nytt besök', false)
             ->assertDontSee('>Ny visit<', false)
+            ->assertSee('assignment-review-hint', false)
+            ->assertSee('Inte granskad betyder att ingen har markerat rapporten som kontrollerad.', false)
+            ->assertSee('Ansvarig är den som utför besöket. En granskare kan kontrollera rapporten innan den skickas. Inte granskad betyder att ingen har markerat rapporten som kontrollerad.', false);
+
+        $this->actingAs($owner)->get(route('settings.edit'))
+            ->assertOk()
+            ->assertSee('id="medlemmar"', false)
             ->assertSee('Ansvarig är den som utför besöket. En granskare kan kontrollera rapporten innan den skickas. Inte granskad betyder att ingen har markerat rapporten som kontrollerad.', false);
 
         $this->actingAs($owner)->from(route('assignments.show', $assignment, false))

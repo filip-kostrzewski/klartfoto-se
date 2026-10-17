@@ -63,9 +63,9 @@
                 <div><span>{{ $page['example_label'] }}</span><strong>{{ $page['preview_title'] }}</strong></div>
             </div>
             <div class="industry-report-preview-meta">
-                <span><small>{{ $home['object_label'] }}</small><strong>{{ $home['object_value'] }}</strong></span>
-                <span><small>{{ $home['place_label'] }}</small><strong>{{ $home['place_value'] }}</strong></span>
-                <span><small>{{ $home['status_label'] }}</small><strong>{{ $home['status_value'] }}</strong></span>
+                <span><small>{{ $page['example_object_label'] ?? $home['object_label'] }}</small><strong>{{ $page['example_object_value'] ?? $home['object_value'] }}</strong></span>
+                <span><small>{{ $page['example_place_label'] ?? $home['place_label'] }}</small><strong>{{ $page['example_place_value'] ?? $home['place_value'] }}</strong></span>
+                <span><small>{{ $page['example_status_label'] ?? $home['status_label'] }}</small><strong>{{ $page['example_status_value'] ?? $home['status_value'] }}</strong></span>
             </div>
             @if (($page['route_key'] ?? 'cleaning') === 'cleaning')
                 <div class="industry-report-preview-photos">
