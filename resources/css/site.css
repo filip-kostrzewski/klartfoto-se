@@ -3204,6 +3204,16 @@ html.cookie-choice-saved .cookie-banner {
     margin: 8px 0 0;
 }
 
+.assignment-delete {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+}
+
+.assignment-delete p {
+    margin: 0 0 12px;
+}
+
 .photo-delete button {
     min-height: 44px;
     padding: 8px 14px;

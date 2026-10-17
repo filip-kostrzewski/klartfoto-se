@@ -457,5 +457,14 @@
                 </form>
             </section>
         @endif
+
+        @if ($canDeleteAssignment)
+            <form class="assignment-delete" method="post" action="{{ route('assignments.destroy', $assignment, false) }}" onsubmit="return confirm('Vill du radera det här uppdraget? Alla bilder, rapportversioner och delningslänkar tas bort permanent.');">
+                @csrf
+                @method('DELETE')
+                <p>Radering tar bort bilderna, rapportversionerna och delningslänkarna. Det går inte att ångra.</p>
+                <button class="button button-outline-dark" type="submit">Radera uppdrag</button>
+            </form>
+        @endif
     </section>
 @endsection

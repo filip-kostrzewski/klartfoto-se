@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CreateAssignmentReportVersion;
+use App\Actions\DeleteAssignment;
 use App\Actions\DeleteAssignmentPhoto;
 use App\Actions\SaveAssignmentCustomer;
 use App\Actions\SendAssignmentReportEmail;
@@ -361,7 +362,19 @@ class AssignmentController extends Controller
             'teamMembers' => $teamMembers,
             'canViewCustomerResponses' => $canViewCustomerResponses,
             'customerResponses' => $customerResponses,
+            'canDeleteAssignment' => $user instanceof User && $user->can('delete', $assignment),
         ]);
+    }
+
+    public function destroy(Assignment $assignment, DeleteAssignment $deleteAssignment): RedirectResponse
+    {
+        Gate::authorize('delete', $assignment);
+
+        $deleteAssignment->handle($assignment);
+
+        return redirect()
+            ->route('assignments.index')
+            ->with('toast', 'Uppdraget är raderat.');
     }
 
     public function storePhotos(

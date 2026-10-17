@@ -28,6 +28,17 @@ class AssignmentPolicy
         return $this->owns($user, $assignment);
     }
 
+    public function delete(User $user, Assignment $assignment): Response
+    {
+        if (! $this->owns($user, $assignment)->allowed()) {
+            return Response::denyAsNotFound();
+        }
+
+        return $user->isOwner()
+            ? Response::allow()
+            : Response::deny('Endast kontoägaren kan radera ett uppdrag.');
+    }
+
     private function owns(User $user, Assignment $assignment): Response
     {
         return $user->company_id !== null && $user->company_id === $assignment->company_id

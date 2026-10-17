@@ -59,9 +59,13 @@ class PublicReportTest extends TestCase
             ->assertSee($afterUrl, false)
             ->assertDontSee('Ta bort', false);
 
-        $this->get($beforeUrl)
+        $photoResponse = $this->get($beforeUrl)
             ->assertOk()
             ->assertHeader('content-type', 'image/jpeg');
+        $cacheControl = strtolower((string) $photoResponse->headers->get('Cache-Control'));
+        $this->assertStringContainsString('private', $cacheControl);
+        $this->assertStringContainsString('no-store', $cacheControl);
+        $this->assertStringNotContainsString('public', $cacheControl);
     }
 
     public function test_unknown_token_and_another_jobs_photo_are_not_found(): void

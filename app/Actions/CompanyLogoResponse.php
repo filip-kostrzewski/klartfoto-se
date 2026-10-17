@@ -29,13 +29,16 @@ class CompanyLogoResponse
             'Content-Type' => $contentType,
             'X-Content-Type-Options' => 'nosniff',
             'X-Robots-Tag' => 'noindex, nofollow',
-            'Cache-Control' => 'private, max-age=3600',
         ];
 
         if ($contentType === 'image/svg+xml') {
             $headers['Content-Security-Policy'] = "default-src 'none'; style-src 'unsafe-inline'; sandbox";
         }
 
-        return response()->file($absolutePath, $headers);
+        $response = response()->file($absolutePath, $headers);
+        $response->setPrivate();
+        $response->headers->set('Cache-Control', 'private, no-store');
+
+        return $response;
     }
 }

@@ -67,6 +67,10 @@ class PublicReportPdfTest extends TestCase
             ->assertHeader('Content-Type', 'application/pdf')
             ->assertHeader('X-Content-Type-Options', 'nosniff')
             ->assertHeader('X-Robots-Tag', 'noindex, nofollow');
+        $pdfCacheControl = strtolower((string) $response->headers->get('Cache-Control'));
+        $this->assertStringContainsString('private', $pdfCacheControl);
+        $this->assertStringContainsString('no-store', $pdfCacheControl);
+        $this->assertStringNotContainsString('public', $pdfCacheControl);
         $this->assertSame($pdfBytes, $response->getContent());
 
         Http::assertSent(function (Request $request) use ($version, $assetBytes): bool {

@@ -35,13 +35,16 @@ class PublicReportController extends Controller
                 ->header('X-Robots-Tag', 'noindex, nofollow');
         }
 
-        return response($contents, 200, [
+        $response = response($contents, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename="klartfoto-rapport-v'.$version->version_number.'.pdf"',
-            'Cache-Control' => 'private, max-age=3600',
             'X-Content-Type-Options' => 'nosniff',
             'X-Robots-Tag' => 'noindex, nofollow',
         ]);
+        $response->setPrivate();
+        $response->headers->set('Cache-Control', 'private, no-store');
+
+        return $response;
     }
 
     public function storeResponse(StorePublicReportResponseRequest $request, string $token): RedirectResponse
@@ -209,11 +212,10 @@ class PublicReportController extends Controller
         $absolutePath = Storage::disk('local')->path($assignmentPhoto->path);
         abort_unless(is_file($absolutePath), 404);
 
-        return response()->file($absolutePath, [
+        return $this->privateFile($absolutePath, [
             'Content-Type' => 'image/jpeg',
             'X-Content-Type-Options' => 'nosniff',
             'X-Robots-Tag' => 'noindex, nofollow',
-            'Cache-Control' => 'private, max-age=86400',
         ]);
     }
 
@@ -246,13 +248,24 @@ class PublicReportController extends Controller
             'Content-Type' => $contentType,
             'X-Content-Type-Options' => 'nosniff',
             'X-Robots-Tag' => 'noindex, nofollow',
-            'Cache-Control' => 'private, max-age=86400',
         ];
 
         if ($contentType === 'image/svg+xml') {
             $headers['Content-Security-Policy'] = "default-src 'none'; style-src 'unsafe-inline'; sandbox";
         }
 
-        return response()->file($absolutePath, $headers);
+        return $this->privateFile($absolutePath, $headers);
+    }
+
+    /**
+     * @param  array<string, string>  $headers
+     */
+    private function privateFile(string $absolutePath, array $headers): BinaryFileResponse
+    {
+        $response = response()->file($absolutePath, $headers);
+        $response->setPrivate();
+        $response->headers->set('Cache-Control', 'private, no-store');
+
+        return $response;
     }
 }
