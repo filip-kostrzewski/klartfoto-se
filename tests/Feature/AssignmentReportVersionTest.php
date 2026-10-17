@@ -41,6 +41,7 @@ class AssignmentReportVersionTest extends TestCase
         ])->assertRedirect();
 
         $assignment = Assignment::query()->sole();
+        $this->actingAs($owner)->post(route('assignments.versions.store', $assignment, false))->assertRedirect();
         $version = $assignment->reportVersions()->sole();
         $place = $assignment->places()->with('photoPairs.photos')->sole();
         $pairs = $place->photoPairs;
@@ -169,7 +170,7 @@ class AssignmentReportVersionTest extends TestCase
         $this->assertSame(0, $secondVisit->photos()->count());
         $this->assertNotSame($firstVisit->public_token, $secondVisit->public_token);
         $this->assertSame(0, $secondVisit->reportVersions()->count());
-        $this->assertSame(1, $firstVisit->reportVersions()->count());
+        $this->assertSame(0, $firstVisit->reportVersions()->count());
 
         $this->actingAs($owner)->from(route('assignments.create', absolute: false))->post(route('assignments.store', absolute: false), [
             'customer_id' => $foreignCustomer->id,
@@ -200,6 +201,7 @@ class AssignmentReportVersionTest extends TestCase
         ])->assertRedirect();
 
         $assignment = Assignment::query()->sole();
+        $this->actingAs($owner)->post(route('assignments.versions.store', $assignment, false))->assertRedirect();
         $oldVersion = $assignment->reportVersions()->sole();
         $oldSnapshot = $oldVersion->snapshot;
 
@@ -261,6 +263,7 @@ class AssignmentReportVersionTest extends TestCase
         ])->assertRedirect();
 
         $assignment = Assignment::query()->sole();
+        $this->actingAs($owner)->post(route('assignments.versions.store', $assignment, false))->assertRedirect();
         $version = $assignment->reportVersions()->sole();
         $snapshot = app(CreateAssignmentReportVersion::class)->snapshotData($assignment->fresh());
         $canonicalJson = json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -283,6 +286,7 @@ class AssignmentReportVersionTest extends TestCase
         ])->assertRedirect();
 
         $assignment = Assignment::query()->sole();
+        $this->actingAs($owner)->post(route('assignments.versions.store', $assignment, false))->assertRedirect();
         $version = $assignment->reportVersions()->sole();
         $version->forceFill(['snapshot' => $this->reverseSnapshotObjectKeys($version->snapshot)])->save();
 

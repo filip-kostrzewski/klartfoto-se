@@ -233,7 +233,15 @@ class AssignmentPhotoUploadTest extends TestCase
             'after_upload_ids' => [Str::uuid()->toString()],
         ], ['Accept' => 'application/json'])->assertOk();
 
-        $version = $assignment->reportVersions()->sole();
+        $this->assertSame(0, $assignment->reportVersions()->count());
+        $this->actingAs($owner)
+            ->get(route('assignments.show', $assignment, false))
+            ->assertOk()
+            ->assertDontSee('Klar att dela', false);
+
+        $this->actingAs($owner)->post(route('assignments.versions.store', $assignment, false))->assertRedirect();
+
+        $version = $assignment->fresh()->reportVersions()->sole();
         $pair = $version->snapshot['places'][0]['pairs'][0];
         $this->assertNotNull($pair['before']);
         $this->assertNotNull($pair['after']);

@@ -20,7 +20,7 @@
             <span class="photo-uploader">Uppladdad av {{ $pair['beforeUploader'] }}</span>
         @endif
         @if (($canDeletePhotos ?? false) && $pair['before'])
-            <form class="photo-delete" method="post" action="{{ route('assignments.photos.destroy', [$assignment, $pair['before']], false) }}" onsubmit="return confirm('Vill du ta bort den här bilden?')">
+            <form class="photo-delete" method="post" action="{{ route('assignments.photos.destroy', [$assignment, $pair['before']], false) }}" onsubmit="return confirm('Vill ni ta bort den här bilden?')">
                 @csrf
                 @method('DELETE')
                 <button type="submit" aria-label="Ta bort förebilden">Ta bort</button>
@@ -38,7 +38,7 @@
             <span class="photo-uploader">Uppladdad av {{ $pair['afterUploader'] }}</span>
         @endif
         @if (($canDeletePhotos ?? false) && $pair['after'])
-            <form class="photo-delete" method="post" action="{{ route('assignments.photos.destroy', [$assignment, $pair['after']], false) }}" onsubmit="return confirm('Vill du ta bort den här bilden?')">
+            <form class="photo-delete" method="post" action="{{ route('assignments.photos.destroy', [$assignment, $pair['after']], false) }}" onsubmit="return confirm('Vill ni ta bort den här bilden?')">
                 @csrf
                 @method('DELETE')
                 <button type="submit" aria-label="Ta bort efterbilden">Ta bort</button>

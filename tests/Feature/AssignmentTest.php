@@ -52,7 +52,7 @@ class AssignmentTest extends TestCase
             ->assertSee('Anna Andersson', false);
     }
 
-    public function test_new_draft_can_be_created_without_photos_and_first_upload_publishes_its_initial_version(): void
+    public function test_new_draft_stays_unpublished_until_the_report_is_published(): void
     {
         Storage::fake('local');
         $user = User::factory()->create();
@@ -74,7 +74,16 @@ class AssignmentTest extends TestCase
             'before_photos' => [UploadedFile::fake()->image('hall.jpg', 40, 40)],
         ], ['Accept' => 'application/json'])->assertOk();
 
-        $version = $assignment->reportVersions()->sole();
+        $this->assertSame(0, $assignment->reportVersions()->count());
+        $this->actingAs($user)
+            ->get(route('assignments.show', $assignment, false))
+            ->assertOk()
+            ->assertSee('Ingen rapportversion ännu', false)
+            ->assertDontSee('Klar att dela', false);
+
+        $this->actingAs($user)->post(route('assignments.versions.store', $assignment, false))->assertRedirect();
+
+        $version = $assignment->fresh()->reportVersions()->sole();
         $this->assertSame(1, $version->version_number);
         $this->assertSame($initialToken, $version->token);
         $this->assertSame($initialToken, $assignment->fresh()->public_token);
@@ -189,6 +198,7 @@ class AssignmentTest extends TestCase
         ])->assertRedirect();
 
         $assignment = Assignment::query()->firstOrFail();
+        $this->actingAs($owner)->post(route('assignments.versions.store', $assignment, false))->assertRedirect();
         $before = $assignment->photos()->where('phase', PhotoPhase::Before)->firstOrFail();
         $after = $assignment->photos()->where('phase', PhotoPhase::After)->firstOrFail();
         $reportAssets = $assignment->reportVersions()->sole()->photoAssets()->get()->keyBy('source_photo_id');
@@ -203,7 +213,7 @@ class AssignmentTest extends TestCase
         $this->actingAs($member)->get(route('assignments.show', $assignment))
             ->assertOk()
             ->assertSee('Ta bort', false)
-            ->assertSee('Vill du ta bort den här bilden?', false)
+            ->assertSee('Vill ni ta bort den här bilden?', false)
             ->assertSee('aria-label="Ta bort förebilden"', false)
             ->assertSee('aria-label="Ta bort efterbilden"', false);
 

@@ -36,7 +36,11 @@
         </div>
         <p class="pricing-note">{{ $pricing['note'] }} {{ $pricing['invoice_note'] }}</p>
         @if (filled($pricing['pilot_note'] ?? null))
-            <p class="pricing-pilot">{{ $pricing['pilot_note'] }}</p>
+            @php
+                $pilotEmail = 'kontakt@klartfoto.se';
+                $pilotParts = explode($pilotEmail, (string) $pricing['pilot_note'], 2);
+            @endphp
+            <p class="pricing-pilot">{{ $pilotParts[0] }}@if (count($pilotParts) === 2)@include('partials.public-mailto', ['email' => $pilotEmail]){{ $pilotParts[1] }}@endif</p>
         @endif
         @if (filled($pricing['market_note'] ?? null))
             <p class="pricing-market">{{ $pricing['market_note'] }}</p>

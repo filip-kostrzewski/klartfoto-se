@@ -168,7 +168,7 @@
                                         </div>
                                         <div class="assignment-pair-note-field">
                                             <label for="customer-comment-{{ $photoPair->id }}">Kommentar till kunden</label>
-                                            <p id="customer-comment-help-{{ $photoPair->id }}">Visas vid bildparet när du publicerar nästa rapportversion.</p>
+                                            <p id="customer-comment-help-{{ $photoPair->id }}">Visas vid bildparet när ni publicerar nästa rapportversion.</p>
                                             <textarea id="customer-comment-{{ $photoPair->id }}" name="customer_comment" rows="3" maxlength="1000" aria-invalid="{{ $pairFormWasSubmitted && $errors->has('customer_comment') ? 'true' : 'false' }}" aria-describedby="customer-comment-help-{{ $photoPair->id }}@if ($pairFormWasSubmitted && $errors->has('customer_comment')) customer-comment-error-{{ $photoPair->id }}@endif">{{ $customerCommentValue }}</textarea>
                                             @if ($pairFormWasSubmitted)
                                                 @error('customer_comment')<span class="field-error" id="customer-comment-error-{{ $photoPair->id }}">{{ $message }}</span>@enderror

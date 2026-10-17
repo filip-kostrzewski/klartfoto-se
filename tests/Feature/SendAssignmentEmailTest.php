@@ -231,7 +231,7 @@ class SendAssignmentEmailTest extends TestCase
                 'message' => 'Please call me.',
             ])
             ->assertRedirect(route('assignments.show', $assignment, false))
-            ->assertSessionHas('error', 'Det gick inte att bekräfta om mejlet skickades. Kontrollera med mottagaren innan du skickar igen.')
+            ->assertSessionHas('error', 'Det gick inte att bekräfta om mejlet skickades. Kontrollera med mottagaren innan ni skickar igen.')
             ->assertSessionHas('_old_input.message', 'Please call me.');
 
         $this->assertStringNotContainsString('private transport detail', serialize($response->getSession()->all()));
@@ -450,12 +450,12 @@ class SendAssignmentEmailTest extends TestCase
                 'recipient_email' => 'customer@example.test',
             ])
             ->assertRedirect(route('assignments.show', $assignment, false))
-            ->assertSessionHas('error', 'Du har skickat för många rapporter, försök igen om en stund.');
+            ->assertSessionHas('error', 'Ni har skickat för många rapporter, försök igen om en stund.');
 
         $this->actingAs($anotherMember)
             ->get(route('assignments.show', $assignment, false))
             ->assertOk()
-            ->assertSee('Du har skickat för många rapporter, försök igen om en stund.', false)
+            ->assertSee('Ni har skickat för många rapporter, försök igen om en stund.', false)
             ->assertDontSee('Too Many Requests', false);
 
         $this->assertDatabaseCount('assignment_email_attempts', 20);
@@ -475,6 +475,9 @@ class SendAssignmentEmailTest extends TestCase
             'before_photos' => [UploadedFile::fake()->image('fore.jpg', 40, 40)],
             'before_upload_ids' => [Str::uuid()->toString()],
         ], ['Accept' => 'application/json'])->assertOk();
+
+        $this->assertSame(0, $assignment->reportVersions()->count());
+        $this->actingAs($owner)->post(route('assignments.versions.store', $assignment, false))->assertRedirect();
 
         $firstVersion = $assignment->reportVersions()->sole();
         $this->assertNull($firstVersion->snapshot['places'][0]['pairs'][0]['after']);
@@ -532,7 +535,7 @@ class SendAssignmentEmailTest extends TestCase
         $this->actingAs($owner)
             ->get(route('assignments.show', $assignment, false))
             ->assertOk()
-            ->assertSee('Saknar efterbild', false)
+            ->assertSee('Ingen rapportversion ännu', false)
             ->assertSee('saknar efterbild', false)
             ->assertSee('Minst ett rum har en förebild men saknar efterbild.', false)
             ->assertSee('name="confirm_incomplete_pairs"', false)

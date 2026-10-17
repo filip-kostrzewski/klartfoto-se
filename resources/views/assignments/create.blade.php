@@ -68,7 +68,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <span class="saved-customer-help" id="customer-picker-help">En ny kund eller adress sparas när du skapar uppdraget.</span>
+                            <span class="saved-customer-help" id="customer-picker-help">En ny kund eller adress sparas när ni skapar uppdraget.</span>
                             @error('customer_id') <span class="field-error">{{ $message }}</span> @enderror
                             @error('customer_property_id') <span class="field-error">{{ $message }}</span> @enderror
                         </div>
@@ -108,7 +108,7 @@
                 </fieldset>
 
                 <div class="assignment-form-footer">
-                    <p>Utkastet sparas först. På nästa sida väljer du plats och lägger till bilderna före och efter.</p>
+                    <p>Utkastet sparas först. På nästa sida väljer ni plats och lägger till bilderna före och efter.</p>
                     <button class="button button-lime" type="submit" data-loading-text="Sparar utkast…">Spara och lägg till bilder</button>
                 </div>
             </form>

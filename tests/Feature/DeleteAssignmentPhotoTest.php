@@ -32,6 +32,7 @@ class DeleteAssignmentPhotoTest extends TestCase
         ])->assertRedirect();
 
         $assignment = Assignment::query()->sole();
+        $this->actingAs($owner)->post(route('assignments.versions.store', $assignment, false))->assertRedirect();
         $before = $assignment->photos()->where('phase', PhotoPhase::Before)->firstOrFail();
         $after = $assignment->photos()->where('phase', PhotoPhase::After)->firstOrFail();
         $firstVersion = $assignment->reportVersions()->sole();
@@ -145,6 +146,7 @@ class DeleteAssignmentPhotoTest extends TestCase
         ])->assertRedirect();
 
         $assignment = Assignment::query()->sole();
+        $this->actingAs($owner)->post(route('assignments.versions.store', $assignment, false))->assertRedirect();
         $published = $assignment->photos()->sole();
         $version = $assignment->reportVersions()->sole();
         $publishedHash = $version->snapshot_hash;

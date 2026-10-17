@@ -29,6 +29,7 @@ class PublicReportTest extends TestCase
         ])->assertRedirect();
 
         $assignment = Assignment::query()->firstOrFail();
+        $this->actingAs($user)->post(route('assignments.versions.store', $assignment, false))->assertRedirect();
         $photos = AssignmentPhoto::query()->orderBy('id')->get();
         $this->assertCount(2, $photos);
         $this->assertSame(PhotoPhase::Before, $photos[0]->phase);

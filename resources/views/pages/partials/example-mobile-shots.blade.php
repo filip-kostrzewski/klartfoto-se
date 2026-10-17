@@ -2,14 +2,11 @@
     $exampleFlag = trans('marketing.report.example_flag');
     $shotVersion = config('klartfoto.demo_asset_version');
 @endphp
-<div class="example-mobile-shots">
-    <a href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">
-        <img src="{{ asset('images/demo/example-report-phone.webp') }}?v={{ $shotVersion }}" width="390" height="844" alt="{{ $exampleFlag }}. {{ $copy['home']['photo_note'] }}" loading="lazy" decoding="async">
-    </a>
-    <a href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">
-        <img src="{{ asset('images/demo/example-report-phone-photos.webp') }}?v={{ $shotVersion }}" width="390" height="844" alt="{{ $exampleFlag }}. {{ $copy['home']['photo_note'] }}" loading="lazy" decoding="async">
-    </a>
-    <a href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">
-        <img src="{{ asset('images/demo/example-report-phone-footer.webp') }}?v={{ $shotVersion }}" width="390" height="520" alt="{{ $exampleFlag }}. {{ $copy['home']['photo_note'] }}" loading="lazy" decoding="async">
+<div class="example-phone">
+    <a class="example-phone-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">
+        <span class="example-phone-frame">
+            <span class="example-phone-speaker" aria-hidden="true"></span>
+            <img src="{{ asset('images/demo/example-report-phone.webp') }}?v={{ $shotVersion }}" width="708" height="1372" alt="{{ $exampleFlag }}. AI-demo av rapportens övre del: företag, objekt, datum och första bildparet. {{ $copy['home']['photo_note'] }}" loading="lazy" decoding="async">
+        </span>
     </a>
 </div>

@@ -42,6 +42,7 @@ class ReportEvidenceTest extends TestCase
         ])->assertRedirect();
 
         $assignment = Assignment::query()->firstOrFail();
+        $this->actingAs($user)->post(route('assignments.versions.store', $assignment, false))->assertRedirect();
         $before = $assignment->photos()->where('phase', PhotoPhase::Before)->firstOrFail();
         $after = $assignment->photos()->where('phase', PhotoPhase::After)->firstOrFail();
         $this->assertNotNull($before->assignment_photo_pair_id);

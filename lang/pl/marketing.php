@@ -92,7 +92,7 @@ return [
             'team_vat' => '',
             'team_features' => ['Wszystko z planu Start', 'Do 10 użytkowników', 'Własne logo w raporcie'],
             'note' => '30 dni bez opłaty i bez karty. Bez zobowiązań.',
-            'pilot_note' => 'Pilotaż (na zaproszenie): kilka firm otrzymuje Team bez opłat do 31 grudnia 2026 w zamian za szczerą opinię. Zainteresowani? Napisz na kontakt@klartfoto.se.',
+            'pilot_note' => 'Pilotaż (na zaproszenie): kilka firm otrzymuje Team bez opłat do 31 grudnia 2026 w zamian za szczerą opinię. Chcecie dołączyć? Napiszcie na kontakt@klartfoto.se.',
             'market_note' => 'Usługa jest przeznaczona dla firm działających w Szwecji i rozliczana w koronach szwedzkich (SEK).',
             'invoice_note' => 'Płatność na fakturę.',
             'cta' => 'Zacznij za darmo',

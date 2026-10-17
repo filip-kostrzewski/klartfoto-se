@@ -118,6 +118,7 @@ class RegistrationTest extends TestCase
         Storage::disk('local')->assertExists($photos[0]->path);
         Storage::disk('local')->assertExists($photos[1]->path);
 
+        $this->post(route('assignments.versions.store', $assignment))->assertRedirect();
         $this->post(route('assignments.share', $assignment))->assertRedirect();
         $this->assertNotNull($assignment->refresh()->link_copied_at);
 

@@ -40,8 +40,8 @@ class CompanyLogoTest extends TestCase
 
         $this->actingAs($owner)->get('/exempel-rapport')
             ->assertOk()
-            ->assertSee('/installningar/logotyp', false)
-            ->assertDontSee('images/demo/company-logo.svg', false);
+            ->assertDontSee('/installningar/logotyp', false)
+            ->assertSee('images/demo/company-logo.svg?v='.config('klartfoto.demo_asset_version'), false);
     }
 
     public function test_sample_report_shows_a_drawing_when_the_company_has_no_logo(): void
@@ -49,7 +49,7 @@ class CompanyLogoTest extends TestCase
         $this->get('/exempel-rapport')
             ->assertOk()
             ->assertSee('images/demo/company-logo.svg?v='.config('klartfoto.demo_asset_version'), false)
-            ->assertSee('Logotyp · teckning', false);
+            ->assertSee('Exempel Städ AB', false);
     }
 
     public function test_jpeg_logo_is_reencoded_and_an_unsafe_svg_is_rejected(): void

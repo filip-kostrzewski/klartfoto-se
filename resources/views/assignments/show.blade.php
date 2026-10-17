@@ -73,7 +73,7 @@
                     @else
                         <span class="assignment-review-status">
                             <span class="assignment-review-badge assignment-review-badge-pending">Inte granskad</span>
-                            <span class="assignment-review-hint">Ansvarig är den som utför besöket. Granskare kan vara kontoägaren eller en teammedlem som ägaren har valt. Inte granskad betyder att ingen har markerat rapporten som kontrollerad. Ägaren eller den valda granskaren markerar rapporten med knappen Markera som granskad.</span>
+                            <span class="assignment-review-hint" data-review-hint>Ansvarig är den som utför besöket. Granskare kan vara kontoägaren eller en teammedlem som ägaren har valt. Inte granskad betyder att ingen har markerat rapporten som kontrollerad. Ägaren eller den valda granskaren markerar rapporten med knappen Markera som granskad.</span>
                         </span>
                     @endif
                 </summary>
@@ -181,7 +181,7 @@
                         @elseif ($latestReportVersion)
                             Skapad {{ $latestReportVersion->created_at->locale('sv')->translatedFormat('j F Y') }}
                         @else
-                            Skapas när du publicerar bilderna.
+                            Skapas när ni publicerar bilderna.
                         @endif
                     </span>
                 </div>
@@ -315,7 +315,7 @@
             @else
                 <div class="assignment-email-blocked" role="status">
                     @if (! auth()->user()->hasVerifiedEmail())
-                        <strong>Bekräfta din e-postadress innan du skickar</strong>
+                        <strong>Bekräfta din e-postadress innan ni skickar</strong>
                         <p>Vi behöver veta att avsändarens adress fungerar. Bekräfta den i rutan högst upp på sidan.</p>
                         <a href="#email-verification">Gå till e-postbekräftelse <span aria-hidden="true">↑</span></a>
                     @elseif (! $canManageJobs)
@@ -328,16 +328,16 @@
                         <a href="#assignment-upload-heading">Lägg till bilder <span aria-hidden="true">↓</span></a>
                     @elseif (($latestEmailAttempt['status'] ?? null) === 'sent')
                         <strong>Rapporten har skickats vidare.</strong>
-                        <p>För att undvika dubbla mejl kan du skicka igen efter 60 sekunder. Uppdatera sidan då.</p>
+                        <p>För att undvika dubbla mejl kan ni skicka igen efter 60 sekunder. Uppdatera sidan då.</p>
                     @elseif (($latestEmailAttempt['status'] ?? null) === 'unknown')
                         <strong>Kontrollera det senaste utskicket</strong>
-                        <p>Vi kan inte bekräfta om mejlet skickades. Kontrollera med mottagaren innan du gör ett nytt försök.</p>
+                        <p>Vi kan inte bekräfta om mejlet skickades. Kontrollera med mottagaren innan ni gör ett nytt försök.</p>
                     @elseif (($latestEmailAttempt['status'] ?? null) === 'sending')
                         <strong>Ett utskick pågår</strong>
-                        <p>Vänta tills det senaste försöket är klart innan du skickar igen.</p>
+                        <p>Vänta tills det senaste försöket är klart innan ni skickar igen.</p>
                     @else
                         <strong>Utskick kan inte startas just nu</strong>
-                        <p>Vänta en stund innan du försöker igen. Era befintliga rapporter är kvar.</p>
+                        <p>Vänta en stund innan ni försöker igen. Era befintliga rapporter är kvar.</p>
                     @endif
                 </div>
             @endif
@@ -375,7 +375,7 @@
                         @if ($emailAttemptStatus === 'sent')
                             <span>Det bekräftar inte att mejlet har levererats eller lästs.</span>
                         @elseif ($emailAttemptStatus === 'unknown')
-                            <span>Det gick inte att bekräfta om mejlet skickades. Kontrollera med mottagaren innan du skickar igen.</span>
+                            <span>Det gick inte att bekräfta om mejlet skickades. Kontrollera med mottagaren innan ni skickar igen.</span>
                         @endif
                     </div>
                 </div>

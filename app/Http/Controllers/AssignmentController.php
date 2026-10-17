@@ -227,7 +227,6 @@ class AssignmentController extends Controller
         StoreAssignmentRequest $request,
         StoreAssignmentPhotos $photos,
         SaveAssignmentCustomer $customers,
-        CreateAssignmentReportVersion $versions,
         OnboardingChecklist $checklist,
     ): JsonResponse|RedirectResponse {
         if (! Gate::allows('create', Assignment::class)) {
@@ -237,7 +236,7 @@ class AssignmentController extends Controller
         $user = $request->user();
         $wasComplete = $user instanceof User && $checklist->isComplete($user);
 
-        $assignment = DB::transaction(function () use ($request, $photos, $customers, $versions): Assignment {
+        $assignment = DB::transaction(function () use ($request, $photos, $customers): Assignment {
             $user = $request->user();
             abort_unless($user instanceof User, 403);
             $customerData = $request->safe()->only(['customer_name', 'customer_email', 'address']);
@@ -277,10 +276,6 @@ class AssignmentController extends Controller
                     $this->uploadedIds($request, 'before_upload_ids'),
                     $this->uploadedIds($request, 'after_upload_ids'),
                 );
-            }
-
-            if ($assignment->photos()->exists()) {
-                $versions->create($assignment, $user, preserveCurrentToken: true);
             }
 
             return $assignment;
@@ -451,7 +446,6 @@ class AssignmentController extends Controller
         StoreAssignmentPhotoRequest $request,
         Assignment $assignment,
         StoreAssignmentPhotos $photos,
-        CreateAssignmentReportVersion $versions,
         OnboardingChecklist $checklist,
     ): RedirectResponse|JsonResponse {
         Gate::authorize('update', $assignment);
@@ -463,7 +457,7 @@ class AssignmentController extends Controller
 
         $wasComplete = $checklist->isComplete($user);
 
-        $result = DB::transaction(function () use ($request, $assignment, $photos, $versions, $user): array {
+        $result = DB::transaction(function () use ($request, $assignment, $photos, $user): array {
             $lockedAssignment = Assignment::query()->whereKey($assignment->id)->lockForUpdate()->firstOrFail();
             $before = $this->uploadedFiles($request, 'before_photos');
             $after = $this->uploadedFiles($request, 'after_photos');
@@ -499,14 +493,6 @@ class AssignmentController extends Controller
 
             if ($uploadResult['uploaded'] > 0) {
                 $lockedAssignment->markDraftChanged();
-            }
-
-            if (
-                ! $request->boolean('defer_report_version')
-                && $lockedAssignment->photos()->exists()
-                && $lockedAssignment->reportVersions()->doesntExist()
-            ) {
-                $versions->create($lockedAssignment, $user, preserveCurrentToken: true);
             }
 
             return $uploadResult;
@@ -710,10 +696,14 @@ class AssignmentController extends Controller
         }
 
         if (! $assignment->photos()->exists()) {
-            return back()->withErrors(['report' => 'Lägg till minst en bild innan du skapar en rapportversion.']);
+            return back()->withErrors(['report' => 'Lägg till minst en bild innan ni skapar en rapportversion.']);
         }
 
-        $versions->create($assignment, $user);
+        $versions->create(
+            $assignment,
+            $user,
+            preserveCurrentToken: $assignment->reportVersions()->doesntExist(),
+        );
 
         return redirect()->route('assignments.show', $assignment)->with('toast', 'En ny rapportversion är skapad.');
     }

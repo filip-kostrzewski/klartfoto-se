@@ -785,7 +785,7 @@ document.querySelectorAll('form[data-photo-upload-mode]').forEach((form) => {
                 showFormErrors(form, result.errors);
             }
 
-            showFailure(validationMessages || result.message || 'Uppladdningen kunde inte bekräftas. Försök igen med samma fil innan du ändrar den.');
+            showFailure(validationMessages || result.message || 'Uppladdningen kunde inte bekräftas. Försök igen med samma fil innan ni ändrar den.');
 
             if (result.status >= 400 && result.status < 500 && uploadRecords.size === 0 && placeField instanceof HTMLInputElement) {
                 placeField.readOnly = false;
@@ -1299,10 +1299,10 @@ document.querySelectorAll('[data-swedish-date-field]').forEach((field) => {
     };
 
     const positionPopover = () => {
-        const rect = open.getBoundingClientRect();
+        const rect = text.getBoundingClientRect();
         const width = popover.offsetWidth;
         const height = popover.offsetHeight;
-        let top = rect.bottom + 6;
+        let top = rect.bottom + 12;
         let left = Math.min(Math.max(8, rect.left), Math.max(8, window.innerWidth - width - 8));
 
         if (top + height > window.innerHeight - 8) {
