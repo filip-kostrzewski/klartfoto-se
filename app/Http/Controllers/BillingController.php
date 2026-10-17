@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BillingInterval;
 use App\CompanyPlan;
 use App\Http\Requests\StoreManualBillingRequest;
 use App\Http\Requests\StoreSubscriptionRequest;
@@ -34,7 +35,6 @@ class BillingController extends Controller
             'isOwner' => $isOwner,
             'hasPendingInvoiceRequest' => $company->hasPendingInvoiceRequest(),
             'isTrialActive' => $company->onTrial(),
-            'isFeedbackPilot' => $company->onActiveFeedbackPilot(),
             'isManualPlanActive' => $company->isManualPlanActive(),
             'canManageJobs' => $user?->canManageJobs() ?? false,
             'hasTeamFeatures' => $company->allowsTeamFeatures(),
@@ -68,6 +68,7 @@ class BillingController extends Controller
 
             $lockedCompany->forceFill([
                 'requested_plan' => $validated['plan'],
+                'requested_interval' => $validated['interval'],
                 'requested_at' => $requestedAt,
                 'billing_details' => $billingDetails,
             ])->save();
@@ -87,6 +88,7 @@ class BillingController extends Controller
                     companyId: $company->id,
                     companyName: $company->name,
                     plan: CompanyPlan::from($validated['plan']),
+                    interval: BillingInterval::from($validated['interval']),
                     billingDetails: $billingDetails,
                     requestedAt: $requestedAt->toDateTimeString(),
                 ));

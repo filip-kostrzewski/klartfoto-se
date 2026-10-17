@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\BillingInterval;
 use App\CompanyPlan;
 use App\Mail\ManualBillingRequestReceived;
 use App\Models\Assignment;
@@ -58,7 +59,8 @@ class ManualBillingTest extends TestCase
 
         Mail::assertSent(ManualBillingRequestReceived::class, fn (ManualBillingRequestReceived $mail): bool => $mail->hasTo('billing@example.test')
             && $mail->companyId === $company->id
-            && $mail->plan === CompanyPlan::Start,
+            && $mail->plan === CompanyPlan::Start
+            && $mail->interval === BillingInterval::Month,
         );
     }
 
@@ -547,10 +549,96 @@ class ManualBillingTest extends TestCase
         $this->assertDatabaseCount('manual_billing_activations', 0);
     }
 
+    public function test_yearly_request_is_stored_and_activation_defaults_to_the_requested_interval(): void
+    {
+        $this->travelTo('2026-10-16 12:00:00');
+        Mail::fake();
+        config(['klartfoto.billing_notify_email' => 'billing@example.test']);
+        $owner = User::factory()->create();
+        $company = $owner->company;
+        $this->assertInstanceOf(Company::class, $company);
+
+        $this->actingAs($owner)->from(route('settings.billing', absolute: false))
+            ->post(route('settings.billing.request', absolute: false), $this->validRequest('team', 'quarter'))
+            ->assertRedirect(route('settings.billing', absolute: false))
+            ->assertSessionHasErrors(['interval' => 'Välj månadsvis eller årsvis fakturering.']);
+
+        $this->actingAs($owner)->post(route('settings.billing.request', absolute: false), $this->validRequest('team', 'year'))
+            ->assertRedirect();
+
+        $company->refresh();
+        $this->assertSame(BillingInterval::Year, $company->requested_interval);
+        Mail::assertSent(ManualBillingRequestReceived::class, fn (ManualBillingRequestReceived $mail): bool => $mail->interval === BillingInterval::Year
+            && $mail->plan === CompanyPlan::Team
+            && str_contains($mail->render(), '7 900 kr exkl. moms per period'));
+
+        $this->actingAs($owner)->get(route('settings.billing', absolute: false))
+            ->assertSee('Team · Årsvis · skickad 16 oktober 2026', false);
+
+        $this->assertSame(0, Artisan::call('billing:requests'));
+        $this->assertStringContainsString('7 900 kr', Artisan::output());
+
+        $this->artisan('billing:activate', [
+            'company' => $company->id,
+            '--invoice' => 'F-YEAR-001',
+            '--by' => 'Ops Example',
+        ])->assertSuccessful();
+
+        $company->refresh();
+        $this->assertSame(CompanyPlan::Team, $company->plan);
+        $this->assertSame(BillingInterval::Year, $company->billing_interval);
+        $this->assertNull($company->requested_interval);
+        $this->assertSame('2027-10-16', $company->paid_until?->toDateString());
+        $this->assertTrue($company->canManageJobs());
+
+        $this->actingAs($owner)->get(route('settings.billing', absolute: false))
+            ->assertSee('nästa period faktureras årsvis i förskott', false)
+            ->assertSee('Byt plan eller period', false);
+    }
+
+    public function test_monthly_renewal_without_a_request_extends_one_month_from_the_running_period_and_shows_in_renewals(): void
+    {
+        $this->travelTo('2026-10-16 12:00:00');
+        $owner = User::factory()->create();
+        $company = $owner->company;
+        $this->assertInstanceOf(Company::class, $company);
+        $company->forceFill([
+            'plan' => CompanyPlan::Start,
+            'billing_interval' => BillingInterval::Month,
+            'trial_ends_at' => now()->subMonth(),
+            'paid_until' => '2026-10-25 23:59:59',
+            'billing_details' => ['company_name' => 'Billing AB', 'organisation_number' => '556000-0000', 'invoice_email' => 'invoice@example.test', 'billing_address' => 'Storgatan 1'],
+        ])->save();
+
+        $this->assertSame(0, Artisan::call('billing:renewals'));
+        $output = Artisan::output();
+        $this->assertStringContainsString('invoice@example.test', $output);
+        $this->assertStringContainsString('Månadsvis', $output);
+        $this->assertStringContainsString('390 kr', $output);
+        $this->assertStringContainsString('2026-10-25', $output);
+        $this->assertStringContainsString('due', $output);
+
+        $this->artisan('billing:activate', [
+            'company' => $company->id,
+            '--renew' => true,
+            '--invoice' => 'F-RENEW-001',
+            '--by' => 'Ops Example',
+        ])->assertSuccessful();
+
+        $company->refresh();
+        $this->assertSame('2026-11-25', $company->paid_until?->toDateString());
+        $this->assertSame(BillingInterval::Month, $company->billing_interval);
+        $this->assertSame(CompanyPlan::Start, $company->plan);
+
+        $this->assertSame(0, Artisan::call('billing:renewals'));
+        $this->assertStringContainsString('No renewals due.', Artisan::output());
+    }
+
     private function storePendingRequest(Company $company, string $plan = 'start'): void
     {
         $company->forceFill([
             'requested_plan' => $plan,
+            'requested_interval' => 'month',
             'requested_at' => now(),
             'billing_details' => [
                 'company_name' => 'Billing AB',
@@ -562,12 +650,13 @@ class ManualBillingTest extends TestCase
     }
 
     /**
-     * @return array{plan: string, billing_company_name: string, organisation_number: string, invoice_email: string, billing_address: string}
+     * @return array{plan: string, interval: string, billing_company_name: string, organisation_number: string, invoice_email: string, billing_address: string}
      */
-    private function validRequest(string $plan = 'start'): array
+    private function validRequest(string $plan = 'start', string $interval = 'month'): array
     {
         return [
             'plan' => $plan,
+            'interval' => $interval,
             'billing_company_name' => 'Billing AB',
             'organisation_number' => '556000-0000',
             'invoice_email' => 'INVOICE@example.test',

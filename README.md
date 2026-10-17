@@ -1,6 +1,15 @@
 # Klartfoto — strona marketingowa
 
-Klartfoto przedstawia format fotodokumentacji wykonanej pracy dla firm usługowych. Ten projekt zawiera stronę marketingową, trzy strony branżowe, przykład raportu do wydruku oraz formularz kontaktowy zapisujący zgłoszenia w lokalnej bazie SQLite. Nie zawiera aplikacji, kont użytkowników ani panelu. Domena `klartfoto.se` została kupiona, ale strona nie została opublikowana.
+Klartfoto to fotodokumentacja wykonanej pracy dla firm usługowych w Szwecji. Projekt zawiera stronę marketingową w siedmiu językach, aplikację dla firm (konta, uppdrag, zdjęcia przed/po, raport udostępniany linkiem, PDF, e-mail, zespół do 10 osób) oraz fakturowanie ręczne przez Fortnox. Domena `klartfoto.se` została kupiona.
+
+## Model biznesowy
+
+- Rejestracja daje 14 dni za darmo z pełnym zakresem Team, bez karty. Długość ustawia `KLARTFOTO_TRIAL_DAYS`.
+- Plany: Start 390 kr/mies. (1 użytkownik) i Team 790 kr/mies. (do 10 użytkowników, logo w raporcie), bez VAT. Rocznie: Start 3 900 kr, Team 7 900 kr (dwa miesiące gratis). Kwoty są w `config/klartfoto.php` pod `prices`.
+- Abonament jest ciągły, bez okresu wiązania, fakturowany z góry za miesiąc lub rok przez Fortnox. Klient rezygnuje mailem przed końcem bieżącego okresu.
+- Właściciel konta wysyła prośbę o fakturę ze strony abonamentu. Operator wystawia fakturę w Fortnox i po wpłacie aktywuje plan: `php artisan billing:activate {id} --invoice=F-123 --by=Imie` (plan, interwał i data końca wynikają z prośby lub bieżącego planu; `--until`, `--plan`, `--interval` nadpisują). `billing:requests` pokazuje oczekujące prośby, `billing:renewals` plany do odnowienia lub wygasłe, `billing:activate --renew` przedłuża bez nowej prośby.
+- Harmonogram wysyła przypomnienia do właściciela 3 dni przed końcem triala i po jego wygaśnięciu (`billing:trial-reminders`).
+- Integracja Stripe (Cashier) jest w kodzie, ale nieaktywna do czasu skonfigurowania kluczy.
 
 ## Aktualny stan
 
@@ -14,6 +23,8 @@ Klartfoto przedstawia format fotodokumentacji wykonanej pracy dla firm usługowy
 ## Uruchomienie lokalne w Herd
 
 Po przeniesieniu katalogu do `~/Herd/klartfoto` Herd udostępnia projekt pod [http://klartfoto.test](http://klartfoto.test).
+
+Projekt wymaga PHP 8.4 lub nowszego. Jeśli globalne `php` w Herd jest starsze, używaj binarki z Herd, np. `php85 artisan ...`.
 
 Konfiguracja przy pierwszym uruchomieniu:
 

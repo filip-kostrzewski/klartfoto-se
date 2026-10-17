@@ -14,3 +14,4 @@ Schedule::call(function (): void {
 })->everyMinute()->name('scheduler-heartbeat');
 
 Schedule::command('app:purge-expired-early-access-signups')->daily();
+Schedule::command('billing:trial-reminders')->dailyAt('07:30')->timezone('Europe/Stockholm');

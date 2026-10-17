@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\BillingInterval;
 use App\CompanyPlan;
 use App\Models\Company;
 use Illuminate\Console\Attributes\Description;
@@ -11,15 +12,13 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-#[Signature('billing:activate {company : Company ID} {--plan= : start or team} {--until= : Paid-through date in YYYY-MM-DD format} {--invoice= : Fortnox invoice reference} {--by= : Operator name} {--renew : Renew an existing manual plan without another request} {--shorten : Allow shortening an existing paid period}')]
+#[Signature('billing:activate {company : Company ID} {--plan= : start or team, defaults to the pending request or the current plan} {--interval= : month or year, defaults to the pending request or the running interval} {--until= : Paid-through date in YYYY-MM-DD format, defaults to one interval after the running period} {--invoice= : Fortnox invoice reference} {--by= : Operator name} {--renew : Renew an existing manual plan without another request} {--shorten : Allow shortening an existing paid period}')]
 #[Description('Activate a manually invoiced company plan')]
 class ActivateManualBilling extends Command
 {
     public function handle(): int
     {
         $companyId = filter_var($this->argument('company'), FILTER_VALIDATE_INT);
-        $planValue = $this->option('plan');
-        $plan = is_string($planValue) ? CompanyPlan::tryFrom($planValue) : null;
 
         if (! is_int($companyId) || $companyId < 1) {
             $this->error('Company ID must be a positive integer.');
@@ -27,14 +26,43 @@ class ActivateManualBilling extends Command
             return self::FAILURE;
         }
 
+        $preview = Company::query()->find($companyId);
+
+        if (! $preview instanceof Company) {
+            $this->error('Company not found.');
+
+            return self::FAILURE;
+        }
+
+        $planValue = $this->option('plan');
+        $plan = is_string($planValue) && $planValue !== '' ? CompanyPlan::tryFrom($planValue) : $preview->nextBillingPlan();
+
         if (! $plan instanceof CompanyPlan) {
             $this->error('Plan must be "start" or "team".');
 
             return self::FAILURE;
         }
 
+        $intervalValue = $this->option('interval');
+        $interval = is_string($intervalValue) && $intervalValue !== '' ? BillingInterval::tryFrom($intervalValue) : $preview->nextBillingInterval();
+
+        if (! $interval instanceof BillingInterval) {
+            $this->error('Interval must be "month" or "year".');
+
+            return self::FAILURE;
+        }
+
+        $untilOption = $this->option('until');
+
+        if (! is_string($untilOption) || trim($untilOption) === '') {
+            $untilOption = $preview->nextPeriodStartsAt()
+                ->startOfDay()
+                ->addMonthsNoOverflow($interval->months())
+                ->toDateString();
+        }
+
         $validation = Validator::make([
-            'until' => $this->option('until'),
+            'until' => $untilOption,
             'invoice' => $this->option('invoice'),
             'by' => $this->option('by'),
         ], [
@@ -51,7 +79,7 @@ class ActivateManualBilling extends Command
             return self::FAILURE;
         }
 
-        $untilValue = trim((string) $this->option('until'));
+        $untilValue = trim($untilOption);
         $invoiceReference = trim((string) $this->option('invoice'));
         $operator = trim((string) $this->option('by'));
 
@@ -76,6 +104,7 @@ class ActivateManualBilling extends Command
         $activated = DB::transaction(function () use (
             $companyId,
             $plan,
+            $interval,
             $paidUntil,
             $activatedAt,
             $invoiceReference,
@@ -152,8 +181,10 @@ class ActivateManualBilling extends Command
 
             $company->forceFill([
                 'plan' => $plan,
+                'billing_interval' => $interval,
                 'paid_until' => $paidUntil,
                 'requested_plan' => null,
+                'requested_interval' => null,
                 'requested_at' => null,
             ])->save();
 
@@ -166,7 +197,7 @@ class ActivateManualBilling extends Command
             return self::FAILURE;
         }
 
-        $this->info("Activated company {$companyId} on the {$plan->value} plan through {$paidUntil->toDateString()}.");
+        $this->info("Activated company {$companyId} on the {$plan->value} plan ({$interval->value}) through {$paidUntil->toDateString()}.");
 
         return self::SUCCESS;
     }

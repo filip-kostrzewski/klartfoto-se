@@ -7,8 +7,8 @@ $providerContactEmail = $contactEmail && filter_var($contactEmail, FILTER_VALIDA
     : 'kontakt@klartfoto.se';
 
 return [
-    'trial_days' => (int) env('KLARTFOTO_TRIAL_DAYS', 30),
-    'feedback_pilot_ends_on' => '2026-12-31',
+    'trial_days' => (int) env('KLARTFOTO_TRIAL_DAYS', 14),
+    'trial_ending_reminder_days' => 3,
     'contact_email' => $contactEmail && filter_var($contactEmail, FILTER_VALIDATE_EMAIL)
         ? $contactEmail
         : null,
@@ -22,6 +22,10 @@ return [
     'logo_max_edge' => 800,
     'start_seat_limit' => 1,
     'team_seat_limit' => 10,
+    'prices' => [
+        'start' => ['month' => 390, 'year' => 3900],
+        'team' => ['month' => 790, 'year' => 7900],
+    ],
     'stripe_price_start' => env('STRIPE_PRICE_START'),
     'stripe_price_team' => env('STRIPE_PRICE_TEAM'),
 ];

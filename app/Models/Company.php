@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\BillingInterval;
 use App\CompanyPlan;
 use App\CompanyRole;
 use Database\Factories\CompanyFactory;
@@ -14,7 +15,7 @@ use Illuminate\Support\Carbon;
 use Laravel\Cashier\Billable;
 use Laravel\Cashier\Subscription;
 
-#[Fillable(['name', 'plan', 'trial_ends_at', 'logo_path', 'paid_until', 'requested_plan', 'requested_at', 'billing_details', 'phone', 'organization_number'])]
+#[Fillable(['name', 'plan', 'trial_ends_at', 'logo_path', 'paid_until', 'billing_interval', 'requested_plan', 'requested_interval', 'requested_at', 'billing_details', 'phone', 'organization_number'])]
 #[Hidden(['billing_details'])]
 class Company extends Model
 {
@@ -28,7 +29,10 @@ class Company extends Model
     {
         return [
             'plan' => CompanyPlan::class,
-            'feedback_pilot' => 'boolean',
+            'billing_interval' => BillingInterval::class,
+            'requested_interval' => BillingInterval::class,
+            'trial_ending_notified_at' => 'datetime',
+            'trial_ended_notified_at' => 'datetime',
             'trial_ends_at' => 'datetime',
             'paid_until' => 'datetime',
             'requested_at' => 'datetime',
@@ -167,20 +171,9 @@ class Company extends Model
         return max(1, (int) ceil($seconds / 86400));
     }
 
-    public function feedbackPilotEndsAt(): Carbon
-    {
-        return Carbon::parse((string) config('klartfoto.feedback_pilot_ends_on', '2026-12-31'), 'Europe/Stockholm')->endOfDay()->utc();
-    }
-
-    public function onActiveFeedbackPilot(): bool
-    {
-        return $this->feedback_pilot === true && $this->feedbackPilotEndsAt()->isFuture();
-    }
-
     public function canManageJobs(): bool
     {
         return $this->onGenericTrial()
-            || $this->onActiveFeedbackPilot()
             || $this->isManualPlanActive()
             || $this->subscribed('default');
     }
@@ -195,7 +188,7 @@ class Company extends Model
 
     public function allowsTeamFeatures(): bool
     {
-        if ($this->onTrial() || $this->onActiveFeedbackPilot()) {
+        if ($this->onTrial()) {
             return true;
         }
 
@@ -224,6 +217,35 @@ class Company extends Model
     public function isManualPlanActive(): bool
     {
         return $this->paid_until?->isFuture() ?? false;
+    }
+
+    /**
+     * The interval the next Fortnox invoice should cover: the pending request first, then the running plan.
+     */
+    public function nextBillingInterval(): BillingInterval
+    {
+        return $this->requested_interval ?? $this->billing_interval ?? BillingInterval::Month;
+    }
+
+    public function nextBillingPlan(): CompanyPlan
+    {
+        $requested = $this->requested_plan instanceof CompanyPlan
+            ? $this->requested_plan
+            : CompanyPlan::tryFrom((string) $this->requested_plan);
+
+        return $requested ?? $this->plan ?? CompanyPlan::Start;
+    }
+
+    /**
+     * The date the next paid period starts from: the end of the running period, or today when nothing is running.
+     */
+    public function nextPeriodStartsAt(): Carbon
+    {
+        if ($this->paid_until instanceof Carbon && $this->paid_until->isFuture()) {
+            return $this->paid_until->copy();
+        }
+
+        return Carbon::now();
     }
 
     public function hasPendingInvoiceRequest(): bool

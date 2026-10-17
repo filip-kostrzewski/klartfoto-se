@@ -60,5 +60,6 @@ class SchedulerHealthTest extends TestCase
         $list = Artisan::output();
         $this->assertStringContainsString('scheduler-heartbeat', $list);
         $this->assertStringContainsString('app:purge-expired-early-access-signups', $list);
+        $this->assertStringContainsString('billing:trial-reminders', $list);
     }
 }

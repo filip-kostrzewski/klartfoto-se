@@ -52,7 +52,7 @@
 
                 <button class="button button-lime auth-submit" type="submit" data-loading-text="Loggar in…">Logga in</button>
             </form>
-            <p class="auth-switch">Nytt konto? <a href="{{ route('register', absolute: false) }}">Prova Klartfoto gratis i 30 dagar</a></p>
+            <p class="auth-switch">Nytt konto? <a href="{{ route('register', absolute: false) }}">Prova Klartfoto gratis i {{ config('klartfoto.trial_days') }} dagar</a></p>
         </section>
     </div>
 @endsection

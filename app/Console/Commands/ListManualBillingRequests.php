@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Company;
+use App\PlanPricing;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -32,6 +33,8 @@ class ListManualBillingRequests extends Command
                 $company->id,
                 $this->terminalText($company->name),
                 $company->requested_plan,
+                $company->nextBillingInterval()->label(),
+                PlanPricing::formatted($company->nextBillingPlan(), $company->nextBillingInterval()),
                 $company->requested_at?->toDateTimeString(),
                 $this->terminalText($details['company_name'] ?? null),
                 $this->terminalText($details['organisation_number'] ?? null),
@@ -41,7 +44,7 @@ class ListManualBillingRequests extends Command
         });
 
         $this->table(
-            ['ID', 'Account', 'Plan', 'Requested at', 'Invoice company', 'Org. number', 'Invoice email', 'Invoice address'],
+            ['ID', 'Account', 'Plan', 'Interval', 'Amount excl. VAT', 'Requested at', 'Invoice company', 'Org. number', 'Invoice email', 'Invoice address'],
             $rows,
         );
 

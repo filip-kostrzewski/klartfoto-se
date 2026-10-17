@@ -2938,11 +2938,19 @@ html.cookie-choice-saved .cookie-banner {
     font-size: 16px;
 }
 
-.pricing-pilot {
+.pricing-yearly {
+    margin: -6px 0 14px;
+    font-size: 14px;
+    font-weight: 650;
+    opacity: .85;
+}
+
+.pricing-yearly-note {
     margin: 0 0 16px;
     font-size: 16px;
     font-weight: 650;
 }
+
 
 .pricing-section .button {
     width: 100%;
@@ -4941,7 +4949,7 @@ html {
 }
 
 .pricing-note,
-.pricing-pilot {
+.pricing-yearly-note {
     color: #4f5d52;
 }
 

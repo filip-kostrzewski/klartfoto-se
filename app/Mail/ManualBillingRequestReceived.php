@@ -2,7 +2,9 @@
 
 namespace App\Mail;
 
+use App\BillingInterval;
 use App\CompanyPlan;
+use App\PlanPricing;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -16,6 +18,7 @@ class ManualBillingRequestReceived extends Mailable
         public int $companyId,
         public string $companyName,
         public CompanyPlan $plan,
+        public BillingInterval $interval,
         public array $billingDetails,
         public string $requestedAt,
     ) {}
@@ -32,7 +35,7 @@ class ManualBillingRequestReceived extends Mailable
         $details = $this->billingDetails;
         $body = '<h1>Ny fakturaförfrågan</h1>'
             .'<p>Företag #'.$this->companyId.': '.e($this->companyName).'</p>'
-            .'<p>Begärt plan: '.e($this->plan->value).'</p>'
+            .'<p>Begärd plan: '.e($this->plan->value).' · '.e($this->interval->label()).' · '.e(PlanPricing::formatted($this->plan, $this->interval)).' exkl. moms per period</p>'
             .'<p>Företagsnamn för fakturan: '.e($details['company_name']).'</p>'
             .'<p>Organisationsnummer: '.e($details['organisation_number']).'</p>'
             .'<p>Faktura-e-post: '.e($details['invoice_email']).'</p>'

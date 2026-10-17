@@ -22,24 +22,28 @@ class TrialPlanCopyTest extends TestCase
 
         $this->actingAs($owner)->get(route('assignments.index'))
             ->assertOk()
-            ->assertSee('Gratis till 15 november 2026. Inget kort behövs. Därefter har ni ingen aktiv åtkomst till nya uppdrag. Ni kan fortfarande öppna befintliga rapporter.', false);
+            ->assertSee('Gratis till 15 november 2026. Inget kort behövs. <a href="/installningar/abonnemang">Välj plan</a> innan dess så fortsätter ni utan avbrott.', false);
 
         $this->actingAs($owner)->get(route('settings.edit'))
             ->assertOk()
             ->assertSee('Under provperioden har ni allt i Team: upp till 10 användare och egen logotyp.', false)
             ->assertSee('Efter provperioden: välj Team för att behålla 1 användare och logotypen. Med Start kan bara 1 användare logga in och logotypen visas inte.', false)
-            ->assertDontSee('Feedbackpilot – Team gratis till 31 december 2026', false)
             ->assertSee('Under provperioden har ni allt i Team, inklusive egen logotyp.', false);
 
         $this->actingAs($owner)->get(route('settings.billing'))
             ->assertOk()
-            ->assertSee('Gratis till 15 november 2026. Inget kort behövs. Därefter har ni ingen aktiv åtkomst till nya uppdrag. Ni kan fortfarande öppna befintliga rapporter.', false);
+            ->assertSee('Gratis till 15 november 2026. Inget kort behövs. Välj plan innan dess så fortsätter ni utan avbrott.', false)
+            ->assertSee('390 kr/mån', false)
+            ->assertSee('790 kr/mån', false)
+            ->assertSee('eller 7 900 kr/år', false)
+            ->assertSee('name="interval" value="year"', false)
+            ->assertSee('value="team" required checked', false);
 
         $owner->company->forceFill(['trial_ends_at' => now()->subDay()])->save();
 
         $this->actingAs($owner)->get(route('assignments.index'))
             ->assertOk()
-            ->assertSee('Ingen aktiv åtkomst till nya uppdrag. Ni kan fortfarande öppna befintliga rapporter.', false)
+            ->assertSee('Ingen aktiv åtkomst till nya uppdrag. Ni kan fortfarande öppna befintliga rapporter. <a href="/installningar/abonnemang">Aktivera en plan</a>', false)
             ->assertDontSee('Under provperioden har ni allt i Team', false);
 
         $assignment = Assignment::factory()->for($owner)->create();

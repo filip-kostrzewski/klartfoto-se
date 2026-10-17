@@ -34,16 +34,18 @@ class MarketingSiteTest extends TestCase
         $this->assertStringContainsString('<html lang="sv">', $html);
         $this->assertStringContainsString('<title>Användarvillkor | Klartfoto</title>', $html);
         $this->assertStringContainsString('<link rel="canonical" href="https://klartfoto.se/villkor">', $html);
-        $this->assertStringContainsString('Uppdaterad 17 oktober 2026 · Version 1.2.', $html);
-        $this->assertStringContainsString('Den här provperioden är skild från feedbackpiloten.', $html);
-        $this->assertStringContainsString('Feedbackpilot (på inbjudan): ett fåtal företag får Team gratis till 31 december 2026 mot ärlig feedback. Intresserad? Skriv till kontakt@klartfoto.se.', $html);
+        $this->assertStringContainsString('Uppdaterad 17 oktober 2026 · Version 1.3.', $html);
+        $this->assertStringNotContainsString('Feedbackpilot', $html);
         $this->assertStringContainsString('mailto:kontakt@klartfoto.se', $html);
-        $this->assertStringContainsString('30 dagar', $html);
-        $this->assertStringContainsString('290 kr per månad exklusive moms', $html);
-        $this->assertStringContainsString('590 kr per månad exklusive moms', $html);
+        $this->assertStringContainsString('kostnadsfritt i 14 dagar', $html);
+        $this->assertStringContainsString('390 kr per månad exklusive moms', $html);
+        $this->assertStringContainsString('790 kr per månad exklusive moms', $html);
+        $this->assertStringContainsString('Start 3 900 kr per år och Team 7 900 kr per år exklusive moms', $html);
         $this->assertStringContainsString('Den är inte en betalning och aktiverar inte planen.', $html);
         $this->assertStringContainsString('Vi aktiverar den betalda planen när betalningen har registrerats.', $html);
-        $this->assertStringContainsString('Fakturabetalda planer förnyas inte automatiskt', $html);
+        $this->assertStringContainsString('Abonnemanget löper tills vidare utan bindningstid', $html);
+        $this->assertStringContainsString('säga upp abonnemanget när som helst genom att mejla oss innan den pågående perioden löper ut', $html);
+        $this->assertStringNotContainsString('förnyas inte automatiskt', $html);
         $this->assertStringNotContainsString('hreflang="en"', $html);
         $this->assertStringContainsString('hreflang="x-default" href="https://klartfoto.se/villkor"', $html);
     }
@@ -224,15 +226,18 @@ class MarketingSiteTest extends TestCase
             ->assertOk()
             ->assertSee('id="priser"', false)
             ->assertSee('href="/#priser"', false)
-            ->assertSee('290 kr/mån', false)
-            ->assertSee('590 kr/mån', false)
+            ->assertSee('390 kr/mån', false)
+            ->assertSee('790 kr/mån', false)
+            ->assertSee('eller 3 900 kr/år', false)
+            ->assertSee('eller 7 900 kr/år', false)
+            ->assertSee('Rekommenderad', false)
+            ->assertDontSee('Feedbackpilot', false)
             ->assertSee('1 användare', false)
             ->assertSee('obegränsade rapporter', false)
             ->assertSee('upp till 10 användare', false)
             ->assertSee('egen logga i rapporten', false)
-            ->assertSee('30 dagar gratis utan kort. Ingen bindningstid.', false)
-            ->assertSee('Feedbackpilot (på inbjudan): ett fåtal företag får Team gratis till 31 december 2026 mot ärlig feedback. Intresserad? Skriv till ', false)
-            ->assertSee('<!--email_off--><a href="mailto:kontakt@klartfoto.se">kontakt@klartfoto.se</a><!--/email_off-->', false)
+            ->assertSee('14 dagar gratis utan kort. Ingen bindningstid.', false)
+            ->assertSee('Betala per år och få två månader gratis', false)
             ->assertSee('Betalning sker mot faktura.', false)
             ->assertSee('class="hero-price"', false)
             ->assertDontSee('Fortnox', false)
@@ -319,11 +324,11 @@ class MarketingSiteTest extends TestCase
 
         $this->get('/pl')
             ->assertOk()
-            ->assertSee('290 kr/mies. bez VAT', false)
-            ->assertSee('590 kr/mies. bez VAT', false)
+            ->assertSee('390 kr/mies. bez VAT', false)
+            ->assertSee('790 kr/mies. bez VAT', false)
+            ->assertSee('lub 7 900 kr/rok', false)
             ->assertDontSee('kr/mån', false)
-            ->assertSee('Pilotaż (na zaproszenie): kilka firm otrzymuje Team bez opłat do 31 grudnia 2026 w zamian za szczerą opinię. Chcecie dołączyć? Napiszcie na ', false)
-            ->assertSee('<!--email_off--><a href="mailto:kontakt@klartfoto.se">kontakt@klartfoto.se</a><!--/email_off-->', false)
+            ->assertDontSee('Pilotaż', false)
             ->assertSee('Usługa jest przeznaczona dla firm działających w Szwecji i rozliczana w koronach szwedzkich (SEK).', false)
             ->assertSee('firm sprzątających', false)
             ->assertDontSee('usługowych', false);

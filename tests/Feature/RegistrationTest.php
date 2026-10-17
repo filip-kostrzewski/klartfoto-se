@@ -57,9 +57,8 @@ class RegistrationTest extends TestCase
         $this->assertSame(CompanyRole::Owner, $user->role);
         $this->assertSame('Glans Städ AB', $user->company?->name);
         $this->assertTrue(Hash::check('hemligt-losen', $user->password));
-        $this->assertSame('2026-11-14 23:59:59', $user->trial_ends_at?->timezone('Europe/Stockholm')->format('Y-m-d H:i:s'));
-        $this->assertSame('2026-11-14 23:59:59', $user->company?->trial_ends_at?->timezone('Europe/Stockholm')->format('Y-m-d H:i:s'));
-        $this->assertFalse((bool) $user->company?->feedback_pilot);
+        $this->assertSame('2026-10-29 23:59:59', $user->trial_ends_at?->timezone('Europe/Stockholm')->format('Y-m-d H:i:s'));
+        $this->assertSame('2026-10-29 23:59:59', $user->company?->trial_ends_at?->timezone('Europe/Stockholm')->format('Y-m-d H:i:s'));
 
         $this->actingAs($user)->get('/installningar')
             ->assertOk()
@@ -162,10 +161,9 @@ class RegistrationTest extends TestCase
         $this->assertSame('https://klartfoto.se/', SiteSeo::canonical('/'));
     }
 
-    public function test_signup_on_17_october_lasts_exactly_30_days(): void
+    public function test_signup_on_17_october_lasts_exactly_14_days(): void
     {
         $this->travelTo('2026-10-17 12:00:00');
-        config(['klartfoto.trial_ends_at' => '2026-11-14']);
 
         $this->post('/register', [
             'company_name' => 'Glans Städ AB',
@@ -180,13 +178,13 @@ class RegistrationTest extends TestCase
         $ends = $user?->company?->trial_ends_at?->timezone('Europe/Stockholm');
 
         $this->assertNotNull($ends);
-        $this->assertSame('2026-11-16 23:59:59', $ends->format('Y-m-d H:i:s'));
-        $this->assertSame(30, (int) Carbon::parse('2026-10-17', 'Europe/Stockholm')->startOfDay()->diffInDays($ends->copy()->startOfDay()));
+        $this->assertSame('2026-10-31 23:59:59', $ends->format('Y-m-d H:i:s'));
+        $this->assertSame(14, (int) Carbon::parse('2026-10-17', 'Europe/Stockholm')->startOfDay()->diffInDays($ends->copy()->startOfDay()));
 
-        $this->travelTo(Carbon::parse('2026-11-16 20:00:00', 'Europe/Stockholm'));
+        $this->travelTo(Carbon::parse('2026-10-31 20:00:00', 'Europe/Stockholm'));
         $this->assertTrue($user->company->fresh()->canManageJobs());
 
-        $this->travelTo(Carbon::parse('2026-11-17 00:00:01', 'Europe/Stockholm'));
+        $this->travelTo(Carbon::parse('2026-11-01 00:00:01', 'Europe/Stockholm'));
         $this->assertFalse($user->company->fresh()->canManageJobs());
     }
 

@@ -12,6 +12,9 @@
                 <div class="pricing-card-heading"><h3>{{ $pricing['start_name'] }}</h3></div>
                 <p class="pricing-description">{{ $pricing['start_description'] }}</p>
                 <p class="pricing-price">{{ $pricing['start_price'] }} <span>{{ $pricing['start_vat'] }}</span></p>
+                @if (filled($pricing['start_yearly'] ?? null))
+                    <p class="pricing-yearly">{{ $pricing['start_yearly'] }}</p>
+                @endif
                 <ul>
                     @foreach ($pricing['start_features'] as $feature)
                         <li>{{ $feature }}</li>
@@ -26,6 +29,9 @@
                 </div>
                 <p class="pricing-description">{{ $pricing['team_description'] }}</p>
                 <p class="pricing-price">{{ $pricing['team_price'] }} <span>{{ $pricing['team_vat'] }}</span></p>
+                @if (filled($pricing['team_yearly'] ?? null))
+                    <p class="pricing-yearly">{{ $pricing['team_yearly'] }}</p>
+                @endif
                 <ul>
                     @foreach ($pricing['team_features'] as $feature)
                         <li>{{ $feature }}</li>
@@ -35,12 +41,8 @@
             </article>
         </div>
         <p class="pricing-note">{{ $pricing['note'] }} {{ $pricing['invoice_note'] }}</p>
-        @if (filled($pricing['pilot_note'] ?? null))
-            @php
-                $pilotEmail = 'kontakt@klartfoto.se';
-                $pilotParts = explode($pilotEmail, (string) $pricing['pilot_note'], 2);
-            @endphp
-            <p class="pricing-pilot">{{ $pilotParts[0] }}@if (count($pilotParts) === 2)@include('partials.public-mailto', ['email' => $pilotEmail]){{ $pilotParts[1] }}@endif</p>
+        @if (filled($pricing['yearly_note'] ?? null))
+            <p class="pricing-yearly-note">{{ $pricing['yearly_note'] }}</p>
         @endif
         @if (filled($pricing['market_note'] ?? null))
             <p class="pricing-market">{{ $pricing['market_note'] }}</p>

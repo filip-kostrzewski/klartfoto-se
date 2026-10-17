@@ -19,7 +19,7 @@ class CompanyFactory extends Factory
         return [
             'name' => 'Glans Städ AB',
             'plan' => CompanyPlan::Start,
-            'trial_ends_at' => now()->addDays(30),
+            'trial_ends_at' => now()->addDays(14),
         ];
     }
 

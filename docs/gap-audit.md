@@ -4,7 +4,7 @@ Stan kodu: 17 października 2026. Ceny konkurencji tylko z podanych stron z tego
 
 ## Co Klartfoto już robi
 
-Publicznie: zdjęcia przed/po, klient, adres i data, link do raportu bez konta klienta, przeglądarka mobilna, 30 dni próby bez karty, Start 290 kr/mies. i Team 590 kr/mies. exkl. moms, 1 vs 10 użytkowników, logo w Team, nieograniczone raporty, faktura, archiwum, usuwanie zlecenia, wersje, granskning, PDF i e-mail. Pilot feedback jest osobno i tylko na zaproszenie (Team do 31 grudnia 2026).
+Publicznie: zdjęcia przed/po, klient, adres i data, link do raportu bez konta klienta, przeglądarka mobilna, 14 dni próby bez karty z pełnym Team, Start 390 kr/mies. i Team 790 kr/mies. exkl. moms (rocznie 3 900 / 7 900 kr), 1 vs 10 użytkowników, logo w Team, nieograniczone raporty, abonament ciągły fakturowany z góry przez Fortnox, archiwum, usuwanie zlecenia, wersje, granskning, PDF i e-mail. Pilotaż na zaproszenie został usunięty.
 
 ## Konkurenci (tylko zweryfikowane)
 

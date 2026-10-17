@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\BillingInterval;
 use App\CompanyPlan;
 use App\Models\Company;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -21,7 +22,7 @@ class StoreManualBillingRequest extends FormRequest
     {
         $normalized = [];
 
-        foreach (['plan', 'billing_company_name', 'organisation_number', 'invoice_email', 'billing_address'] as $field) {
+        foreach (['plan', 'interval', 'billing_company_name', 'organisation_number', 'invoice_email', 'billing_address'] as $field) {
             $value = $this->input($field);
 
             if (is_string($value)) {
@@ -43,6 +44,7 @@ class StoreManualBillingRequest extends FormRequest
     {
         return [
             'plan' => ['required', 'string', Rule::in([CompanyPlan::Start->value, CompanyPlan::Team->value])],
+            'interval' => ['required', 'string', Rule::in([BillingInterval::Month->value, BillingInterval::Year->value])],
             'billing_company_name' => ['required', 'string', 'max:255'],
             'organisation_number' => ['required', 'string', 'max:64'],
             'invoice_email' => ['required', 'string', 'email', 'max:254'],
@@ -58,6 +60,8 @@ class StoreManualBillingRequest extends FormRequest
         return [
             'plan.required' => 'Välj Start eller Team.',
             'plan.in' => 'Välj Start eller Team.',
+            'interval.required' => 'Välj månadsvis eller årsvis fakturering.',
+            'interval.in' => 'Välj månadsvis eller årsvis fakturering.',
             'billing_company_name.required' => 'Ange företagsnamnet för fakturan.',
             'billing_company_name.max' => 'Företagsnamnet får vara högst 255 tecken.',
             'organisation_number.required' => 'Ange organisationsnumret.',

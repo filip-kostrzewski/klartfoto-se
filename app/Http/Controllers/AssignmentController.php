@@ -190,7 +190,6 @@ class AssignmentController extends Controller
             'readyToSendCount' => $readyToSendCount,
             'archivedAssignmentCount' => $company->assignments()->whereNotNull('archived_at')->count(),
             'onTrial' => $company->onTrial(),
-            'isFeedbackPilot' => $company->onActiveFeedbackPilot(),
             'canManageJobs' => $user->canManageJobs(),
             'dateInputs' => $dateInputs,
             'companyName' => $company->name,
