@@ -179,7 +179,7 @@ return [
     ],
     'report' => [
         'title' => 'Skabelon til før- og efterrapport | :brand', 'description' => 'Se en eksempelrapport med AI-demobilleder og oplysninger om kunde, adresse og dato.',
-        'breadcrumb' => 'Rapportskabelon', 'eyebrow' => 'PRAKTISK SKABELON · FØR OG EFTER', 'h1' => 'Skabelon til en rapport med før- og efterbilleder.',
+        'breadcrumb' => 'Rapportskabelon', 'eyebrow' => 'PRAKTISK SKABELON · FØR OG EFTER', 'example_flag' => 'Eksempel', 'h1' => 'Skabelon til en rapport med før- og efterbilleder.',
         'intro' => 'Et AI-genereret køkkeneksempel viser før- og efterbilleder sammen med opgaveoplysningerne.',
         'print' => 'Print / gem som PDF', 'signup' => 'Vis interesse', 'print_note' => 'Vælg ”Gem som PDF” i udskriftsdialogen.',
         'report_overline' => 'RAPPORTSKABELON · ILLUSTRATIVE OPLYSNINGER', 'report_title' => 'Rapport om udført arbejde', 'subtitle' => 'Før- og efterbilleder · eksempelversion',

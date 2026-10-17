@@ -18,37 +18,38 @@
     </section>
 
     <section class="printable-section section-pad" id="printable-report">
-        <article class="printable-report">
-            <header class="printable-header">
-                <img class="report-logo" src="{{ $companyLogoUrl }}" alt="{{ $companyLogoAlt }}" width="160" height="64">
-                <div>
+        <article class="customer-report version-report example-report-sheet">
+            <p class="example-report-flag">{{ $page['example_flag'] }}</p>
+            <header class="customer-report-header">
+                <img class="customer-report-logo report-logo" src="{{ $companyLogoUrl }}" alt="{{ $companyLogoAlt }}" width="160" height="64">
+                <div class="customer-report-heading-copy">
                     <p class="report-overline">{{ $page['report_overline'] }}</p>
                     <h2>{{ $page['report_title'] }}</h2>
-                    <p class="printable-subtitle">{{ $page['subtitle'] }}</p>
+                    <p class="customer-report-date">{{ $page['date_value'] }}</p>
                 </div>
-                <span class="printable-mark" aria-hidden="true">R/01</span>
             </header>
-            <div class="printable-meta">
-                <div><span>{{ $page['object'] }}</span><strong>{{ $page['object_value'] }}</strong></div>
-                <div><span>{{ $page['place'] }}</span><strong>{{ $page['place_value'] }}</strong></div>
-                <div><span>{{ $page['date'] }}</span><strong>{{ $page['date_value'] }}</strong></div>
-            </div>
-            <div class="printable-disclaimer"><span aria-hidden="true">✳</span> {{ $copy['home']['photo_note'] }}</div>
-            <div class="printable-photos">
+            <p class="printable-disclaimer"><span aria-hidden="true">✳</span> {{ $copy['home']['photo_note'] }}</p>
+            <dl class="customer-report-meta">
+                <div><dt>{{ $page['object'] }}</dt><dd>{{ $page['object_value'] }}</dd></div>
+                <div><dt>{{ $page['place'] }}</dt><dd>{{ $page['place_value'] }}</dd></div>
+                <div><dt>{{ $page['date'] }}</dt><dd>{{ $page['date_value'] }}</dd></div>
+            </dl>
+            <h2 class="version-report-place">{{ $page['place_value'] }}</h2>
+            <div class="photo-pair version-photo-pair">
                 <figure>
+                    <figcaption>{{ $page['before_caption'] }}</figcaption>
                     <img src="{{ asset('images/demo/kitchen-before-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" srcset="{{ asset('images/demo/kitchen-before-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/demo/kitchen-before.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w" sizes="(max-width: 680px) 100vw, 42vw" width="1536" height="1024" alt="{{ $page['before_alt'] }}" loading="lazy" decoding="async">
-                    <figcaption><span>{{ $page['before_caption'] }}</span><span>{{ $page['before_description'] }}</span></figcaption>
                 </figure>
                 <figure>
+                    <figcaption>{{ $page['after_caption'] }}</figcaption>
                     <img src="{{ asset('images/demo/kitchen-after-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" srcset="{{ asset('images/demo/kitchen-after-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/demo/kitchen-after.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w" sizes="(max-width: 680px) 100vw, 42vw" width="1536" height="1024" alt="{{ $page['after_alt'] }}" loading="lazy" decoding="async">
-                    <figcaption><span>{{ $page['after_caption'] }}</span><span>{{ $page['after_description'] }}</span></figcaption>
                 </figure>
             </div>
-            <footer class="printable-footer">
-                <span>{{ str_replace(':brand', $page['brand'], $page['footer_brand']) }}</span>
-                <span>{{ $page['footer_desc'] }}</span>
+            <footer class="customer-report-footer">
+                <p>{{ str_replace(':brand', $page['brand'], $page['footer_brand']) }}</p>
+                <p>{{ $page['footer_desc'] }}</p>
+                <p>{{ $page['after_note'] }}</p>
             </footer>
         </article>
-        <p class="printable-after">{{ $page['after_note'] }}</p>
     </section>
 @endsection

@@ -239,6 +239,7 @@ class MarketingSiteTest extends TestCase
             ->assertSee('href="/register"', false)
             ->assertSee('images/demo/kitchen-before-small.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('images/demo/kitchen-after-small.webp?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertSee('images/demo/example-report-phone.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('AI-demo · inte ett kundfoto', false)
             ->assertSee('images/renovation-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('images/property-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
@@ -253,6 +254,8 @@ class MarketingSiteTest extends TestCase
             ->assertOk()
             ->assertSee('images/demo/kitchen-before-small.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('images/demo/kitchen-after-small.webp?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertSee('class="example-report-flag"', false)
+            ->assertSee('Exempel', false)
             ->assertSee('AI-demo · inte ett kundfoto', false)
             ->assertDontSee('checklista', false);
 
@@ -266,7 +269,8 @@ class MarketingSiteTest extends TestCase
             ->assertSee('12 mars 2026', false)
             ->assertSee('AI-demo · inte ett kundfoto', false)
             ->assertSee('Fotodokumentation för städföretag.', false)
-            ->assertSee('images/demo/kitchen-before-small.webp?v='.config('klartfoto.demo_asset_version'), false);
+            ->assertSee('images/demo/kitchen-before-small.webp?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertSee('images/demo/example-report-phone.webp?v='.config('klartfoto.demo_asset_version'), false);
 
         $this->get('/for-hantverkare')
             ->assertOk()
@@ -276,6 +280,7 @@ class MarketingSiteTest extends TestCase
             ->assertSee('AI-demo · inte ett kundfoto', false)
             ->assertSee('Fotodokumentation för hantverkare.', false)
             ->assertSee('images/renovation-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertSee('images/demo/example-report-phone.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertDontSee('Efter städning', false)
             ->assertDontSee('Exempelkund', false)
             ->assertDontSee('Exempelvägen 12', false)
@@ -290,6 +295,7 @@ class MarketingSiteTest extends TestCase
             ->assertSee('AI-demo · inte ett kundfoto', false)
             ->assertSee('Fotodokumentation för uthyrare.', false)
             ->assertSee('images/property-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertSee('images/demo/example-report-phone.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertDontSee('Efter städning', false)
             ->assertDontSee('Exempelkund', false)
             ->assertDontSee('Fotodokumentation för städföretag.', false)

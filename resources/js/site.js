@@ -1094,61 +1094,284 @@ document.querySelectorAll('[data-copy-url]').forEach((button) => {
     });
 });
 
+function assignmentDialogBackdrop() {
+    let backdrop = document.querySelector('[data-assignment-dialog-backdrop]');
+
+    if (! (backdrop instanceof HTMLElement)) {
+        backdrop = document.createElement('div');
+        backdrop.className = 'assignment-dialog-backdrop';
+        backdrop.dataset.assignmentDialogBackdrop = 'true';
+        backdrop.hidden = true;
+        document.body.append(backdrop);
+    }
+
+    return backdrop;
+}
+
+function syncAssignmentDialogLayer() {
+    const backdrop = assignmentDialogBackdrop();
+    const openDialog = document.querySelector('dialog.assignment-dialog[open]');
+    const isOpen = openDialog instanceof HTMLDialogElement;
+
+    backdrop.hidden = ! isOpen;
+    document.body.classList.toggle('assignment-dialog-open', isOpen);
+
+    if (! isOpen) {
+        return;
+    }
+
+    document.body.append(backdrop);
+    document.body.append(openDialog);
+}
+
+document.querySelectorAll('dialog.assignment-dialog').forEach((dialog) => {
+    dialog.addEventListener('close', syncAssignmentDialogLayer);
+});
+
 document.querySelectorAll('[data-open-dialog]').forEach((button) => {
     button.addEventListener('click', () => {
         const dialog = document.getElementById(button.dataset.openDialog ?? '');
 
-        if (dialog instanceof HTMLDialogElement && ! dialog.open) {
-            if (dialog.parentElement !== document.body) {
-                document.body.append(dialog);
-            }
-
-            dialog.showModal();
-            dialog.querySelector('[data-dialog-cancel]')?.focus();
+        if (! (dialog instanceof HTMLDialogElement) || dialog.open) {
+            return;
         }
+
+        const backdrop = assignmentDialogBackdrop();
+        document.body.append(backdrop);
+        document.body.append(dialog);
+        backdrop.hidden = false;
+        document.body.classList.add('assignment-dialog-open');
+        dialog.showModal();
+        dialog.querySelector('[data-dialog-cancel]')?.focus();
     });
 });
 
 const swedishDateMonths = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
+const swedishDateMonthNames = ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december'];
+let swedishDateClickBlocked = false;
+let swedishDateClickBlockToken = 0;
+
+function blockSwedishDateClickThrough() {
+    const token = window.setTimeout(() => {
+        if (swedishDateClickBlockToken === token) {
+            swedishDateClickBlocked = false;
+        }
+    }, 700);
+
+    swedishDateClickBlockToken = token;
+    swedishDateClickBlocked = true;
+}
+
+function eventElement(event) {
+    if (event.target instanceof Element) {
+        return event.target;
+    }
+
+    return event.target instanceof Node ? event.target.parentElement : null;
+}
+
+document.addEventListener('pointerdown', (event) => {
+    const target = eventElement(event);
+    const openPopover = document.querySelector('.swedish-date-popover:popover-open, .swedish-date-popover.swedish-date-popover-open');
+
+    if (! (openPopover instanceof HTMLElement)) {
+        return;
+    }
+
+    if (target && (openPopover.contains(target) || target.closest('[data-swedish-date-open]'))) {
+        return;
+    }
+
+    closeSwedishDatePopover(openPopover);
+    blockSwedishDateClickThrough();
+}, true);
+
+document.addEventListener('click', (event) => {
+    if (! swedishDateClickBlocked) {
+        return;
+    }
+
+    swedishDateClickBlocked = false;
+    event.preventDefault();
+    event.stopPropagation();
+}, true);
+
+function closeSwedishDatePopover(popover) {
+    const field = document.querySelector(`[data-swedish-date-field] [aria-controls="${popover.id}"]`)?.closest('[data-swedish-date-field]')
+        ?? popover.closest('[data-swedish-date-field]');
+    const open = field?.querySelector('[data-swedish-date-open]');
+
+    if (open instanceof HTMLButtonElement) {
+        open.setAttribute('aria-expanded', 'false');
+    }
+
+    if (popover.matches(':popover-open') && typeof popover.hidePopover === 'function') {
+        popover.hidePopover();
+    }
+
+    popover.classList.remove('swedish-date-popover-open');
+}
+
+function openSwedishDatePopover(popover) {
+    document.querySelectorAll('.swedish-date-popover:popover-open, .swedish-date-popover.swedish-date-popover-open').forEach((openPopover) => {
+        if (openPopover !== popover) {
+            closeSwedishDatePopover(openPopover);
+        }
+    });
+
+    if (typeof popover.showPopover === 'function' && ! popover.matches(':popover-open')) {
+        popover.showPopover();
+    }
+
+    popover.classList.add('swedish-date-popover-open');
+}
 
 document.querySelectorAll('[data-swedish-date-field]').forEach((field) => {
     const text = field.querySelector('[data-swedish-date]');
     const picker = field.querySelector('[data-swedish-date-picker]');
     const open = field.querySelector('[data-swedish-date-open]');
+    const popover = field.querySelector('[data-swedish-date-popover]');
+    const days = field.querySelector('[data-swedish-date-days]');
+    const caption = field.querySelector('[data-swedish-date-caption]');
 
-    if (! (text instanceof HTMLInputElement) || ! (picker instanceof HTMLInputElement) || ! (open instanceof HTMLButtonElement)) {
+    if (! (text instanceof HTMLInputElement) || ! (picker instanceof HTMLInputElement) || ! (open instanceof HTMLButtonElement) || ! (popover instanceof HTMLElement) || ! (days instanceof HTMLElement) || ! (caption instanceof HTMLElement)) {
         return;
     }
 
-    open.addEventListener('click', () => {
-        if (typeof picker.showPicker === 'function') {
-            try {
-                picker.showPicker();
+    let visibleMonth = new Date().getMonth();
+    let visibleYear = new Date().getFullYear();
 
-                return;
-            } catch {
-                picker.focus();
+    const isoFromField = () => {
+        const stored = field.dataset.swedishDateIso ?? '';
+
+        if (/^\d{4}-\d{2}-\d{2}$/.test(stored)) {
+            return stored;
+        }
+
+        return /^\d{4}-\d{2}-\d{2}$/.test(picker.value) ? picker.value : '';
+    };
+
+    const showMonth = (year, month) => {
+        visibleYear = year;
+        visibleMonth = month;
+        caption.textContent = `${swedishDateMonthNames[month]} ${year}`;
+        days.replaceChildren();
+
+        const firstWeekday = (new Date(year, month, 1).getDay() + 6) % 7;
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const selected = isoFromField();
+
+        for (let index = 0; index < firstWeekday; index += 1) {
+            days.append(document.createElement('span'));
+        }
+
+        for (let day = 1; day <= daysInMonth; day += 1) {
+            const button = document.createElement('button');
+            const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            button.type = 'button';
+            button.dataset.swedishDateDay = iso;
+            button.textContent = String(day);
+            button.setAttribute('aria-label', `${day} ${swedishDateMonthNames[month]} ${year}`);
+
+            if (iso === selected) {
+                button.setAttribute('aria-pressed', 'true');
             }
+
+            days.append(button);
         }
+    };
 
-        picker.click();
-    });
+    const selectIso = (iso) => {
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+        const month = match ? swedishDateMonths[Number(match[2]) - 1] : null;
 
-    picker.addEventListener('change', () => {
-        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(picker.value);
-
-        if (! match) {
+        if (! match || ! month) {
             return;
         }
 
-        const month = swedishDateMonths[Number(match[2]) - 1];
-
-        if (! month) {
-            return;
-        }
-
+        field.dataset.swedishDateIso = iso;
+        picker.value = iso;
         text.value = `${Number(match[3])} ${month} ${match[1]}`;
         text.dispatchEvent(new Event('input', { bubbles: true }));
+        text.dispatchEvent(new Event('change', { bubbles: true }));
+        closeSwedishDatePopover(popover);
+        blockSwedishDateClickThrough();
+    };
+
+    const positionPopover = () => {
+        const rect = open.getBoundingClientRect();
+        const width = popover.offsetWidth;
+        const height = popover.offsetHeight;
+        let top = rect.bottom + 6;
+        let left = Math.min(Math.max(8, rect.left), Math.max(8, window.innerWidth - width - 8));
+
+        if (top + height > window.innerHeight - 8) {
+            top = Math.max(8, rect.top - height - 6);
+        }
+
+        popover.style.top = `${top}px`;
+        popover.style.left = `${left}px`;
+    };
+
+    open.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (popover.matches(':popover-open') || popover.classList.contains('swedish-date-popover-open')) {
+            closeSwedishDatePopover(popover);
+
+            return;
+        }
+
+        const selected = isoFromField();
+        const selectedDate = /^\d{4}-\d{2}-\d{2}$/.test(selected) ? new Date(`${selected}T00:00:00`) : new Date();
+        showMonth(selectedDate.getFullYear(), selectedDate.getMonth());
+        openSwedishDatePopover(popover);
+        open.setAttribute('aria-expanded', 'true');
+        positionPopover();
+    });
+
+    popover.addEventListener('pointerdown', (event) => {
+        event.stopPropagation();
+    });
+
+    popover.addEventListener('pointerup', (event) => {
+        const target = eventElement(event);
+
+        if (! target) {
+            return;
+        }
+
+        const day = target.closest('[data-swedish-date-day]');
+
+        if (day instanceof HTMLButtonElement && day.dataset.swedishDateDay) {
+            event.preventDefault();
+            event.stopPropagation();
+            selectIso(day.dataset.swedishDateDay);
+
+            return;
+        }
+
+        if (target.closest('[data-swedish-date-prev]')) {
+            event.preventDefault();
+            event.stopPropagation();
+            showMonth(visibleMonth === 0 ? visibleYear - 1 : visibleYear, visibleMonth === 0 ? 11 : visibleMonth - 1);
+            positionPopover();
+
+            return;
+        }
+
+        if (target.closest('[data-swedish-date-next]')) {
+            event.preventDefault();
+            event.stopPropagation();
+            showMonth(visibleMonth === 11 ? visibleYear + 1 : visibleYear, visibleMonth === 11 ? 0 : visibleMonth + 1);
+            positionPopover();
+        }
+    });
+
+    popover.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
     });
 });
 

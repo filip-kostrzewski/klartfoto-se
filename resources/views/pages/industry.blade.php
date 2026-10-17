@@ -87,6 +87,7 @@
                 </div>
             @endif
         </article>
+        @include('pages.partials.example-mobile-shots')
     </section>
 
     @if (($page['route_key'] ?? null) === 'cleaning')

@@ -208,7 +208,7 @@ return [
     'report' => [
         'title' => 'Exempelrapport med före- och efterbilder | :brand',
         'description' => 'Se en exempelrapport med AI-demobilder och uppgifter om kund, adress och datum.',
-        'breadcrumb' => 'Exempelrapport', 'eyebrow' => 'EXEMPEL · FÖRE OCH EFTER',
+        'breadcrumb' => 'Exempelrapport', 'eyebrow' => 'EXEMPEL · FÖRE OCH EFTER', 'example_flag' => 'Exempel',
         'h1' => 'Exempelrapport med före- och efterbilder.',
         'intro' => 'Ett AI-genererat köksexempel visar hur före- och efterbilder kan visas tillsammans med uppgifter om uppdraget.',
         'print' => 'Skriv ut / spara som PDF', 'signup' => 'Anmäl intresse',

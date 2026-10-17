@@ -128,14 +128,17 @@
             <p>
                 <span>{{ $snapshot['company_name'] }}</span>
                 @if (filled($snapshot['company_phone'] ?? null))
-                    <span>{{ $snapshot['company_phone'] }}</span>
+                    <span><x-phone-link :phone="$snapshot['company_phone']" /></span>
                 @endif
                 @if (filled($snapshot['company_organization_number'] ?? null))
                     <span>org.nr {{ $snapshot['company_organization_number'] }}</span>
                 @endif
             </p>
-            @if (filled($snapshot['report_created_at'] ?? null))
-                <p>Rapporten skapades {{ \Illuminate\Support\Carbon::parse($snapshot['report_created_at'])->timezone('Europe/Stockholm')->locale('sv')->translatedFormat('j F Y \\k\\l. H:i') }}</p>
+            @php
+                $reportCreatedAt = $versionCreatedAt ?? ($snapshot['report_created_at'] ?? null);
+            @endphp
+            @if (filled($reportCreatedAt))
+                <p>Rapporten skapades {{ \Illuminate\Support\Carbon::parse($reportCreatedAt)->timezone('Europe/Stockholm')->locale('sv')->translatedFormat('j F Y \\k\\l. H:i') }}</p>
             @endif
             <p>Rapport via Klartfoto</p>
         </footer>

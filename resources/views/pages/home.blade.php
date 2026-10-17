@@ -156,6 +156,7 @@
             </div>
             <a class="text-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['sample_link'] }}</a>
         </div>
+        @include('pages.partials.example-mobile-shots')
         <div class="sample-layout">
             <div class="sample-explainer">
                 <p class="sample-disclaimer"><span aria-hidden="true">✳</span> {{ $home['sample_disclaimer'] }}</p>

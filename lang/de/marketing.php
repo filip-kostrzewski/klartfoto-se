@@ -179,7 +179,7 @@ return [
     ],
     'report' => [
         'title' => 'Vorher-Nachher-Berichtsvorlage | :brand', 'description' => 'Sehen Sie einen Beispielbericht mit KI-Demofotos sowie Angaben zu Kunde, Adresse und Datum.',
-        'breadcrumb' => 'Berichtsvorlage', 'eyebrow' => 'PRAKTISCHE VORLAGE · VORHER UND NACHHER', 'h1' => 'Vorlage für einen Bericht mit Vorher-Nachher-Fotos.',
+        'breadcrumb' => 'Berichtsvorlage', 'eyebrow' => 'PRAKTISCHE VORLAGE · VORHER UND NACHHER', 'example_flag' => 'Beispiel', 'h1' => 'Vorlage für einen Bericht mit Vorher-Nachher-Fotos.',
         'intro' => 'Ein KI-generiertes Küchenbeispiel zeigt Vorher-Nachher-Fotos zusammen mit den Auftragsangaben.',
         'print' => 'Drucken / als PDF speichern', 'signup' => 'Kontakt aufnehmen', 'print_note' => 'Wählen Sie im Druckdialog „Als PDF speichern“.',
         'report_overline' => 'BERICHTSVORLAGE · ANSCHAULICHE ANGABEN', 'report_title' => 'Bericht über erledigte Arbeit', 'subtitle' => 'Vorher-Nachher-Fotos · Beispielversion',

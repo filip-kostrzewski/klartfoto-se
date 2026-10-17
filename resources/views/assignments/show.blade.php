@@ -73,12 +73,12 @@
                     @else
                         <span class="assignment-review-status">
                             <span class="assignment-review-badge assignment-review-badge-pending">Inte granskad</span>
-                            <span class="assignment-review-hint">Inte granskad betyder att ingen har markerat rapporten som kontrollerad.</span>
+                            <span class="assignment-review-hint">Ansvarig är den som utför besöket. Granskare kan vara kontoägaren eller en teammedlem som ägaren har valt. Inte granskad betyder att ingen har markerat rapporten som kontrollerad. Ägaren eller den valda granskaren markerar rapporten med knappen Markera som granskad.</span>
                         </span>
                     @endif
                 </summary>
                 <section class="assignment-team-panel" aria-labelledby="assignment-team-heading">
-                <p class="assignment-team-help">Ansvarig är den som utför besöket. En granskare kan kontrollera rapporten innan den skickas. Inte granskad betyder att ingen har markerat rapporten som kontrollerad.</p>
+                <p class="assignment-team-help">Ansvarig är den som utför besöket. Granskare kan vara kontoägaren eller en teammedlem som ägaren har valt. Inte granskad betyder att ingen har markerat rapporten som kontrollerad. Ägaren eller den valda granskaren markerar rapporten med knappen Markera som granskad.</p>
 
                 <dl class="assignment-team-people">
                     <div>
@@ -382,7 +382,7 @@
             @endif
 
             <div class="share-link-tools">
-                <div class="share-link-tools-heading"><strong>Vill du skicka länken själv?</strong><p>Kopiera den och dela i valfri kanal.</p></div>
+                <div class="share-link-tools-heading"><strong>Vill ni skicka länken själva?</strong><p>Kopiera den och dela i valfri kanal.</p></div>
                 <div class="share-link-row">
                     <label class="sr-only" for="share-link">Länk till rapporten</label>
                     <input id="share-link" type="text" readonly value="{{ $reportUrl }}" aria-describedby="share-copy-feedback">
@@ -475,39 +475,43 @@
             </section>
         @endif
 
-        @if ($canArchiveAssignment && ! $assignment->isArchived())
-            <dialog class="assignment-dialog" id="archive-assignment-dialog" aria-labelledby="archive-assignment-title">
-                <form method="post" action="{{ route('assignments.archive', $assignment, false) }}">
-                    @csrf
-                    <h2 id="archive-assignment-title">Arkivera uppdraget?</h2>
-                    <p>{{ $assignment->customer_name }} <span aria-hidden="true">·</span> {{ $assignment->address }}</p>
-                    <p>{{ \App\Models\Assignment::ARCHIVE_SHARE_LINK_NOTICE }}</p>
-                    <div class="assignment-dialog-actions">
-                        <button class="button button-outline-dark" type="submit" formmethod="dialog" data-close-dialog data-dialog-cancel autofocus>Avbryt</button>
-                        <button class="button button-dark" type="submit">Arkivera</button>
-                    </div>
-                </form>
-            </dialog>
-        @endif
-
         @if ($canDeleteAssignment)
             <div class="assignment-delete">
                 <p>Radering tar bort bilderna, rapportversionerna, PDF:erna och delningslänkarna. Det går inte att ångra.</p>
                 <button class="button button-danger" type="button" data-open-dialog="delete-assignment-dialog">Radera uppdrag</button>
             </div>
-            <dialog class="assignment-dialog" id="delete-assignment-dialog" aria-labelledby="delete-assignment-title">
-                <form method="post" action="{{ route('assignments.destroy', $assignment, false) }}">
-                    @csrf
-                    @method('DELETE')
-                    <h2 id="delete-assignment-title">Radera uppdraget?</h2>
-                    <p>{{ $assignment->customer_name }} <span aria-hidden="true">·</span> {{ $assignment->address }}</p>
-                    <p>Bilder, rapportversioner, PDF:er och delningslänkar tas bort permanent.</p>
-                    <div class="assignment-dialog-actions">
-                        <button class="button button-outline-dark" type="submit" formmethod="dialog" data-close-dialog data-dialog-cancel autofocus>Avbryt</button>
-                        <button class="button button-danger-solid" type="submit">Radera permanent</button>
-                    </div>
-                </form>
-            </dialog>
         @endif
+
+        @push('dialogs')
+            @if ($canArchiveAssignment && ! $assignment->isArchived())
+                <dialog class="assignment-dialog" id="archive-assignment-dialog" aria-labelledby="archive-assignment-title">
+                    <form method="post" action="{{ route('assignments.archive', $assignment, false) }}">
+                        @csrf
+                        <h2 id="archive-assignment-title">Arkivera uppdraget?</h2>
+                        <p>{{ $assignment->customer_name }} <span aria-hidden="true">·</span> {{ $assignment->address }}</p>
+                        <p>{{ \App\Models\Assignment::ARCHIVE_SHARE_LINK_NOTICE }}</p>
+                        <div class="assignment-dialog-actions">
+                            <button class="button button-outline-dark" type="submit" formmethod="dialog" data-close-dialog data-dialog-cancel autofocus>Avbryt</button>
+                            <button class="button button-dark" type="submit">Arkivera</button>
+                        </div>
+                    </form>
+                </dialog>
+            @endif
+            @if ($canDeleteAssignment)
+                <dialog class="assignment-dialog" id="delete-assignment-dialog" aria-labelledby="delete-assignment-title">
+                    <form method="post" action="{{ route('assignments.destroy', $assignment, false) }}">
+                        @csrf
+                        @method('DELETE')
+                        <h2 id="delete-assignment-title">Radera uppdraget?</h2>
+                        <p>{{ $assignment->customer_name }} <span aria-hidden="true">·</span> {{ $assignment->address }}</p>
+                        <p>Bilder, rapportversioner, PDF:er och delningslänkar tas bort permanent.</p>
+                        <div class="assignment-dialog-actions">
+                            <button class="button button-outline-dark" type="submit" formmethod="dialog" data-close-dialog data-dialog-cancel autofocus>Avbryt</button>
+                            <button class="button button-danger-solid" type="submit">Radera permanent</button>
+                        </div>
+                    </form>
+                </dialog>
+            @endif
+        @endpush
     </section>
 @endsection

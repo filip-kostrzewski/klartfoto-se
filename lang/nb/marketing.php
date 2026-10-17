@@ -179,7 +179,7 @@ return [
     ],
     'report' => [
         'title' => 'Mal for før- og etterrapport | :brand', 'description' => 'Se en eksempelrapport med KI-demobilder og opplysninger om kunde, adresse og dato.',
-        'breadcrumb' => 'Rapportmal', 'eyebrow' => 'PRAKTISK MAL · FØR OG ETTER', 'h1' => 'Mal for rapport med før- og etterbilder.',
+        'breadcrumb' => 'Rapportmal', 'eyebrow' => 'PRAKTISK MAL · FØR OG ETTER', 'example_flag' => 'Eksempel', 'h1' => 'Mal for rapport med før- og etterbilder.',
         'intro' => 'Et KI-generert kjøkkeneksempel viser før- og etterbilder sammen med opplysningene om oppdraget.',
         'print' => 'Skriv ut / lagre som PDF', 'signup' => 'Meld interesse', 'print_note' => 'Velg «Lagre som PDF» i utskriftsdialogen.',
         'report_overline' => 'RAPPORTMAL · ILLUSTRERENDE OPPLYSNINGER', 'report_title' => 'Rapport om utført arbeid', 'subtitle' => 'Før- og etterbilder · eksempelversjon',

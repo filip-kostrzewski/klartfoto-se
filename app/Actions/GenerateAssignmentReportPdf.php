@@ -182,9 +182,7 @@ class GenerateAssignmentReportPdf
             'companyOrganizationNumber' => is_string($snapshot['company_organization_number'] ?? null)
                 ? $snapshot['company_organization_number']
                 : null,
-            'reportCreatedAt' => is_string($snapshot['report_created_at'] ?? null)
-                ? $snapshot['report_created_at']
-                : null,
+            'reportCreatedAt' => $version->created_at?->copy()->utc()->format('Y-m-d H:i:s'),
             'versionNumber' => (int) $version->version_number,
             'logoDataUri' => $logoDataUri,
             'places' => $places,

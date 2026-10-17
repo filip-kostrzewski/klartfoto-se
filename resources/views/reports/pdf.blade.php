@@ -180,7 +180,7 @@
                         <span class="report-meta-label">Företagsuppgifter</span>
                         <div class="report-meta-value">
                             @if (filled($companyPhone ?? null))
-                                {{ $companyPhone }}
+                                <x-phone-link :phone="$companyPhone" />
                             @endif
                             @if (filled($companyPhone ?? null) && filled($companyOrganizationNumber ?? null))
                                 ·

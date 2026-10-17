@@ -48,6 +48,10 @@
                     <div class="app-topbar-title">
                         <span>Arbetsyta</span><span aria-hidden="true">/</span><strong>@yield('page-heading', 'Uppdrag')</strong>
                     </div>
+                    <form class="app-topbar-logout" method="post" action="{{ route('logout', absolute: false) }}">
+                        @csrf
+                        <button type="submit">Logga ut</button>
+                    </form>
                     <details class="app-user-menu">
                         <summary>
                             <span class="user-avatar" aria-hidden="true">{{ mb_strtoupper(mb_substr(auth()->user()->name ?: auth()->user()->email, 0, 1)) }}</span>
@@ -98,5 +102,6 @@
             @yield('content')
         </main>
     @endauth
+    @stack('dialogs')
 </body>
 </html>

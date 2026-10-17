@@ -179,7 +179,7 @@ return [
     ],
     'report' => [
         'title' => 'Ennen ja jälkeen -raporttipohja | :brand', 'description' => 'Katso esimerkkiraportti, jossa on tekoälydemo-kuvia sekä asiakkaan, osoitteen ja päivämäärän tiedot.',
-        'breadcrumb' => 'Raporttipohja', 'eyebrow' => 'KÄYTÄNNÖN POHJA · ENNEN JA JÄLKEEN', 'h1' => 'Pohja ennen ja jälkeen -raportille.',
+        'breadcrumb' => 'Raporttipohja', 'eyebrow' => 'KÄYTÄNNÖN POHJA · ENNEN JA JÄLKEEN', 'example_flag' => 'Esimerkki', 'h1' => 'Pohja ennen ja jälkeen -raportille.',
         'intro' => 'Tekoälyllä luotu keittiöesimerkki näyttää ennen ja jälkeen -kuvat työn tietojen yhteydessä.',
         'print' => 'Tulosta / tallenna PDF:nä', 'signup' => 'Ilmoita kiinnostuksesi', 'print_note' => 'Valitse tulostusikkunassa ”Tallenna PDF:nä”.',
         'report_overline' => 'RAPORTTIPOHJA · HAVAINNOLLISTAVAT TIEDOT', 'report_title' => 'Raportti tehdystä työstä', 'subtitle' => 'Ennen ja jälkeen -kuvat · esimerkkiversio',

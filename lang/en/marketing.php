@@ -193,7 +193,7 @@ return [
     ],
     'report' => [
         'title' => 'Before-and-after report template | :brand', 'description' => 'View a sample report with AI demo photos and customer, address and date details.',
-        'breadcrumb' => 'Report template', 'eyebrow' => 'PRACTICAL RESOURCE · BEFORE AND AFTER',
+        'breadcrumb' => 'Report template', 'eyebrow' => 'PRACTICAL RESOURCE · BEFORE AND AFTER', 'example_flag' => 'Example',
         'h1' => 'A template for a before-and-after report.',
         'intro' => 'An AI-generated kitchen example shows before-and-after photos alongside the job details.',
         'print' => 'Print / save as PDF', 'signup' => 'Get in touch',

@@ -240,6 +240,7 @@ class PublicReportPdfTest extends TestCase
         $version->forceFill([
             'snapshot' => $snapshot,
             'snapshot_hash' => hash('sha256', json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)),
+            'created_at' => '2026-10-16 07:30:00',
         ])->save();
 
         $pdfBytes = "%PDF-1.7\nfrozen metadata\n%%EOF\n";

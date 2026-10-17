@@ -38,7 +38,7 @@
         @endforelse
 
         @if ($companyName !== '')
-            <p class="customer-report-access">Den som har länken kan se bilderna. Kontakta {{ $companyName }}@if ($companyPhone), {{ $companyPhone }}@endif.</p>
+            <p class="customer-report-access">Den som har länken kan se bilderna. Kontakta {{ $companyName }}@if ($companyPhone), <x-phone-link :phone="$companyPhone" />@endif.</p>
         @endif
 
         <footer class="customer-report-footer">

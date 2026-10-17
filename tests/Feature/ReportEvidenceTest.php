@@ -79,6 +79,7 @@ class ReportEvidenceTest extends TestCase
         $this->assertSame('070-111 22 33', $user->company->refresh()->phone);
         $this->assertSame('559000-0000', $user->company->reportOrganizationNumber());
 
+        $this->travelTo('2026-10-18 08:15:00');
         $this->actingAs($user)
             ->post(route('assignments.versions.store', $assignment, false))
             ->assertRedirect(route('assignments.show', $assignment, false));
@@ -93,7 +94,15 @@ class ReportEvidenceTest extends TestCase
             ->assertSee('Kök', false)
             ->assertSee('Bänken är ren.', false)
             ->assertSee('org.nr 559000-0000', false)
-            ->assertSee('070-111 22 33', false);
+            ->assertSee('070-111 22 33', false)
+            ->assertSee('href="tel:0701112233"', false)
+            ->assertSee('Rapporten skapades 18 oktober 2026 kl. 10:15', false)
+            ->assertDontSee('Rapporten skapades 16 oktober 2026 kl. 09:30', false);
+
+        $this->get(route('reports.show', ['token' => $firstVersion->token], false))
+            ->assertOk()
+            ->assertSee('Rapporten skapades 16 oktober 2026 kl. 09:30', false)
+            ->assertDontSee('Rapporten skapades 18 oktober 2026 kl. 10:15', false);
 
         $this->actingAs($user)->put('/installningar/foretag', [
             'company_name' => 'Kriti Städ',
@@ -437,7 +446,9 @@ class ReportEvidenceTest extends TestCase
         $this->get('/r/'.$assignment->public_token)
             ->assertOk()
             ->assertSee('Företag · 070-000 00 95 · org.nr 000000-0000', false)
-            ->assertSee('Kontakta Företag, 070-000 00 95.', false);
+            ->assertSee('Kontakta Företag,', false)
+            ->assertSee('href="tel:0700000095"', false)
+            ->assertSee('>070-000 00 95</a>', false);
 
         $this->actingAs($owner)->put('/installningar/foretag', [
             'company_name' => 'Företag',

@@ -151,6 +151,7 @@ class PublicReportController extends Controller
                     'snapshot' => $version->snapshot,
                     'photoPairs' => $photoPairs,
                     'logoUrl' => $logoUrl,
+                    'versionCreatedAt' => $version->created_at,
                     'pdfUrl' => route('reports.pdf', ['token' => $token], false),
                     'newerVersionUrl' => $newerVersionUrl,
                 ])

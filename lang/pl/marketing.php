@@ -183,7 +183,7 @@ return [
     ],
     'report' => [
         'title' => 'Wzór raportu przed i po | :brand', 'description' => 'Zobacz przykładowy raport ze zdjęciami AI-demo oraz danymi klienta, adresem i datą.',
-        'breadcrumb' => 'Wzór raportu', 'eyebrow' => 'PRAKTYCZNY MATERIAŁ · PRZED I PO', 'h1' => 'Wzór raportu ze zdjęciami przed i po.',
+        'breadcrumb' => 'Wzór raportu', 'eyebrow' => 'PRAKTYCZNY MATERIAŁ · PRZED I PO', 'example_flag' => 'Przykład', 'h1' => 'Wzór raportu ze zdjęciami przed i po.',
         'intro' => 'Wygenerowany przykład kuchni pokazuje zdjęcia przed i po wraz z danymi zlecenia.',
         'print' => 'Drukuj / zapisz jako PDF', 'signup' => 'Dołącz', 'print_note' => 'W oknie drukowania wybierz „Zapisz jako PDF”.',
         'report_overline' => 'WZÓR RAPORTU · DANE POGLĄDOWE', 'report_title' => 'Raport z wykonanej pracy', 'subtitle' => 'Zdjęcia przed i po · wersja przykładowa',
