@@ -21,7 +21,9 @@
             @endif
         </div>
 
-        @if ($onTrial && $trialEndsAt)
+        @if ($isFeedbackPilot)
+            <div class="trial-strip"><span class="trial-strip-icon" aria-hidden="true">✓</span><p><strong>Feedbackpilot</strong><span>Feedbackpilot – Team gratis till 31 december 2026</span></p></div>
+        @elseif ($onTrial && $trialEndsAt)
             <div class="trial-strip"><span class="trial-strip-icon" aria-hidden="true">✓</span><p><strong>Provperiod</strong><span>Gratis till {{ $trialEndsAt->locale('sv')->translatedFormat('j F Y') }}. Inget kort behövs. Därefter har ni ingen aktiv åtkomst till nya uppdrag. Ni kan fortfarande öppna befintliga rapporter.</span></p></div>
         @elseif (! $canManageJobs)
             <div class="form-status form-status-error" role="status">Ingen aktiv åtkomst till nya uppdrag. Ni kan fortfarande öppna befintliga rapporter.</div>
@@ -78,11 +80,13 @@
                     </div>
                     <div class="assignment-filter-date">
                         <label for="assignment-from">Från datum</label>
-                        <x-swedish-date id="assignment-from" name="from" :value="$filters['from']" />
+                        <x-swedish-date id="assignment-from" name="from" :value="$dateInputs['from']" :invalid="$errors->has('from')" error-id="assignment-from-error" />
+                        @error('from') <span class="field-error" id="assignment-from-error">{{ $message }}</span> @enderror
                     </div>
                     <div class="assignment-filter-date">
                         <label for="assignment-to">Till datum</label>
-                        <x-swedish-date id="assignment-to" name="to" :value="$filters['to']" />
+                        <x-swedish-date id="assignment-to" name="to" :value="$dateInputs['to']" :invalid="$errors->has('to')" error-id="assignment-to-error" />
+                        @error('to') <span class="field-error" id="assignment-to-error">{{ $message }}</span> @enderror
                     </div>
                     <div class="assignment-filter-actions">
                         <button class="button button-dark" type="submit">Visa uppdrag</button>

@@ -53,7 +53,7 @@
                 @endif
                 @if ($canManageJobs)
                     <a class="button button-outline-dark" href="{{ route('assignments.edit', $assignment, false) }}">Redigera</a>
-                    <a class="button button-lime" href="{{ route('assignments.create', $newVisitParameters, false) }}">Ny visit</a>
+                    <a class="button button-lime" href="{{ route('assignments.create', $newVisitParameters, false) }}">Nytt besök</a>
                 @endif
                 <a class="button button-outline-dark" href="#share-box">Skicka rapporten</a>
                 <a class="assignment-back-link" href="{{ route('assignments.index', $assignment->isArchived() ? ['arkiv' => 'arkiverade'] : [], false) }}">{{ $assignment->isArchived() ? 'Arkiverade uppdrag' : 'Alla uppdrag' }}</a>
@@ -75,6 +75,7 @@
                     @endif
                 </summary>
                 <section class="assignment-team-panel" aria-labelledby="assignment-team-heading">
+                <p class="assignment-team-help">Ansvarig är den som utför besöket. En granskare kan kontrollera rapporten innan den skickas. Inte granskad betyder att ingen har markerat rapporten som kontrollerad.</p>
 
                 <dl class="assignment-team-people">
                     <div>

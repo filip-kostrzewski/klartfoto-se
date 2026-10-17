@@ -33,6 +33,12 @@ class AssignmentTeamWorkflowTest extends TestCase
         $this->assertSame($member->id, $assignment->fresh()->assigned_to_user_id);
         $this->assertSame($owner->id, $assignment->fresh()->reviewer_user_id);
 
+        $this->actingAs($owner)->get(route('assignments.show', $assignment))
+            ->assertOk()
+            ->assertSee('Nytt besök', false)
+            ->assertDontSee('>Ny visit<', false)
+            ->assertSee('Ansvarig är den som utför besöket. En granskare kan kontrollera rapporten innan den skickas. Inte granskad betyder att ingen har markerat rapporten som kontrollerad.', false);
+
         $this->actingAs($owner)->from(route('assignments.show', $assignment, false))
             ->put(route('assignments.team.update', $assignment, false), [
                 'assigned_to_user_id' => $otherOwner->id,

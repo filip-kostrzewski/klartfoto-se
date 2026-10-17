@@ -17,6 +17,9 @@
                 @if ($isManualPlanActive)
                     <strong>Abonnemanget är aktivt</strong>
                     <span>Planen gäller till {{ $company->paid_until?->locale('sv')->translatedFormat('j F Y') }}.</span>
+                @elseif ($isFeedbackPilot ?? false)
+                    <strong>Feedbackpilot</strong>
+                    <span>Feedbackpilot – Team gratis till 31 december 2026</span>
                 @elseif ($isTrialActive)
                     <strong>Provperiod pågår</strong>
                     <span>Gratis till {{ $company->trial_ends_at?->locale('sv')->translatedFormat('j F Y') }}. Inget kort behövs. Därefter har ni ingen aktiv åtkomst till nya uppdrag. Ni kan fortfarande öppna befintliga rapporter.</span>
@@ -32,6 +35,10 @@
             <strong>{{ $currentPlan }}</strong>
         </div>
     </div>
+
+    @if (! $compact && ! ($isManualPlanActive && $company->plan === \App\CompanyPlan::Team))
+        <p class="subscription-summary-note">{{ $company->afterTrialAccessSummary() }}</p>
+    @endif
 
     @if ($hasPendingInvoiceRequest)
         <div class="billing-pending" role="status">

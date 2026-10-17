@@ -11,6 +11,7 @@ use App\SiteSeo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Mail\Transport\ArrayTransport;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
@@ -56,8 +57,9 @@ class RegistrationTest extends TestCase
         $this->assertSame(CompanyRole::Owner, $user->role);
         $this->assertSame('Glans Städ AB', $user->company?->name);
         $this->assertTrue(Hash::check('hemligt-losen', $user->password));
-        $this->assertSame('2026-11-14 12:00:00', $user->trial_ends_at?->format('Y-m-d H:i:s'));
-        $this->assertSame('2026-11-14 12:00:00', $user->company?->trial_ends_at?->format('Y-m-d H:i:s'));
+        $this->assertSame('2026-11-14 23:59:59', $user->trial_ends_at?->timezone('Europe/Stockholm')->format('Y-m-d H:i:s'));
+        $this->assertSame('2026-11-14 23:59:59', $user->company?->trial_ends_at?->timezone('Europe/Stockholm')->format('Y-m-d H:i:s'));
+        $this->assertFalse((bool) $user->company?->feedback_pilot);
 
         $this->actingAs($user)->get('/installningar')
             ->assertOk()
@@ -159,9 +161,10 @@ class RegistrationTest extends TestCase
         $this->assertSame('https://klartfoto.se/', SiteSeo::canonical('/'));
     }
 
-    public function test_fixed_trial_end_overrides_the_default_number_of_days(): void
+    public function test_signup_on_17_october_lasts_exactly_30_days(): void
     {
-        config(['klartfoto.trial_ends_at' => '2026-12-31']);
+        $this->travelTo('2026-10-17 12:00:00');
+        config(['klartfoto.trial_ends_at' => '2026-11-14']);
 
         $this->post('/register', [
             'company_name' => 'Glans Städ AB',
@@ -173,8 +176,17 @@ class RegistrationTest extends TestCase
         ])->assertRedirect(route('assignments.index'));
 
         $user = User::query()->where('email', 'anna@glans.se')->first();
+        $ends = $user?->company?->trial_ends_at?->timezone('Europe/Stockholm');
 
-        $this->assertSame('2026-12-31 23:59:59', $user?->trial_ends_at?->format('Y-m-d H:i:s'));
+        $this->assertNotNull($ends);
+        $this->assertSame('2026-11-16 23:59:59', $ends->format('Y-m-d H:i:s'));
+        $this->assertSame(30, (int) Carbon::parse('2026-10-17', 'Europe/Stockholm')->startOfDay()->diffInDays($ends->copy()->startOfDay()));
+
+        $this->travelTo(Carbon::parse('2026-11-16 20:00:00', 'Europe/Stockholm'));
+        $this->assertTrue($user->company->fresh()->canManageJobs());
+
+        $this->travelTo(Carbon::parse('2026-11-17 00:00:01', 'Europe/Stockholm'));
+        $this->assertFalse($user->company->fresh()->canManageJobs());
     }
 
     public function test_registration_requires_a_company_password_and_privacy_consent(): void

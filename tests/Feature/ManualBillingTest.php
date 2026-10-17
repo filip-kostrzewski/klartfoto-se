@@ -213,6 +213,7 @@ class ManualBillingTest extends TestCase
         $this->assertSame('2026-10-15', $company->trial_ends_at?->toDateString());
         $this->assertTrue($owner->fresh()->canManageJobs());
         $this->assertFalse($member->fresh()->canManageJobs());
+        $this->assertFalse($member->fresh()->maySignIn());
         $this->assertSame(1, $company->seatLimit());
         $this->assertDatabaseHas('manual_billing_activations', [
             'company_id' => $company->id,
@@ -232,25 +233,23 @@ class ManualBillingTest extends TestCase
             'sort_order' => 1,
         ]);
         $this->actingAs($member)->get('/uppdrag')
-            ->assertOk()
-            ->assertDontSee('Nytt uppdrag', false)
-            ->assertSee('Anna Andersson', false);
+            ->assertRedirect(route('login'));
 
         $this->actingAs($member)->post('/uppdrag', [
             'customer_name' => 'Unauthorized customer',
             'address' => 'Storgatan 2, 111 22 Stockholm',
             'performed_on' => '2026-10-16',
-        ])->assertRedirect()->assertSessionHasErrors('trial');
+        ])->assertRedirect(route('login'));
 
         $this->actingAs($member)->post(route('assignments.photos.store', $assignment), [
             'before_photos' => [UploadedFile::fake()->image('before.jpg')],
             'after_photos' => [UploadedFile::fake()->image('after.jpg')],
-        ])->assertRedirect()->assertSessionHasErrors('trial');
+        ])->assertRedirect(route('login'));
 
         $this->actingAs($member)->delete(route('assignments.photos.destroy', [
             'assignment' => $assignment,
             'photo' => $photo,
-        ]))->assertRedirect()->assertSessionHasErrors('trial');
+        ]))->assertRedirect(route('login'));
 
         $this->assertDatabaseCount('assignments', 1);
         $this->assertDatabaseCount('assignment_photos', 1);

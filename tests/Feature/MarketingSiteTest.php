@@ -34,9 +34,9 @@ class MarketingSiteTest extends TestCase
         $this->assertStringContainsString('<html lang="sv">', $html);
         $this->assertStringContainsString('<title>Användarvillkor | Klartfoto</title>', $html);
         $this->assertStringContainsString('<link rel="canonical" href="https://klartfoto.se/villkor">', $html);
-        $this->assertStringContainsString('Uppdaterad 17 oktober 2026 · Version 1.1.', $html);
+        $this->assertStringContainsString('Uppdaterad 17 oktober 2026 · Version 1.2.', $html);
         $this->assertStringContainsString('Den här provperioden är skild från feedbackpiloten.', $html);
-        $this->assertStringContainsString('Feedbackpiloten är gratis till 31 december 2026. Därefter 590 kr/mån exkl. moms (Team), ingen bindningstid och ingen automatisk debitering.', $html);
+        $this->assertStringContainsString('Feedbackpilot (på inbjudan): ett fåtal företag får Team gratis till 31 december 2026 mot ärlig feedback. Intresserad? Skriv till kontakt@klartfoto.se.', $html);
         $this->assertStringContainsString('mailto:kontakt@klartfoto.se', $html);
         $this->assertStringContainsString('30 dagar', $html);
         $this->assertStringContainsString('290 kr per månad exklusive moms', $html);
@@ -231,7 +231,7 @@ class MarketingSiteTest extends TestCase
             ->assertSee('upp till 10 användare', false)
             ->assertSee('egen logga i rapporten', false)
             ->assertSee('30 dagar gratis utan kort. Ingen bindningstid.', false)
-            ->assertSee('Feedbackpilot: gratis till 31 december 2026. Därefter 590 kr/mån exkl. moms (Team), ingen bindningstid och ingen automatisk debitering.', false)
+            ->assertSee('Feedbackpilot (på inbjudan): ett fåtal företag får Team gratis till 31 december 2026 mot ärlig feedback. Intresserad? Skriv till kontakt@klartfoto.se.', false)
             ->assertSee('Betalning sker mot faktura.', false)
             ->assertSee('class="hero-price"', false)
             ->assertDontSee('Fortnox', false)
@@ -260,6 +260,16 @@ class MarketingSiteTest extends TestCase
             ->assertOk()
             ->assertSee('images/cleaning-detail.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('AI-genererat demofoto av en person som torkar av en köksbänk', false);
+
+        $this->get('/pl')
+            ->assertOk()
+            ->assertSee('290 kr/mies. bez VAT', false)
+            ->assertSee('590 kr/mies. bez VAT', false)
+            ->assertDontSee('kr/mån', false)
+            ->assertSee('Pilotaż (na zaproszenie): kilka firm otrzymuje Team bez opłat do 31 grudnia 2026 w zamian za szczerą opinię. Zainteresowany? Napisz na kontakt@klartfoto.se.', false)
+            ->assertSee('Usługa jest przeznaczona dla firm działających w Szwecji i rozliczana w koronach szwedzkich (SEK).', false)
+            ->assertSee('firm sprzątających', false)
+            ->assertDontSee('usługowych', false);
 
         config(['klartfoto.provider_contact_email' => null]);
         $this->get('/integritetspolicy')

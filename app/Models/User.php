@@ -78,6 +78,17 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         return $this->company?->onTrial() ?? false;
     }
 
+    public function maySignIn(): bool
+    {
+        if ($this->isOwner()) {
+            return true;
+        }
+
+        $this->loadMissing('company');
+
+        return $this->company?->allowsTeamFeatures() === true;
+    }
+
     public function canManageJobs(): bool
     {
         $this->loadMissing('company');

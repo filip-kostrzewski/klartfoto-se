@@ -382,8 +382,10 @@ class SendAssignmentEmailTest extends TestCase
             ->post(route('assignments.email', $assignment, false), [
                 'recipient_email' => 'customer@example.test',
             ])
-            ->assertRedirect(route('assignments.show', $assignment, false))
+            ->assertRedirect(route('login'))
             ->assertSessionHasErrors('email');
+
+        $this->assertDatabaseCount('assignment_email_attempts', 0);
 
         $this->actingAs($owner)
             ->from(route('assignments.show', $assignment, false))

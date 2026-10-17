@@ -51,11 +51,34 @@ class AssignmentController extends Controller
         abort_if($company === null, 403);
 
         $query = $request->query();
+        $dateInputs = ['from' => '', 'to' => ''];
+        $dateErrors = [];
 
         foreach (['from', 'to'] as $field) {
-            if (array_key_exists($field, $query)) {
-                $query[$field] = SwedishDate::toIso($query[$field]);
+            if (! array_key_exists($field, $query)) {
+                continue;
             }
+
+            $raw = is_string($query[$field]) ? trim($query[$field]) : '';
+            $dateInputs[$field] = $raw;
+
+            if ($raw === '') {
+                $query[$field] = '';
+
+                continue;
+            }
+
+            $iso = SwedishDate::toIso($raw);
+
+            if (! SwedishDate::isIsoDate($iso)) {
+                $dateErrors[$field] = 'Ogiltigt datum';
+                unset($query[$field]);
+
+                continue;
+            }
+
+            $query[$field] = $iso;
+            $dateInputs[$field] = $iso;
         }
 
         $validatedFilters = Validator::make($query, [
@@ -167,14 +190,16 @@ class AssignmentController extends Controller
             'readyToSendCount' => $readyToSendCount,
             'archivedAssignmentCount' => $company->assignments()->whereNotNull('archived_at')->count(),
             'onTrial' => $company->onTrial(),
+            'isFeedbackPilot' => $company->onActiveFeedbackPilot(),
             'canManageJobs' => $user->canManageJobs(),
+            'dateInputs' => $dateInputs,
             'companyName' => $company->name,
             'trialEndsAt' => $company->trial_ends_at,
             'showOnboarding' => $celebrate || (! $dismissed && ! $onboardingComplete),
             'showOnboardingRestore' => ! $celebrate && $dismissed && ! $onboardingComplete,
             'onboardingCelebrate' => $celebrate,
             'onboardingSteps' => $onboardingSteps,
-        ]);
+        ])->withErrors($dateErrors);
     }
 
     public function create(): View

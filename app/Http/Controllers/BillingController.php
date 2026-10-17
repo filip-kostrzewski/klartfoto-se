@@ -34,6 +34,7 @@ class BillingController extends Controller
             'isOwner' => $isOwner,
             'hasPendingInvoiceRequest' => $company->hasPendingInvoiceRequest(),
             'isTrialActive' => $company->onTrial(),
+            'isFeedbackPilot' => $company->onActiveFeedbackPilot(),
             'isManualPlanActive' => $company->isManualPlanActive(),
             'canManageJobs' => $user?->canManageJobs() ?? false,
             'hasTeamFeatures' => $company->allowsTeamFeatures(),

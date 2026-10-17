@@ -38,5 +38,8 @@
         @if (filled($pricing['pilot_note'] ?? null))
             <p class="pricing-pilot">{{ $pricing['pilot_note'] }}</p>
         @endif
+        @if (filled($pricing['market_note'] ?? null))
+            <p class="pricing-market">{{ $pricing['market_note'] }}</p>
+        @endif
     </section>
 @endif

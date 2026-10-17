@@ -92,11 +92,10 @@ class DeleteAssignmentTest extends TestCase
             ->assertDontSee('Vill du radera det här uppdraget? Alla bilder, rapportversioner och delningslänkar tas bort permanent.', false);
 
         $this->actingAs($member)->get(route('assignments.show', $assignment))
-            ->assertOk()
-            ->assertDontSee('Radera uppdrag', false);
+            ->assertRedirect(route('login'));
 
         $this->actingAs($member)->delete(route('assignments.destroy', $assignment))
-            ->assertForbidden();
+            ->assertRedirect(route('login'));
         $this->assertModelExists($assignment);
         Storage::disk('local')->assertExists($photoPath);
 

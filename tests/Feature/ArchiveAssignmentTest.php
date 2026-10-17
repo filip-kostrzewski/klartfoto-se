@@ -124,20 +124,19 @@ class ArchiveAssignmentTest extends TestCase
 
         $this->actingAs($member)
             ->post(route('assignments.archive', $assignment))
-            ->assertForbidden();
+            ->assertRedirect(route('login'));
         $this->assertNull($assignment->fresh()->archived_at);
+        $this->assertModelExists($member);
 
         $assignment->forceFill(['archived_at' => now()])->save();
 
         $this->actingAs($member)
             ->get(route('assignments.show', $assignment))
-            ->assertOk()
-            ->assertSee('Rapportlänken fungerar fortfarande – kunden kan se bilderna. Radera uppdraget om länken ska sluta fungera.', false)
-            ->assertDontSee('Återställ', false);
+            ->assertRedirect(route('login'));
 
         $this->actingAs($member)
             ->post(route('assignments.restore', $assignment))
-            ->assertForbidden();
+            ->assertRedirect(route('login'));
         $this->assertNotNull($assignment->fresh()->archived_at);
     }
 

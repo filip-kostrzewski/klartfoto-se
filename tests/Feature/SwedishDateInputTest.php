@@ -23,16 +23,18 @@ class SwedishDateInputTest extends TestCase
         $create->assertOk()
             ->assertSee('placeholder="ÅÅÅÅ-MM-DD"', false)
             ->assertSee('lang="sv-SE"', false)
+            ->assertSee('inputmode="numeric"', false)
+            ->assertSee('Välj datum', false)
+            ->assertSee('data-swedish-date-picker', false)
             ->assertSee('value="17 okt 2026"', false)
             ->assertDontSee('value="2026-10-17"', false)
-            ->assertDontSee('type="date"', false)
             ->assertDontSee('mm/dd/yyyy', false);
 
         $this->actingAs($owner)->get(route('assignments.edit', $assignment))
             ->assertOk()
             ->assertSee('value="16 okt 2026"', false)
             ->assertDontSee('value="2026-10-16"', false)
-            ->assertDontSee('type="date"', false)
+            ->assertSee('inputmode="numeric"', false)
             ->assertDontSee('mm/dd/yyyy', false);
 
         $this->actingAs($owner)->get(route('assignments.index', [
@@ -42,7 +44,7 @@ class SwedishDateInputTest extends TestCase
             ->assertOk()
             ->assertSee('value="15 okt 2026"', false)
             ->assertSee('value="17 okt 2026"', false)
-            ->assertDontSee('type="date"', false)
+            ->assertSee('inputmode="numeric"', false)
             ->assertDontSee('mm/dd/yyyy', false)
             ->assertViewHas('filters', function (array $filters): bool {
                 return $filters['from'] === '2026-10-15' && $filters['to'] === '2026-10-17';
@@ -85,5 +87,32 @@ class SwedishDateInputTest extends TestCase
             ->assertSessionHasErrors('performed_on');
 
         $this->assertSame(0, Assignment::query()->count());
+    }
+
+    public function test_an_invalid_date_filter_shows_an_error_and_does_not_keep_the_previous_date(): void
+    {
+        $owner = User::factory()->create();
+        Assignment::factory()->for($owner)->create([
+            'customer_name' => 'Tidig kund',
+            'performed_on' => '2026-01-15',
+        ]);
+        Assignment::factory()->for($owner)->create([
+            'customer_name' => 'Sen kund',
+            'performed_on' => '2026-10-17',
+        ]);
+
+        $this->actingAs($owner)->get(route('assignments.index', ['from' => '2026-10-01']))
+            ->assertOk()
+            ->assertSee('Sen kund', false)
+            ->assertDontSee('Tidig kund', false);
+
+        $this->actingAs($owner)->get(route('assignments.index', ['from' => 'abc']))
+            ->assertOk()
+            ->assertSee('Ogiltigt datum', false)
+            ->assertSee('value="abc"', false)
+            ->assertSee('Tidig kund', false)
+            ->assertSee('Sen kund', false)
+            ->assertDontSee('value="1 okt 2026"', false)
+            ->assertDontSee('value="15 okt 2026"', false);
     }
 }

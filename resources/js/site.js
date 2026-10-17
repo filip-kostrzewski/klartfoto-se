@@ -1105,6 +1105,49 @@ document.querySelectorAll('[data-open-dialog]').forEach((button) => {
     });
 });
 
+const swedishDateMonths = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
+
+document.querySelectorAll('[data-swedish-date-field]').forEach((field) => {
+    const text = field.querySelector('[data-swedish-date]');
+    const picker = field.querySelector('[data-swedish-date-picker]');
+    const open = field.querySelector('[data-swedish-date-open]');
+
+    if (! (text instanceof HTMLInputElement) || ! (picker instanceof HTMLInputElement) || ! (open instanceof HTMLButtonElement)) {
+        return;
+    }
+
+    open.addEventListener('click', () => {
+        if (typeof picker.showPicker === 'function') {
+            try {
+                picker.showPicker();
+
+                return;
+            } catch {
+                picker.focus();
+            }
+        }
+
+        picker.click();
+    });
+
+    picker.addEventListener('change', () => {
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(picker.value);
+
+        if (! match) {
+            return;
+        }
+
+        const month = swedishDateMonths[Number(match[2]) - 1];
+
+        if (! month) {
+            return;
+        }
+
+        text.value = `${Number(match[3])} ${month} ${match[1]}`;
+        text.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+});
+
 document.querySelectorAll('[data-close-dialog]').forEach((button) => {
     button.addEventListener('click', () => {
         const dialog = button.closest('dialog');

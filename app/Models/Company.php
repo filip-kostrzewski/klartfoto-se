@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 use Laravel\Cashier\Billable;
 use Laravel\Cashier\Subscription;
 
@@ -27,6 +28,7 @@ class Company extends Model
     {
         return [
             'plan' => CompanyPlan::class,
+            'feedback_pilot' => 'boolean',
             'trial_ends_at' => 'datetime',
             'paid_until' => 'datetime',
             'requested_at' => 'datetime',
@@ -165,9 +167,22 @@ class Company extends Model
         return max(1, (int) ceil($seconds / 86400));
     }
 
+    public function feedbackPilotEndsAt(): Carbon
+    {
+        return Carbon::parse((string) config('klartfoto.feedback_pilot_ends_on', '2026-12-31'), 'Europe/Stockholm')->endOfDay()->utc();
+    }
+
+    public function onActiveFeedbackPilot(): bool
+    {
+        return $this->feedback_pilot === true && $this->feedbackPilotEndsAt()->isFuture();
+    }
+
     public function canManageJobs(): bool
     {
-        return $this->onGenericTrial() || $this->isManualPlanActive() || $this->subscribed('default');
+        return $this->onGenericTrial()
+            || $this->onActiveFeedbackPilot()
+            || $this->isManualPlanActive()
+            || $this->subscribed('default');
     }
 
     public function billingIsReady(): bool
@@ -180,12 +195,30 @@ class Company extends Model
 
     public function allowsTeamFeatures(): bool
     {
-        if ($this->onTrial()) {
+        if ($this->onTrial() || $this->onActiveFeedbackPilot()) {
             return true;
         }
 
         return $this->plan === CompanyPlan::Team
             && ($this->isManualPlanActive() || $this->subscribed('default'));
+    }
+
+    public function afterTrialAccessSummary(): string
+    {
+        $keptUsers = min(
+            max($this->users()->count(), 1),
+            (int) config('klartfoto.team_seat_limit', 10),
+        );
+        $startSeats = (int) config('klartfoto.start_seat_limit', 1);
+
+        return "Efter provperioden: välj Team för att behålla {$keptUsers} användare och logotypen. Med Start kan bara {$startSeats} användare logga in och logotypen visas inte.";
+    }
+
+    public function startPlanSignInMessage(): string
+    {
+        $startSeats = (int) config('klartfoto.start_seat_limit', 1);
+
+        return "Med Start kan bara {$startSeats} användare logga in. Befintliga rapporter kan öppnas av kontoägaren.";
     }
 
     public function isManualPlanActive(): bool

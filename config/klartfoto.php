@@ -8,7 +8,7 @@ $providerContactEmail = $contactEmail && filter_var($contactEmail, FILTER_VALIDA
 
 return [
     'trial_days' => (int) env('KLARTFOTO_TRIAL_DAYS', 30),
-    'trial_ends_at' => env('KLARTFOTO_TRIAL_ENDS_AT'),
+    'feedback_pilot_ends_on' => '2026-12-31',
     'contact_email' => $contactEmail && filter_var($contactEmail, FILTER_VALIDATE_EMAIL)
         ? $contactEmail
         : null,

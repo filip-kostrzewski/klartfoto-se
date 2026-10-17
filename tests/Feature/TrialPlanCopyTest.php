@@ -27,7 +27,8 @@ class TrialPlanCopyTest extends TestCase
         $this->actingAs($owner)->get(route('settings.edit'))
             ->assertOk()
             ->assertSee('Under provperioden har ni allt i Team: upp till 10 användare och egen logotyp.', false)
-            ->assertSee('Därefter har Start 1 användare och ingen egen logotyp. Team har upp till 10 användare och egen logotyp.', false)
+            ->assertSee('Efter provperioden: välj Team för att behålla 1 användare och logotypen. Med Start kan bara 1 användare logga in och logotypen visas inte.', false)
+            ->assertDontSee('Feedbackpilot – Team gratis till 31 december 2026', false)
             ->assertSee('Under provperioden har ni allt i Team, inklusive egen logotyp.', false);
 
         $this->actingAs($owner)->get(route('settings.billing'))

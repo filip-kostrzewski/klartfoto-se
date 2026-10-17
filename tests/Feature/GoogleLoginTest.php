@@ -81,8 +81,8 @@ class GoogleLoginTest extends TestCase
         $this->assertSame('Glans Städ AB', $user->name);
         $this->assertSame(CompanyRole::Owner, $user->role);
         $this->assertSame('Glans Städ AB', $user->company?->name);
-        $this->assertSame('2026-11-14 12:00:00', $user->trial_ends_at?->format('Y-m-d H:i:s'));
-        $this->assertSame('2026-11-14 12:00:00', $user->company?->trial_ends_at?->format('Y-m-d H:i:s'));
+        $this->assertSame('2026-11-14 23:59:59', $user->trial_ends_at?->timezone('Europe/Stockholm')->format('Y-m-d H:i:s'));
+        $this->assertSame('2026-11-14 23:59:59', $user->company?->trial_ends_at?->timezone('Europe/Stockholm')->format('Y-m-d H:i:s'));
     }
 
     public function test_google_callback_links_an_existing_account_without_resetting_the_trial(): void

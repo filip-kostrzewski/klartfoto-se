@@ -43,6 +43,7 @@ class CompanySettingsController extends Controller
             'pendingInvites' => $isOwner ? $company->invitations->count() : 0,
             'hasPendingInvoiceRequest' => $company->hasPendingInvoiceRequest(),
             'isTrialActive' => $company->onTrial(),
+            'isFeedbackPilot' => $company->onActiveFeedbackPilot(),
             'isManualPlanActive' => $company->isManualPlanActive(),
             'canManageJobs' => $user->canManageJobs(),
             'hasTeamFeatures' => $company->allowsTeamFeatures(),
