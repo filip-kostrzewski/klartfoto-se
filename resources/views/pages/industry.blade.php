@@ -60,23 +60,32 @@
         <article class="industry-report-preview">
             <div class="industry-report-preview-heading">
                 <span class="report-mark" aria-hidden="true"><x-icon name="report" /></span>
-                <div><span>{{ $home['sample_disclaimer'] }}</span><strong>{{ $home['sample_card_title'] }}</strong></div>
+                <div><span>{{ $page['example_label'] }}</span><strong>{{ $page['preview_title'] }}</strong></div>
             </div>
             <div class="industry-report-preview-meta">
                 <span><small>{{ $home['object_label'] }}</small><strong>{{ $home['object_value'] }}</strong></span>
                 <span><small>{{ $home['place_label'] }}</small><strong>{{ $home['place_value'] }}</strong></span>
                 <span><small>{{ $home['status_label'] }}</small><strong>{{ $home['status_value'] }}</strong></span>
             </div>
-            <div class="industry-report-preview-photos">
-                <figure>
-                    <img src="{{ asset('images/demo/kitchen-before-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" width="768" height="512" alt="" loading="lazy" decoding="async">
-                    <figcaption>{{ $home['before'] }}</figcaption>
-                </figure>
-                <figure>
-                    <img src="{{ asset('images/demo/kitchen-after-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" width="768" height="512" alt="" loading="lazy" decoding="async">
-                    <figcaption>{{ $home['after'] }}</figcaption>
-                </figure>
-            </div>
+            @if (($page['route_key'] ?? 'cleaning') === 'cleaning')
+                <div class="industry-report-preview-photos">
+                    <figure>
+                        <img src="{{ asset('images/demo/kitchen-before-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" width="768" height="512" alt="" loading="lazy" decoding="async">
+                        <figcaption>{{ $home['before'] }}</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="{{ asset('images/demo/kitchen-after-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" width="768" height="512" alt="" loading="lazy" decoding="async">
+                        <figcaption>{{ $home['after'] }}</figcaption>
+                    </figure>
+                </div>
+            @else
+                <div class="industry-report-preview-photos industry-report-preview-photos-single">
+                    <figure>
+                        <img src="{{ asset('images/'.($page['route_key'] ?? 'cleaning').'-detail-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" width="768" height="512" alt="{{ $page['image_alt'] }}" loading="lazy" decoding="async">
+                        <figcaption>{{ $page['preview_title'] }}</figcaption>
+                    </figure>
+                </div>
+            @endif
         </article>
     </section>
 

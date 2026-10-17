@@ -259,7 +259,23 @@ class MarketingSiteTest extends TestCase
         $this->get('/for-stadforetag')
             ->assertOk()
             ->assertSee('images/cleaning-detail.webp?v='.config('klartfoto.demo_asset_version'), false)
-            ->assertSee('AI-genererat demofoto av en person som torkar av en köksbänk', false);
+            ->assertSee('AI-genererat demofoto av en person som torkar av en köksbänk', false)
+            ->assertSee('Efter städning', false)
+            ->assertSee('images/demo/kitchen-before-small.webp?v='.config('klartfoto.demo_asset_version'), false);
+
+        $this->get('/for-hantverkare')
+            ->assertOk()
+            ->assertSee('Efter utfört arbete', false)
+            ->assertSee('images/renovation-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertDontSee('Efter städning', false)
+            ->assertDontSee('images/demo/kitchen-before-small.webp', false);
+
+        $this->get('/for-uthyrare')
+            ->assertOk()
+            ->assertSee('Inför nästa gäst', false)
+            ->assertSee('images/property-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
+            ->assertDontSee('Efter städning', false)
+            ->assertDontSee('images/demo/kitchen-after-small.webp', false);
 
         $this->get('/pl')
             ->assertOk()
