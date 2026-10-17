@@ -22,9 +22,9 @@
         </div>
 
         @if ($onTrial && $trialEndsAt)
-            <div class="trial-strip"><span class="trial-strip-icon" aria-hidden="true">✓</span><p><strong>Provperiod</strong><span>Gratis till {{ $trialEndsAt->locale('sv')->translatedFormat('j F Y') }}. Inget kort behövs. Därefter har ni ingen aktiv åtkomst till nya uppdrag. Du kan fortfarande öppna befintliga rapporter.</span></p></div>
+            <div class="trial-strip"><span class="trial-strip-icon" aria-hidden="true">✓</span><p><strong>Provperiod</strong><span>Gratis till {{ $trialEndsAt->locale('sv')->translatedFormat('j F Y') }}. Inget kort behövs. Därefter har ni ingen aktiv åtkomst till nya uppdrag. Ni kan fortfarande öppna befintliga rapporter.</span></p></div>
         @elseif (! $canManageJobs)
-            <div class="form-status form-status-error" role="status">Ingen aktiv åtkomst till nya uppdrag. Du kan fortfarande öppna befintliga rapporter.</div>
+            <div class="form-status form-status-error" role="status">Ingen aktiv åtkomst till nya uppdrag. Ni kan fortfarande öppna befintliga rapporter.</div>
         @endif
 
         @if ($assignmentTotal > 0 || $hasAssignmentFilters)

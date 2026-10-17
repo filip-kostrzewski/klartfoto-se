@@ -336,7 +336,9 @@ class SendAssignmentEmailTest extends TestCase
                 'recipient_email' => 'customer@example.test',
             ])
             ->assertRedirect(route('assignments.show', $expiredAssignment, false))
-            ->assertSessionHasErrors('email');
+            ->assertSessionHasErrors([
+                'email' => 'Din åtkomst till nya uppdrag har pausats. Ni kan fortfarande öppna befintliga rapporter.',
+            ]);
 
         $this->assertDatabaseCount('assignment_email_attempts', 0);
         $this->assertNull($unverifiedAssignment->fresh()->customer_email);

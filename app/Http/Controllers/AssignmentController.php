@@ -40,7 +40,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class AssignmentController extends Controller
 {
-    private const ACCESS_PAUSED_MESSAGE = 'Ingen aktiv åtkomst till nya uppdrag. Du kan fortfarande öppna befintliga rapporter.';
+    private const ACCESS_PAUSED_MESSAGE = 'Ingen aktiv åtkomst till nya uppdrag. Ni kan fortfarande öppna befintliga rapporter.';
 
     public function index(Request $request, OnboardingChecklist $checklist): View
     {

@@ -32,7 +32,7 @@ class SendAssignmentEmailController extends Controller
 
         if (! $user->canManageJobs()) {
             return back()->withInput($previousInput)->withErrors([
-                'email' => 'Din åtkomst till nya uppdrag har pausats. Du kan fortfarande öppna befintliga rapporter.',
+                'email' => 'Din åtkomst till nya uppdrag har pausats. Ni kan fortfarande öppna befintliga rapporter.',
             ]);
         }
 

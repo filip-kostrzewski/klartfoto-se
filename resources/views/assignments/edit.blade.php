@@ -77,7 +77,7 @@
                 </div>
             </form>
         @else
-            <div class="app-panel"><p>Åtkomsten är pausad. Du kan fortfarande öppna befintliga rapporter.</p></div>
+            <div class="app-panel"><p>Åtkomsten är pausad. Ni kan fortfarande öppna befintliga rapporter.</p></div>
         @endif
     </section>
 @endsection
