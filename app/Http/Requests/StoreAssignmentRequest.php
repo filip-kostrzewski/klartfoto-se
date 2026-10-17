@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Concerns\ValidatesJobPhotos;
 use App\Models\CustomerProperty;
+use App\Support\SwedishDate;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -17,7 +18,9 @@ class StoreAssignmentRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $times = [];
+        $times = [
+            'performed_on' => SwedishDate::toIso($this->input('performed_on')),
+        ];
 
         foreach (['performed_time', 'performed_end_time'] as $field) {
             if ($this->input($field) === '') {

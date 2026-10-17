@@ -53,7 +53,7 @@
                     @error('address') <span class="field-error" id="address-error">{{ $message }}</span> @enderror
 
                     <label for="performed_on">Datum</label>
-                    <input id="performed_on" name="performed_on" type="date" required value="{{ old('performed_on', $assignment->performed_on->toDateString()) }}" aria-invalid="{{ $errors->has('performed_on') ? 'true' : 'false' }}" @if ($errors->has('performed_on')) aria-describedby="performed-on-error" @endif>
+                    <x-swedish-date id="performed_on" name="performed_on" :value="old('performed_on', $assignment->performed_on->toDateString())" :required="true" :invalid="$errors->has('performed_on')" error-id="performed-on-error" />
                     @error('performed_on') <span class="field-error" id="performed-on-error">{{ $message }}</span> @enderror
 
                     <div class="assignment-time-range">

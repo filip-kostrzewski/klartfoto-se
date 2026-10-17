@@ -78,11 +78,11 @@
                     </div>
                     <div class="assignment-filter-date">
                         <label for="assignment-from">Från datum</label>
-                        <input id="assignment-from" name="from" type="date" value="{{ $filters['from'] }}">
+                        <x-swedish-date id="assignment-from" name="from" :value="$filters['from']" />
                     </div>
                     <div class="assignment-filter-date">
                         <label for="assignment-to">Till datum</label>
-                        <input id="assignment-to" name="to" type="date" value="{{ $filters['to'] }}">
+                        <x-swedish-date id="assignment-to" name="to" :value="$filters['to']" />
                     </div>
                     <div class="assignment-filter-actions">
                         <button class="button button-dark" type="submit">Visa uppdrag</button>
@@ -141,8 +141,10 @@
                                 <span class="job-list-meta">
                                     <span>{{ $assignment->performedLabel() }}</span>
                                     <span>{{ $assignment->photos_count }} {{ $assignment->photos_count === 1 ? 'bild' : 'bilder' }}</span>
-                                <span class="job-status job-status-{{ $assignment->status }}">
-                                    @if ($assignment->status === 'ready')
+                                <span class="job-status {{ $assignment->isArchived() ? 'job-status-archived' : 'job-status-'.$assignment->status }}">
+                                    @if ($assignment->isArchived())
+                                        Arkiverat
+                                    @elseif ($assignment->status === 'ready')
                                         Klar att skicka
                                     @elseif ($assignment->status === 'sent')
                                         Skickad

@@ -20,6 +20,7 @@ use App\Models\AssignmentPlace;
 use App\Models\AssignmentReportVersion;
 use App\Models\User;
 use App\OnboardingChecklist;
+use App\Support\SwedishDate;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -49,7 +50,15 @@ class AssignmentController extends Controller
         $company = $user->company;
         abort_if($company === null, 403);
 
-        $validatedFilters = Validator::make($request->query(), [
+        $query = $request->query();
+
+        foreach (['from', 'to'] as $field) {
+            if (array_key_exists($field, $query)) {
+                $query[$field] = SwedishDate::toIso($query[$field]);
+            }
+        }
+
+        $validatedFilters = Validator::make($query, [
             'q' => ['nullable', 'string', 'max:120'],
             'status' => ['nullable', Rule::in(['draft', 'ready', 'sent'])],
             'from' => ['nullable', 'date'],

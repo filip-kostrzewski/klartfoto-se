@@ -3247,8 +3247,18 @@ html.cookie-choice-saved .cookie-banner {
     line-height: 1.45;
 }
 
-.assignment-dialog {
+dialog.assignment-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    z-index: 50;
     width: min(100% - 32px, 460px);
+    max-height: calc(100dvh - 32px);
+    margin: 0;
+    overflow: auto;
+    transform: translate(-50%, -50%);
     border: 1px solid var(--line);
     border-radius: 3px;
     padding: 24px;
@@ -9480,6 +9490,26 @@ html {
     border-color: #cddbd0;
     background: #edf4ef;
     color: #315741;
+}
+
+.job-status-archived {
+    border-color: #ddd8cc;
+    background: #f6f3ea;
+    color: #5c5346;
+}
+
+@media (max-width: 520px) {
+    dialog.assignment-dialog {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        bottom: auto;
+        width: min(100vw - 32px, 460px);
+        max-height: calc(100dvh - 32px);
+        margin: 0;
+        transform: translate(-50%, -50%);
+    }
 }
 
 .assignment-team-disclosure {

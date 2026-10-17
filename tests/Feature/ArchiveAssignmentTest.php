@@ -69,6 +69,9 @@ class ArchiveAssignmentTest extends TestCase
             ->assertOk()
             ->assertSee('Archiv Kund', false)
             ->assertSee($notice, false)
+            ->assertSee('job-status-archived', false)
+            ->assertSee('Arkiverat', false)
+            ->assertDontSee('job-status-ready', false)
             ->assertDontSee('Aktiv Kund', false);
 
         $this->actingAs($owner)
