@@ -42,14 +42,27 @@
                 <p class="auth-lead">{{ $assignment->address }} <span aria-hidden="true">·</span> {{ $assignment->performedLabel() }}</p>
             </div>
             <div class="assignment-heading-actions">
+                @if ($canArchiveAssignment && ! $assignment->isArchived())
+                    <button class="button button-outline-dark" type="button" data-open-dialog="archive-assignment-dialog">Arkivera</button>
+                @endif
+                @if ($canArchiveAssignment && $assignment->isArchived())
+                    <form method="post" action="{{ route('assignments.restore', $assignment, false) }}">
+                        @csrf
+                        <button class="button button-outline-dark" type="submit">Återställ</button>
+                    </form>
+                @endif
                 @if ($canManageJobs)
                     <a class="button button-outline-dark" href="{{ route('assignments.edit', $assignment, false) }}">Redigera</a>
                     <a class="button button-lime" href="{{ route('assignments.create', $newVisitParameters, false) }}">Ny visit</a>
                 @endif
                 <a class="button button-outline-dark" href="#share-box">Skicka rapporten</a>
-                <a class="assignment-back-link" href="{{ route('assignments.index', absolute: false) }}">Alla uppdrag</a>
+                <a class="assignment-back-link" href="{{ route('assignments.index', $assignment->isArchived() ? ['arkiv' => 'arkiverade'] : [], false) }}">{{ $assignment->isArchived() ? 'Arkiverade uppdrag' : 'Alla uppdrag' }}</a>
             </div>
         </div>
+
+        @if ($assignment->isArchived())
+            <p class="assignment-archive-note" role="status">{{ \App\Models\Assignment::ARCHIVE_SHARE_LINK_NOTICE }}</p>
+        @endif
 
         @if (isset($canManageTeamAssignment, $canReviewAssignment, $canHandoffAssignment, $isReviewed, $teamMembers) && ($canManageTeamAssignment || $canReviewAssignment || $canHandoffAssignment || $isReviewed || (int) $assignment->assigned_to_user_id !== (int) $assignment->user_id || $assignment->reviewer_user_id))
             <details class="assignment-team-disclosure" @if ($errors->has('assigned_to_user_id') || $errors->has('reviewer_user_id')) open @endif>
@@ -458,13 +471,39 @@
             </section>
         @endif
 
+        @if ($canArchiveAssignment && ! $assignment->isArchived())
+            <dialog class="assignment-dialog" id="archive-assignment-dialog" aria-labelledby="archive-assignment-title">
+                <form method="post" action="{{ route('assignments.archive', $assignment, false) }}">
+                    @csrf
+                    <h2 id="archive-assignment-title">Arkivera uppdraget?</h2>
+                    <p>{{ $assignment->customer_name }} <span aria-hidden="true">·</span> {{ $assignment->address }}</p>
+                    <p>{{ \App\Models\Assignment::ARCHIVE_SHARE_LINK_NOTICE }}</p>
+                    <div class="assignment-dialog-actions">
+                        <button class="button button-outline-dark" type="submit" formmethod="dialog" data-close-dialog data-dialog-cancel autofocus>Avbryt</button>
+                        <button class="button button-dark" type="submit">Arkivera</button>
+                    </div>
+                </form>
+            </dialog>
+        @endif
+
         @if ($canDeleteAssignment)
-            <form class="assignment-delete" method="post" action="{{ route('assignments.destroy', $assignment, false) }}" onsubmit="return confirm('Vill du radera det här uppdraget? Alla bilder, rapportversioner och delningslänkar tas bort permanent.');">
-                @csrf
-                @method('DELETE')
-                <p>Radering tar bort bilderna, rapportversionerna och delningslänkarna. Det går inte att ångra.</p>
-                <button class="button button-outline-dark" type="submit">Radera uppdrag</button>
-            </form>
+            <div class="assignment-delete">
+                <p>Radering tar bort bilderna, rapportversionerna, PDF:erna och delningslänkarna. Det går inte att ångra.</p>
+                <button class="button button-danger" type="button" data-open-dialog="delete-assignment-dialog">Radera uppdrag</button>
+            </div>
+            <dialog class="assignment-dialog" id="delete-assignment-dialog" aria-labelledby="delete-assignment-title">
+                <form method="post" action="{{ route('assignments.destroy', $assignment, false) }}">
+                    @csrf
+                    @method('DELETE')
+                    <h2 id="delete-assignment-title">Radera uppdraget?</h2>
+                    <p>{{ $assignment->customer_name }} <span aria-hidden="true">·</span> {{ $assignment->address }}</p>
+                    <p>Bilder, rapportversioner, PDF:er och delningslänkar tas bort permanent.</p>
+                    <div class="assignment-dialog-actions">
+                        <button class="button button-outline-dark" type="submit" formmethod="dialog" data-close-dialog data-dialog-cancel autofocus>Avbryt</button>
+                        <button class="button button-danger-solid" type="submit">Radera permanent</button>
+                    </div>
+                </form>
+            </dialog>
         @endif
     </section>
 @endsection

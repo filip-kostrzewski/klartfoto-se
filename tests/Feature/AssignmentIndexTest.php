@@ -57,6 +57,7 @@ class AssignmentIndexTest extends TestCase
                 'status' => 'sent',
                 'from' => '2026-10-15',
                 'to' => '2026-10-16',
+                'arkiv' => '',
             ])
             ->assertViewHas('assignmentTotal', 21)
             ->assertViewHas('photoTotal', 2);

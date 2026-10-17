@@ -3214,6 +3214,76 @@ html.cookie-choice-saved .cookie-banner {
     margin: 0 0 12px;
 }
 
+.button-danger {
+    border-color: #9f2d2d;
+    background: transparent;
+    color: #9f2d2d;
+}
+
+.button-danger:hover {
+    background: #9f2d2d;
+    color: var(--white);
+}
+
+.button-danger-solid {
+    border-color: #9f2d2d;
+    background: #9f2d2d;
+    color: var(--white);
+}
+
+.button-danger-solid:hover {
+    background: #7d2222;
+    color: var(--white);
+}
+
+.assignment-archive-note {
+    margin: 0 0 18px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    background: #f6f8f2;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.assignment-dialog {
+    width: min(100% - 32px, 460px);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 24px;
+    background: var(--white);
+    color: var(--ink);
+}
+
+.assignment-dialog::backdrop {
+    background: rgba(17, 23, 21, .55);
+}
+
+.assignment-dialog h2 {
+    margin: 0 0 12px;
+    font-size: 22px;
+    line-height: 1.25;
+}
+
+.assignment-dialog p {
+    margin: 0 0 12px;
+    line-height: 1.45;
+}
+
+.assignment-dialog-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.assignment-dialog-actions .button {
+    width: auto;
+    min-height: 46px;
+}
+
 .photo-delete button {
     min-height: 44px;
     padding: 8px 14px;
@@ -5757,6 +5827,14 @@ html {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.job-archive-note {
+    grid-column: 1 / -1;
+    color: #5b685f;
+    font-size: 12px;
+    line-height: 1.45;
+    white-space: normal;
 }
 
 .job-list-meta {
@@ -10098,7 +10176,7 @@ html {
 
 .assignment-filters {
     display: grid;
-    grid-template-columns: minmax(190px, 1.7fr) minmax(140px, 1fr) repeat(2, minmax(132px, .9fr)) auto;
+    grid-template-columns: minmax(180px, 1.6fr) repeat(2, minmax(128px, .9fr)) repeat(2, minmax(120px, .8fr)) auto;
     align-items: end;
     gap: 10px;
 }

@@ -26,6 +26,7 @@ class DeleteAssignmentTest extends TestCase
         $member = User::factory()->memberOf($owner->company)->create();
         $assignment = Assignment::factory()->for($owner)->create([
             'customer_name' => 'Anna Andersson',
+            'address' => 'Storgatan 12',
         ]);
         $photoPath = 'assignments/'.$assignment->id.'/report.jpg';
         Storage::disk('local')->put($photoPath, 'report-photo');
@@ -80,8 +81,15 @@ class DeleteAssignmentTest extends TestCase
 
         $this->actingAs($owner)->get(route('assignments.show', $assignment))
             ->assertOk()
-            ->assertSee('Radera uppdrag', false)
-            ->assertSee('Vill du radera det här uppdraget? Alla bilder, rapportversioner och delningslänkar tas bort permanent.', false);
+            ->assertSee('Radera uppdraget?', false)
+            ->assertSee('Anna Andersson', false)
+            ->assertSee('Storgatan 12', false)
+            ->assertSee('Bilder, rapportversioner, PDF:er och delningslänkar tas bort permanent.', false)
+            ->assertSee('Radera permanent', false)
+            ->assertSee('button button-danger" type="button" data-open-dialog="delete-assignment-dialog"', false)
+            ->assertSee('data-dialog-cancel autofocus', false)
+            ->assertSee('Avbryt', false)
+            ->assertDontSee('Vill du radera det här uppdraget? Alla bilder, rapportversioner och delningslänkar tas bort permanent.', false);
 
         $this->actingAs($member)->get(route('assignments.show', $assignment))
             ->assertOk()

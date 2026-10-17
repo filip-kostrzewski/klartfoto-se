@@ -39,6 +39,17 @@ class AssignmentPolicy
             : Response::deny('Endast kontoägaren kan radera ett uppdrag.');
     }
 
+    public function archive(User $user, Assignment $assignment): Response
+    {
+        if (! $this->owns($user, $assignment)->allowed()) {
+            return Response::denyAsNotFound();
+        }
+
+        return $user->isOwner() || $user->canManageJobs()
+            ? Response::allow()
+            : Response::deny('Endast den som kan hantera uppdrag kan arkivera.');
+    }
+
     private function owns(User $user, Assignment $assignment): Response
     {
         return $user->company_id !== null && $user->company_id === $assignment->company_id

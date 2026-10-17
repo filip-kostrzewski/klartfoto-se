@@ -6,6 +6,7 @@ use App\PhotoPhase;
 use Database\Factories\AssignmentFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,6 +17,8 @@ use Illuminate\Support\Str;
 #[Hidden(['customer_email'])]
 class Assignment extends Model
 {
+    public const ARCHIVE_SHARE_LINK_NOTICE = 'Rapportlänken fungerar fortfarande – kunden kan se bilderna. Radera uppdraget om länken ska sluta fungera.';
+
     /** @use HasFactory<AssignmentFactory> */
     use HasFactory;
 
@@ -42,7 +45,22 @@ class Assignment extends Model
             'report_shared_at' => 'datetime',
             'link_copied_at' => 'datetime',
             'reviewed_at' => 'datetime',
+            'archived_at' => 'datetime',
         ];
+    }
+
+    /**
+     * @param  Builder<Assignment>  $query
+     * @return Builder<Assignment>
+     */
+    public function scopeNotArchived(Builder $query): Builder
+    {
+        return $query->whereNull('archived_at');
+    }
+
+    public function isArchived(): bool
+    {
+        return $this->archived_at !== null;
     }
 
     public function user(): BelongsTo

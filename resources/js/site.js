@@ -1093,3 +1093,24 @@ document.querySelectorAll('[data-copy-url]').forEach((button) => {
         }
     });
 });
+
+document.querySelectorAll('[data-open-dialog]').forEach((button) => {
+    button.addEventListener('click', () => {
+        const dialog = document.getElementById(button.dataset.openDialog ?? '');
+
+        if (dialog instanceof HTMLDialogElement && ! dialog.open) {
+            dialog.showModal();
+            dialog.querySelector('[data-dialog-cancel]')?.focus();
+        }
+    });
+});
+
+document.querySelectorAll('[data-close-dialog]').forEach((button) => {
+    button.addEventListener('click', () => {
+        const dialog = button.closest('dialog');
+
+        if (dialog instanceof HTMLDialogElement) {
+            dialog.close();
+        }
+    });
+});

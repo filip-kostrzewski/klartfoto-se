@@ -4,6 +4,11 @@
 @section('page-heading', 'Uppdrag')
 
 @section('content')
+    @php
+        $hasAssignmentFilters = $filters['q'] !== '' || $filters['status'] !== '' || $filters['from'] !== '' || $filters['to'] !== '' || $filters['arkiv'] !== '';
+        $showingArchived = $filters['arkiv'] === 'arkiverade';
+        $archiveOnly = $showingArchived && $filters['q'] === '' && $filters['status'] === '' && $filters['from'] === '' && $filters['to'] === '';
+    @endphp
     <section class="dashboard-page">
         <div class="app-page-heading">
             <div>
@@ -22,7 +27,7 @@
             <div class="form-status form-status-error" role="status">Åtkomsten är pausad. Du kan fortfarande öppna rapporter som redan är skapade.</div>
         @endif
 
-        @if ($assignmentTotal > 0 || $filters['q'] !== '' || $filters['status'] !== '' || $filters['from'] !== '' || $filters['to'] !== '')
+        @if ($assignmentTotal > 0 || $hasAssignmentFilters)
             <div class="dashboard-stats @isset($readyToSendCount) dashboard-stats-ready @endisset" aria-label="Översikt">
                 <div class="dashboard-stat"><span>Uppdrag i urvalet</span><strong>{{ $assignmentTotal }}</strong><x-icon name="report" /></div>
                 <div class="dashboard-stat"><span>Bilder i urvalet</span><strong>{{ $photoTotal }}</strong><x-icon name="camera" /></div>
@@ -43,7 +48,7 @@
 
         <section class="assignment-list-section" aria-labelledby="assignment-list-heading">
             <div class="assignment-list-heading">
-                <div><h2 id="assignment-list-heading">Dina uppdrag</h2><p>{{ $assignments->isEmpty() ? 'Dina sparade kundbesök visas här.' : 'Sök bland kundbesök och öppna rapporten du behöver.' }}</p></div>
+                <div><h2 id="assignment-list-heading">{{ $showingArchived ? 'Arkiverade uppdrag' : 'Dina uppdrag' }}</h2><p>{{ $assignments->isEmpty() ? ($showingArchived ? 'Arkiverade kundbesök visas här.' : 'Dina sparade kundbesök visas här.') : 'Sök bland kundbesök och öppna rapporten du behöver.' }}</p></div>
                 @if ($canManageJobs && $assignments->isNotEmpty())
                     <a class="text-link" href="{{ route('assignments.create', absolute: false) }}">Lägg till</a>
                 @endif
@@ -64,6 +69,13 @@
                             <option value="sent" @selected($filters['status'] === 'sent')>Delad</option>
                         </select>
                     </div>
+                    <div class="assignment-filter-archive">
+                        <label for="assignment-archive">Lista</label>
+                        <select id="assignment-archive" name="arkiv">
+                            <option value="">Aktiva</option>
+                            <option value="arkiverade" @selected($showingArchived)>Arkiverade</option>
+                        </select>
+                    </div>
                     <div class="assignment-filter-date">
                         <label for="assignment-from">Från datum</label>
                         <input id="assignment-from" name="from" type="date" value="{{ $filters['from'] }}">
@@ -74,7 +86,7 @@
                     </div>
                     <div class="assignment-filter-actions">
                         <button class="button button-dark" type="submit">Visa uppdrag</button>
-                        @if ($filters['q'] !== '' || $filters['status'] !== '' || $filters['from'] !== '' || $filters['to'] !== '')
+                        @if ($hasAssignmentFilters)
                             <a class="assignment-filter-reset" href="{{ route('assignments.index', absolute: false) }}">Rensa filter</a>
                         @endif
                     </div>
@@ -82,11 +94,23 @@
             </div>
 
             @if ($assignments->isEmpty())
-                @if ($filters['q'] !== '' || $filters['status'] !== '' || $filters['from'] !== '' || $filters['to'] !== '')
+                @if ($archiveOnly)
+                    <div class="assignment-no-results" role="status">
+                        <span class="empty-state-icon"><x-icon name="report" /></span>
+                        <div><h3>Inga arkiverade uppdrag</h3><p>Arkiverade uppdrag visas här. Rapportlänken fortsätter att fungera tills uppdraget raderas.</p></div>
+                        <a class="button button-outline-dark" href="{{ route('assignments.index', absolute: false) }}">Visa aktiva</a>
+                    </div>
+                @elseif ($hasAssignmentFilters)
                     <div class="assignment-no-results" role="status">
                         <span class="empty-state-icon"><x-icon name="search" /></span>
                         <div><h3>Inga uppdrag matchar urvalet</h3><p>Prova ett annat namn, datum eller rapportstatus.</p></div>
                         <a class="button button-outline-dark" href="{{ route('assignments.index', absolute: false) }}">Rensa filter</a>
+                    </div>
+                @elseif ($archivedAssignmentCount > 0)
+                    <div class="assignment-no-results" role="status">
+                        <span class="empty-state-icon"><x-icon name="report" /></span>
+                        <div><h3>Inga aktiva uppdrag</h3><p>Arkiverade uppdrag visas under filtret Arkiverade.</p></div>
+                        <a class="button button-outline-dark" href="{{ route('assignments.index', ['arkiv' => 'arkiverade'], false) }}">Visa arkiverade</a>
                     </div>
                 @else
                     <div class="dashboard-empty-state">
@@ -127,6 +151,9 @@
                                     @endif
                                 </span>
                                 </span>
+                                @if ($assignment->isArchived())
+                                    <span class="job-archive-note">{{ \App\Models\Assignment::ARCHIVE_SHARE_LINK_NOTICE }}</span>
+                                @endif
                             </a>
                         </li>
                     @endforeach

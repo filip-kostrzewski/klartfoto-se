@@ -54,15 +54,22 @@ class AssignmentController extends Controller
             'status' => ['nullable', Rule::in(['draft', 'ready', 'sent'])],
             'from' => ['nullable', 'date'],
             'to' => ['nullable', 'date', 'after_or_equal:from'],
+            'arkiv' => ['nullable', Rule::in(['arkiverade'])],
         ])->validate();
         $filters = [
             'q' => trim((string) ($validatedFilters['q'] ?? '')),
             'status' => (string) ($validatedFilters['status'] ?? ''),
             'from' => (string) ($validatedFilters['from'] ?? ''),
             'to' => (string) ($validatedFilters['to'] ?? ''),
+            'arkiv' => (string) ($validatedFilters['arkiv'] ?? ''),
         ];
 
         $assignmentQuery = $company->assignments();
+        if ($filters['arkiv'] === 'arkiverade') {
+            $assignmentQuery->whereNotNull('archived_at');
+        } else {
+            $assignmentQuery->notArchived();
+        }
         if ($filters['q'] !== '') {
             $search = '%'.$filters['q'].'%';
             $assignmentQuery->where(function (Builder $query) use ($search): void {
@@ -95,6 +102,7 @@ class AssignmentController extends Controller
             ->paginate(20)
             ->withQueryString();
         $readyToSendCount = $company->assignments()
+            ->notArchived()
             ->where('status', 'ready')
             ->whereHas('photos')
             ->whereHas('reportVersions', function (Builder $query): void {
@@ -148,6 +156,7 @@ class AssignmentController extends Controller
             'assignmentTotal' => $assignmentTotal,
             'photoTotal' => $photoTotal,
             'readyToSendCount' => $readyToSendCount,
+            'archivedAssignmentCount' => $company->assignments()->whereNotNull('archived_at')->count(),
             'onTrial' => $company->onTrial(),
             'canManageJobs' => $user->canManageJobs(),
             'companyName' => $company->name,
@@ -363,7 +372,34 @@ class AssignmentController extends Controller
             'canViewCustomerResponses' => $canViewCustomerResponses,
             'customerResponses' => $customerResponses,
             'canDeleteAssignment' => $user instanceof User && $user->can('delete', $assignment),
+            'canArchiveAssignment' => $user instanceof User && $user->can('archive', $assignment),
         ]);
+    }
+
+    public function archive(Assignment $assignment): RedirectResponse
+    {
+        Gate::authorize('archive', $assignment);
+
+        if ($assignment->archived_at === null) {
+            $assignment->forceFill(['archived_at' => now()])->save();
+        }
+
+        return redirect()
+            ->route('assignments.show', $assignment)
+            ->with('toast', 'Uppdraget är arkiverat.');
+    }
+
+    public function restore(Assignment $assignment): RedirectResponse
+    {
+        Gate::authorize('archive', $assignment);
+
+        if ($assignment->archived_at !== null) {
+            $assignment->forceFill(['archived_at' => null])->save();
+        }
+
+        return redirect()
+            ->route('assignments.show', $assignment)
+            ->with('toast', 'Uppdraget är återställt.');
     }
 
     public function destroy(Assignment $assignment, DeleteAssignment $deleteAssignment): RedirectResponse

@@ -56,6 +56,8 @@ Route::middleware('auth')->group(function (): void {
     Route::put('/uppdrag/{assignment}/platser/{place}/par/{pair}/kommentarer', [AssignmentController::class, 'updatePhotoPairNotes'])->name('assignments.places.pairs.notes.update');
     Route::get('/uppdrag/{assignment}', [AssignmentController::class, 'show'])->name('assignments.show');
     Route::delete('/uppdrag/{assignment}', [AssignmentController::class, 'destroy'])->name('assignments.destroy');
+    Route::post('/uppdrag/{assignment}/arkiv', [AssignmentController::class, 'archive'])->name('assignments.archive');
+    Route::post('/uppdrag/{assignment}/aterstall', [AssignmentController::class, 'restore'])->name('assignments.restore');
     Route::post('/uppdrag/{assignment}/e-post', SendAssignmentEmailController::class)
         ->middleware('throttle:assignment-email')
         ->name('assignments.email');
