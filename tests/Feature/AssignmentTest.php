@@ -173,7 +173,7 @@ class AssignmentTest extends TestCase
         $this->assertDatabaseCount('assignments', 0);
     }
 
-    public function test_owner_and_member_can_delete_a_draft_photo_without_rewriting_the_public_report(): void
+    public function test_owner_and_member_can_delete_a_photo_and_the_public_report_drops_it(): void
     {
         Storage::fake('local');
         $owner = User::factory()->create();
@@ -224,7 +224,8 @@ class AssignmentTest extends TestCase
             ->assertRedirect(route('assignments.show', $assignment))
             ->assertSessionHas('toast', 'Bilden är borttagen.');
 
-        Storage::disk('local')->assertExists($before->path);
+        Storage::disk('local')->assertMissing($before->path);
+        Storage::disk('local')->assertExists($after->path);
         $this->assertModelMissing($before);
         $this->assertModelExists($after);
 
@@ -234,10 +235,15 @@ class AssignmentTest extends TestCase
             ->assertDontSee('/foton/'.$before->id, false)
             ->assertSee('Ta bort', false);
 
+        $beforeAssetUrl = '/version-foton/'.$reportAssets->get($before->id)->id;
+        $afterAssetUrl = '/version-foton/'.$reportAssets->get($after->id)->id;
+
         $this->get('/r/'.$assignment->public_token)
             ->assertOk()
-            ->assertSee('/version-foton/'.$reportAssets->get($before->id)->id, false)
-            ->assertSee('/version-foton/'.$reportAssets->get($after->id)->id, false)
+            ->assertDontSee($beforeAssetUrl, false)
+            ->assertSee($afterAssetUrl, false)
+            ->assertDontSee($before->path, false)
             ->assertDontSee('Ta bort', false);
+        $this->get('/r/'.$assignment->public_token.$beforeAssetUrl)->assertNotFound();
     }
 }

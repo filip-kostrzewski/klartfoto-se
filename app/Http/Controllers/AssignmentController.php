@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CreateAssignmentReportVersion;
+use App\Actions\DeleteAssignmentPhoto;
 use App\Actions\SaveAssignmentCustomer;
 use App\Actions\SendAssignmentReportEmail;
 use App\Actions\StoreAssignmentPhotos;
@@ -16,7 +17,6 @@ use App\Models\AssignmentPhoto;
 use App\Models\AssignmentPhotoPair;
 use App\Models\AssignmentPlace;
 use App\Models\AssignmentReportVersion;
-use App\Models\AssignmentReportVersionAsset;
 use App\Models\User;
 use App\OnboardingChecklist;
 use Illuminate\Database\Eloquent\Builder;
@@ -445,7 +445,7 @@ class AssignmentController extends Controller
         return $this->jsonOrRedirect(route('assignments.show', $assignment), 'Bilderna är uppladdade.');
     }
 
-    public function destroyPhoto(Assignment $assignment, AssignmentPhoto $photo): RedirectResponse
+    public function destroyPhoto(Assignment $assignment, AssignmentPhoto $photo, DeleteAssignmentPhoto $deletePhoto): RedirectResponse
     {
         Gate::authorize('update', $assignment);
         abort_unless($photo->assignment_id === $assignment->id, 404);
@@ -458,33 +458,7 @@ class AssignmentController extends Controller
             ]);
         }
 
-        $deletion = DB::transaction(function () use ($assignment, $photo): array {
-            $lockedAssignment = Assignment::query()
-                ->whereKey($assignment->getKey())
-                ->lockForUpdate()
-                ->firstOrFail();
-            $lockedPhoto = AssignmentPhoto::query()
-                ->whereKey($photo->getKey())
-                ->where('assignment_id', $lockedAssignment->getKey())
-                ->lockForUpdate()
-                ->firstOrFail();
-            $snapshotHasPhoto = AssignmentReportVersionAsset::query()
-                ->where('type', AssignmentReportVersionAsset::TYPE_PHOTO)
-                ->where('source_photo_id', $lockedPhoto->id)
-                ->exists();
-
-            $lockedPhoto->delete();
-            $lockedAssignment->markDraftChanged();
-
-            return [
-                'path' => $lockedPhoto->path,
-                'delete_file' => ! $snapshotHasPhoto,
-            ];
-        }, attempts: 3);
-
-        if ($deletion['delete_file']) {
-            Storage::disk('local')->delete($deletion['path']);
-        }
+        $deletePhoto->handle($assignment, $photo);
 
         return redirect()
             ->route('assignments.show', $assignment)

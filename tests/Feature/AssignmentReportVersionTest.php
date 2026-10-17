@@ -19,7 +19,7 @@ class AssignmentReportVersionTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_photo_pairs_keep_their_slots_after_delete_and_reorder_and_sent_version_keeps_photo_bytes(): void
+    public function test_photo_pairs_keep_their_slots_after_delete_and_reorder_and_the_published_photo_is_removed(): void
     {
         Storage::fake('local');
         $owner = User::factory()->create();
@@ -52,16 +52,17 @@ class AssignmentReportVersionTest extends TestCase
         $this->assertInstanceOf(AssignmentPhoto::class, $firstAfter);
         $this->assertInstanceOf(AssignmentPhoto::class, $secondBefore);
         $this->assertInstanceOf(AssignmentPhoto::class, $secondAfter);
-        $firstBeforeBytes = Storage::disk('local')->get($firstBefore->path);
         $firstBeforeAsset = $version->photoAssets()->where('source_photo_id', $firstBefore->id)->sole();
-        $originalSnapshot = $version->snapshot;
+        $firstAfterAsset = $version->photoAssets()->where('source_photo_id', $firstAfter->id)->sole();
 
         $this->actingAs($owner)->post(route('assignments.share', $assignment, false))
             ->assertRedirect();
 
         $this->actingAs($owner)->delete(route('assignments.photos.destroy', [$assignment, $firstBefore], false))
             ->assertRedirect();
-        Storage::disk('local')->assertExists($firstBefore->path);
+        Storage::disk('local')->assertMissing($firstBefore->path);
+        Storage::disk('local')->assertExists($firstAfter->path);
+        $snapshotAfterDelete = $version->fresh()->snapshot;
 
         $this->actingAs($owner)->put(route('assignments.places.pairs.reorder', [$assignment, $place], false), [
             'pair_ids' => [$pairs[1]->id, $pairs[0]->id],
@@ -73,7 +74,8 @@ class AssignmentReportVersionTest extends TestCase
         $this->assertSame($secondAfter->id, $currentPairs[0]['after']->id);
         $this->assertNull($currentPairs[1]['before']);
         $this->assertSame($firstAfter->id, $currentPairs[1]['after']->id);
-        $this->assertSame($originalSnapshot, $version->fresh()->snapshot);
+        $this->assertSame($snapshotAfterDelete, $version->fresh()->snapshot);
+        $this->assertStringNotContainsString($firstBefore->path, json_encode($snapshotAfterDelete, JSON_THROW_ON_ERROR));
 
         $existingPhotoIds = $assignment->photos()->pluck('id')->all();
         $this->actingAs($owner)->post(route('assignments.photos.store', $assignment, false), [
@@ -89,19 +91,18 @@ class AssignmentReportVersionTest extends TestCase
         $this->get(route('reports.photos.show', [
             'token' => $version->token,
             'photo' => $firstBefore->id,
-        ], false))->assertOk();
+        ], false))->assertNotFound();
 
         $this->get(route('reports.show', ['token' => $version->token], false))
             ->assertOk()
-            ->assertSee(route('reports.version-assets.show', ['token' => $version->token, 'asset' => $firstBeforeAsset->id], false), false);
+            ->assertDontSee(route('reports.version-assets.show', ['token' => $version->token, 'asset' => $firstBeforeAsset->id], false), false)
+            ->assertSee(route('reports.version-assets.show', ['token' => $version->token, 'asset' => $firstAfterAsset->id], false), false);
 
-        $versionPhotoResponse = $this->get(route(
+        $this->get(route(
             'reports.version-assets.show',
             ['token' => $version->token, 'asset' => $firstBeforeAsset->id],
             false,
-        ))->assertOk();
-
-        $this->assertSame($firstBeforeBytes, $versionPhotoResponse->baseResponse->getFile()->getContent());
+        ))->assertNotFound();
     }
 
     public function test_saved_customer_properties_are_tenant_scoped_and_new_visit_starts_with_fresh_report_state(): void
@@ -285,7 +286,7 @@ class AssignmentReportVersionTest extends TestCase
         $this->assertFalse(app(CreateAssignmentReportVersion::class)->hasUnpublishedDraftChanges($assignment, $version));
     }
 
-    public function test_public_version_keeps_photo_and_logo_bytes_when_sources_and_team_entitlement_change(): void
+    public function test_deleting_a_photo_removes_it_from_the_published_report_while_the_logo_stays(): void
     {
         Storage::fake('local');
         $owner = User::factory()->create();
@@ -306,8 +307,7 @@ class AssignmentReportVersionTest extends TestCase
             'address' => 'Storgatan 1',
         ]);
         $photoPath = 'assignments/'.$assignment->id.'/original.jpg';
-        $originalPhotoBytes = 'immutable report photo bytes';
-        Storage::disk('local')->put($photoPath, $originalPhotoBytes);
+        Storage::disk('local')->put($photoPath, 'report photo bytes');
         $photo = $assignment->photos()->create([
             'phase' => PhotoPhase::Before,
             'path' => $photoPath,
@@ -335,20 +335,27 @@ class AssignmentReportVersionTest extends TestCase
         ])->save();
 
         $this->assertDatabaseMissing('assignment_photos', ['id' => $photo->id]);
-        Storage::disk('local')->assertExists($photoPath);
+        $this->assertDatabaseMissing('assignment_report_version_assets', ['id' => $photoAsset->id]);
+        Storage::disk('local')->assertMissing($photoPath);
         Storage::disk('local')->assertExists($originalLogoPath);
+        Storage::disk('local')->assertExists($logoAsset->path);
 
         $this->get(route('reports.show', ['token' => $version->token], false))
             ->assertOk()
-            ->assertSee(route('reports.logo', ['token' => $version->token], false), false);
+            ->assertSee(route('reports.logo', ['token' => $version->token], false), false)
+            ->assertDontSee(route('reports.version-assets.show', ['token' => $version->token, 'asset' => $photoAsset], false), false)
+            ->assertDontSee($photoPath, false);
 
-        $photoResponse = $this->get(route('reports.photos.show', [
+        $this->get(route('reports.photos.show', [
             'token' => $version->token,
             'photo' => $photo->id,
-        ], false))->assertOk();
+        ], false))->assertNotFound();
+        $this->get(route('reports.version-assets.show', [
+            'token' => $version->token,
+            'asset' => $photoAsset,
+        ], false))->assertNotFound();
         $logoResponse = $this->get(route('reports.logo', ['token' => $version->token], false))->assertOk();
 
-        $this->assertSame($originalPhotoBytes, $photoResponse->baseResponse->getFile()->getContent());
         $this->assertSame($originalLogoBytes, $logoResponse->baseResponse->getFile()->getContent());
         $this->assertNotSame($logoAsset->path, $company->fresh()->logo_path);
     }
