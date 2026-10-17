@@ -45,6 +45,10 @@
             </div>
         </header>
 
+        @if (! empty($newerVersionUrl))
+            <p class="report-newer-version" role="status">Det finns en nyare version. <a href="{{ $newerVersionUrl }}">Öppna den senaste rapporten</a></p>
+        @endif
+
         <dl class="customer-report-meta">
             <div>
                 <dt>Kund</dt>

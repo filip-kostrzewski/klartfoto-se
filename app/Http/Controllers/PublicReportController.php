@@ -137,6 +137,14 @@ class PublicReportController extends Controller
             $logoUrl = $version->assets->contains(
                 fn (AssignmentReportVersionAsset $asset): bool => $asset->type === AssignmentReportVersionAsset::TYPE_LOGO,
             ) ? route('reports.logo', ['token' => $token], false) : null;
+            $latestVersion = AssignmentReportVersion::query()
+                ->where('assignment_id', $version->assignment_id)
+                ->orderByDesc('version_number')
+                ->orderByDesc('id')
+                ->first();
+            $newerVersionUrl = $latestVersion instanceof AssignmentReportVersion && $latestVersion->isNot($version)
+                ? route('reports.show', ['token' => $latestVersion->token], false)
+                : null;
 
             return response()
                 ->view('reports.version', [
@@ -144,6 +152,7 @@ class PublicReportController extends Controller
                     'photoPairs' => $photoPairs,
                     'logoUrl' => $logoUrl,
                     'pdfUrl' => route('reports.pdf', ['token' => $token], false),
+                    'newerVersionUrl' => $newerVersionUrl,
                 ])
                 ->header('X-Robots-Tag', 'noindex, nofollow');
         }

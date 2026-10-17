@@ -110,6 +110,13 @@
                                 @endif
                             </div>
                             @include('reports.partials.photo-pair', ['pair' => $pair, 'assignment' => $assignment, 'canDeletePhotos' => true])
+                            @if ($canManageJobs && $needsBefore && $needsAfter)
+                                <form method="post" action="{{ route('assignments.places.pairs.destroy', [$assignment, $place, $photoPair], false) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="button button-danger" type="submit">Ta bort tomt bildpar</button>
+                                </form>
+                            @endif
                             @if ($canManageJobs && ($needsBefore || $needsAfter))
                                 <details class="assignment-pair-fill" @if ((string) old('assignment_photo_pair_id') === (string) $photoPair->id || $errors->has('before_photos') || $errors->has('after_photos') || $errors->has('before_upload_ids') || $errors->has('after_upload_ids')) open @endif>
                     <summary>Fyll i saknad bildruta <span>i det här bildparet</span></summary>

@@ -237,11 +237,14 @@ class AssignmentReportVersionTest extends TestCase
         $this->get(route('reports.show', ['token' => $oldVersion->token], false))
             ->assertOk()
             ->assertSee('Anna Andersson', false)
+            ->assertSee('Det finns en nyare version', false)
+            ->assertSee(route('reports.show', ['token' => $newVersion->token], false), false)
             ->assertDontSee('Anna Andersson Updated', false);
         $this->get(route('reports.show', ['token' => $newVersion->token], false))
             ->assertOk()
             ->assertSee('Anna Andersson Updated', false)
-            ->assertSee('Storgatan 2', false);
+            ->assertSee('Storgatan 2', false)
+            ->assertDontSee('Det finns en nyare version', false);
     }
 
     public function test_new_version_hash_matches_its_canonical_snapshot_shape(): void

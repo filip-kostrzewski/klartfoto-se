@@ -725,6 +725,43 @@ class AssignmentController extends Controller
         return back()->with('toast', 'Kommentarerna är sparade som utkast.');
     }
 
+    public function destroyPhotoPair(
+        Assignment $assignment,
+        AssignmentPlace $place,
+        AssignmentPhotoPair $pair,
+    ): RedirectResponse {
+        Gate::authorize('update', $assignment);
+        abort_unless($place->assignment_id === $assignment->id, 404);
+        abort_unless($pair->assignment_place_id === $place->id, 404);
+
+        $user = request()->user();
+        if (! $user instanceof User || ! $user->canManageJobs()) {
+            return back()->withErrors(['trial' => self::ACCESS_PAUSED_MESSAGE]);
+        }
+
+        if ($pair->photos()->exists()) {
+            return back()->withErrors(['pair' => 'Bildparet innehåller bilder och kan inte tas bort.']);
+        }
+
+        DB::transaction(function () use ($assignment, $place, $pair): void {
+            $lockedAssignment = Assignment::query()
+                ->whereKey($assignment->getKey())
+                ->lockForUpdate()
+                ->firstOrFail();
+            $lockedPair = AssignmentPhotoPair::query()
+                ->whereKey($pair->getKey())
+                ->where('assignment_place_id', $place->getKey())
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            abort_if($lockedPair->photos()->exists(), 422);
+            $lockedPair->delete();
+            $lockedAssignment->markDraftChanged();
+        });
+
+        return back()->with('toast', 'Det tomma bildparet är borttaget.');
+    }
+
     public function reorderPlaces(Request $request, Assignment $assignment): RedirectResponse
     {
         Gate::authorize('update', $assignment);

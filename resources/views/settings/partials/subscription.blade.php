@@ -19,7 +19,7 @@
                     <span>Planen gäller till {{ $company->paid_until?->locale('sv')->translatedFormat('j F Y') }}.</span>
                 @elseif ($isTrialActive)
                     <strong>Provperiod pågår</strong>
-                    <span>Gratis till {{ $company->trial_ends_at?->locale('sv')->translatedFormat('j F Y') }}.</span>
+                    <span>Gratis till {{ $company->trial_ends_at?->locale('sv')->translatedFormat('j F Y') }}. Inget kort behövs. Därefter har ni ingen aktiv åtkomst till nya uppdrag. Du kan fortfarande öppna befintliga rapporter.</span>
                 @else
                     <strong>Ingen aktiv betald plan</strong>
                     <span>Befintliga rapporter finns kvar i skrivskyddat läge.</span>

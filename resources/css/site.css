@@ -10557,6 +10557,21 @@ html {
     white-space: pre-wrap;
 }
 
+.report-newer-version {
+    margin: 0 0 18px;
+    padding: 12px 14px;
+    border: 1px solid #d7e2cc;
+    border-radius: 3px;
+    background: #f6f8f2;
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+.report-newer-version a {
+    font-weight: 750;
+}
+
 .report-response-flash {
     margin: 12px 0;
     padding: 13px 15px;
