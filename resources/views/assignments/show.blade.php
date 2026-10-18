@@ -73,7 +73,6 @@
                     @else
                         <span class="assignment-review-status">
                             <span class="assignment-review-badge assignment-review-badge-pending">Inte granskad</span>
-                            <span class="assignment-review-hint" data-review-hint>Ansvarig är den som utför besöket. Granskare kan vara kontoägaren eller en teammedlem som ägaren har valt. Inte granskad betyder att ingen har markerat rapporten som kontrollerad. Ägaren eller den valda granskaren markerar rapporten med knappen Markera som granskad.</span>
                         </span>
                     @endif
                 </summary>

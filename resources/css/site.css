@@ -9940,19 +9940,6 @@ html {
     min-width: 0;
 }
 
-.assignment-review-hint {
-    flex: 1 1 12rem;
-    color: #24352b;
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 1.35;
-    text-align: left;
-}
-
-.assignment-team-disclosure[open] .assignment-review-hint {
-    display: none;
-}
-
 .settings-review-help {
     color: #24352b;
 }

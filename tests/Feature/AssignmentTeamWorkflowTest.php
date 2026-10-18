@@ -37,7 +37,7 @@ class AssignmentTeamWorkflowTest extends TestCase
             ->assertOk()
             ->assertSee('Nytt besök', false)
             ->assertDontSee('>Ny visit<', false)
-            ->assertSee('assignment-review-hint', false)
+            ->assertDontSee('assignment-review-hint', false)
             ->assertSee('Inte granskad betyder att ingen har markerat rapporten som kontrollerad.', false)
             ->assertSee('Granskare kan vara kontoägaren eller en teammedlem som ägaren har valt.', false)
             ->assertSee('markerar rapporten med knappen Markera som granskad.', false)
