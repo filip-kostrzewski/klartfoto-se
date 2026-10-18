@@ -1865,7 +1865,7 @@ html.cookie-choice-saved .cookie-banner {
 .printable-disclaimer {
     margin: 17px 0 11px;
     color: #65733f;
-    font-size: 9px;
+    font-size: 12px;
     font-weight: 800;
     letter-spacing: .075em;
     text-transform: uppercase;
@@ -4216,7 +4216,7 @@ html {
     bottom: 17px;
     min-height: 32px;
     gap: 7px;
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0;
     text-transform: none;
 }
@@ -4547,6 +4547,10 @@ html {
     color: var(--white);
     font-size: 11px;
     font-weight: 650;
+}
+
+.industry-image-note {
+    font-size: 12px;
 }
 
 .industry-card-art svg {
@@ -6975,7 +6979,7 @@ html {
         bottom: 9px;
         min-height: 28px;
         padding-inline: 9px;
-        font-size: 10px;
+        font-size: 12px;
     }
 
     .comparison-handle {
@@ -7046,7 +7050,11 @@ html {
         right: 7px;
         bottom: 7px;
         padding: 6px 8px;
-        font-size: 9px;
+        font-size: 12px;
+    }
+
+    .industry-card-image .industry-image-note {
+        left: 7px;
     }
 
     .report-card-header {
