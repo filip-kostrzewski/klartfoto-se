@@ -13,7 +13,7 @@
                 <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> Nytt konto</p>
                 <h1 id="auth-title">Kom igång gratis</h1>
                 <p class="auth-lead">{{ config('klartfoto.trial_days') }} dagar utan kostnad med allt i Team. Inget betalkort behövs.</p>
-                <p class="auth-lead">Läs <a href="{{ route('site.sv.terms', absolute: false) }}">användarvillkoren</a> innan ni startar provperioden.</p>
+                <p class="auth-lead">Läs <a href="{{ route('site.sv.terms', absolute: false) }}">användarvillkoren</a> innan du startar provperioden.</p>
             </div>
 
             @if ($errors->any())

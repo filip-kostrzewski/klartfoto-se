@@ -35,7 +35,7 @@ return [
             ['title' => 'Ge kunden en samlad bild', 'text' => 'Kund, adress, datum och bilder i en rapport som öppnas direkt via en länk.'],
         ],
         'industries_kicker' => 'Utformat kring olika arbeten',
-        'industries_intro' => 'För jobb där kunden behöver se vad som gjorts, även när ni inte är på plats samtidigt.',
+        'industries_intro' => 'För jobb där kunden behöver se vad som gjorts, även när du inte är på plats samtidigt.',
         'industries' => [
             ['key' => 'cleaning', 'label' => 'STÄD', 'title' => 'Flyttstädning och byggstädning', 'text' => 'Visa skicket före städningen och resultatet när jobbet är klart.'],
             ['key' => 'renovation', 'label' => 'RENOVERING OCH SERVICE', 'title' => 'Service och renovering', 'text' => 'Dokumentera förändringen och lämna över bilderna till kunden.'],
