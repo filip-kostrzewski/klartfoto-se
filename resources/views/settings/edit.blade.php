@@ -100,7 +100,7 @@
                             <span class="workflow-icon"><x-icon name="camera" /></span>
                             <div><h2 id="brand-heading">Logotyp</h2><p>Visa företagets logotyp i kundrapporten.</p></div>
                         </header>
-                        <p class="settings-card-description">PNG, JPEG eller SVG. Bilden optimeras när den laddas upp. @if ($company->onTrial()) Under provperioden har ni allt i Team, inklusive egen logotyp. @endif</p>
+                        <p class="settings-card-description">PNG, JPEG eller SVG. Bilden optimeras när den laddas upp. @if ($company->onTrial()) Under provperioden har du allt i Team, inklusive egen logotyp. @endif</p>
                         @if ($company->allowsTeamFeatures() && $company->logo_path)
                             <img class="settings-logo" src="{{ route('settings.logo', absolute: false) }}" alt="{{ $company->name }}">
                         @endif
@@ -129,7 +129,7 @@
                             <div><h2 id="team-heading">Team</h2><p>Hantera vilka som kan arbeta i företagskontot.</p></div>
                         </header>
                         <p class="settings-card-description settings-review-help">Ansvarig är den som utför besöket. Granskare kan vara kontoägaren eller en teammedlem som ägaren har valt. Inte granskad betyder att ingen har markerat rapporten som kontrollerad. Ägaren eller den valda granskaren markerar rapporten med knappen Markera som granskad.</p>
-                        <p class="auth-lead settings-card-description">{{ $userCount }} av {{ $seatLimit }} användare{{ $pendingInvites === 1 ? ', 1 inbjudan väntar' : ($pendingInvites > 1 ? ', '.$pendingInvites.' inbjudningar väntar' : '') }}. @if ($company->onTrial()) Under provperioden har ni allt i Team: upp till 10 användare och egen logotyp. @endif {{ $company->afterTrialAccessSummary() }}</p>
+                        <p class="auth-lead settings-card-description">{{ $userCount }} av {{ $seatLimit }} användare{{ $pendingInvites === 1 ? ', 1 inbjudan väntar' : ($pendingInvites > 1 ? ', '.$pendingInvites.' inbjudningar väntar' : '') }}. @if ($company->onTrial()) Under provperioden har du allt i Team: upp till 10 användare och egen logotyp. @endif {{ $company->afterTrialAccessSummary() }}</p>
                         <ul class="member-list">
                             @foreach ($company->users as $member)
                                 <li>

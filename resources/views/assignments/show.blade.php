@@ -34,6 +34,7 @@
             $sharePhotoCount = $reportSnapshot === null
                 ? $assignment->photos->count()
                 : collect($reportSnapshot['assets'] ?? [])->where('type', 'photo')->count();
+            $canShareReportLink = $latestReportVersion !== null || $assignment->photos->isNotEmpty();
         @endphp
         <div class="app-page-heading">
             <div>
@@ -180,7 +181,7 @@
                         @elseif ($latestReportVersion)
                             Skapad {{ $latestReportVersion->created_at->locale('sv')->translatedFormat('j F Y') }}
                         @else
-                            Skapas när ni publicerar bilderna.
+                            Skapas när du publicerar eller skickar rapporten.
                         @endif
                     </span>
                 </div>
@@ -239,7 +240,9 @@
                     <span class="workflow-icon"><x-icon name="share" /></span>
                     <div><p class="share-box-kicker">DELA RAPPORT</p><h2 id="share-heading">Skicka rapporten till kunden</h2><p>Skicka en länk till uppdragets aktuella innehåll.</p></div>
                 </div>
-                <a class="button button-outline-dark" href="{{ $reportUrl }}" target="_blank" rel="noopener"><x-icon name="eye" /> Öppna rapport</a>
+                @if ($canShareReportLink)
+                    <a class="button button-outline-dark" href="{{ $reportUrl }}" target="_blank" rel="noopener"><x-icon name="eye" /> Öppna rapport</a>
+                @endif
             </div>
 
             @if (session('status'))
@@ -271,7 +274,7 @@
                             @endif
                         </span>
                     @else
-                        <span>Första rapportversionen skapas vid utskick.</span>
+                        <span>Första rapportversionen skapas när du publicerar eller skickar rapporten.</span>
                     @endif
                 </div>
                 <span class="share-project-photo-count">{{ $sharePhotoCount }} {{ $sharePhotoCount === 1 ? 'bild' : 'bilder' }}</span>
@@ -314,7 +317,7 @@
             @else
                 <div class="assignment-email-blocked" role="status">
                     @if (! auth()->user()->hasVerifiedEmail())
-                        <strong>Bekräfta din e-postadress innan ni skickar</strong>
+                        <strong>Bekräfta din e-postadress innan du skickar</strong>
                         <p>Vi behöver veta att avsändarens adress fungerar. Bekräfta den i rutan högst upp på sidan.</p>
                         <a href="#email-verification">Gå till e-postbekräftelse <span aria-hidden="true">↑</span></a>
                     @elseif (! $canManageJobs)
@@ -327,16 +330,16 @@
                         <a href="#assignment-upload-heading">Lägg till bilder <span aria-hidden="true">↓</span></a>
                     @elseif (($latestEmailAttempt['status'] ?? null) === 'sent')
                         <strong>Rapporten har skickats vidare.</strong>
-                        <p>För att undvika dubbla mejl kan ni skicka igen efter 60 sekunder. Uppdatera sidan då.</p>
+                        <p>För att undvika dubbla mejl kan du skicka igen efter 60 sekunder. Uppdatera sidan då.</p>
                     @elseif (($latestEmailAttempt['status'] ?? null) === 'unknown')
                         <strong>Kontrollera det senaste utskicket</strong>
-                        <p>Vi kan inte bekräfta om mejlet skickades. Kontrollera med mottagaren innan ni gör ett nytt försök.</p>
+                        <p>Vi kan inte bekräfta om mejlet skickades. Kontrollera med mottagaren innan du gör ett nytt försök.</p>
                     @elseif (($latestEmailAttempt['status'] ?? null) === 'sending')
                         <strong>Ett utskick pågår</strong>
-                        <p>Vänta tills det senaste försöket är klart innan ni skickar igen.</p>
+                        <p>Vänta tills det senaste försöket är klart innan du skickar igen.</p>
                     @else
                         <strong>Utskick kan inte startas just nu</strong>
-                        <p>Vänta en stund innan ni försöker igen. Era befintliga rapporter är kvar.</p>
+                        <p>Vänta en stund innan du försöker igen. Dina befintliga rapporter är kvar.</p>
                     @endif
                 </div>
             @endif
@@ -374,24 +377,26 @@
                         @if ($emailAttemptStatus === 'sent')
                             <span>Det bekräftar inte att mejlet har levererats eller lästs.</span>
                         @elseif ($emailAttemptStatus === 'unknown')
-                            <span>Det gick inte att bekräfta om mejlet skickades. Kontrollera med mottagaren innan ni skickar igen.</span>
+                            <span>Det gick inte att bekräfta om mejlet skickades. Kontrollera med mottagaren innan du skickar igen.</span>
                         @endif
                     </div>
                 </div>
             @endif
 
             <div class="share-link-tools">
-                <div class="share-link-tools-heading"><strong>Vill ni skicka länken själva?</strong><p>Kopiera den och dela i valfri kanal.</p></div>
-                <div class="share-link-row">
-                    <label class="sr-only" for="share-link">Länk till rapporten</label>
-                    <input id="share-link" type="text" readonly value="{{ $reportUrl }}" aria-describedby="share-copy-feedback">
-                    <button class="button button-outline-dark" type="button" hidden data-copy-url="{{ $reportUrl }}" data-copy-feedback="share-copy-feedback">Kopiera länk</button>
-                </div>
-                <p id="share-copy-feedback" class="share-copy-feedback" aria-live="polite"></p>
-                <noscript><p class="share-copy-noscript">Markera länken ovan och kopiera den manuellt.</p></noscript>
-                <form method="post" action="{{ route('assignments.share', $assignment, false) }}" hidden data-record-copy>
-                    @csrf
-                </form>
+                <div class="share-link-tools-heading"><strong>Vill du skicka länken själv?</strong><p>{{ $canShareReportLink ? 'Kopiera den och dela i valfri kanal.' : 'Länken visas när du har lagt till minst en bild.' }}</p></div>
+                @if ($canShareReportLink)
+                    <div class="share-link-row">
+                        <label class="sr-only" for="share-link">Länk till rapporten</label>
+                        <input id="share-link" type="text" readonly value="{{ $reportUrl }}" aria-describedby="share-copy-feedback">
+                        <button class="button button-outline-dark" type="button" hidden data-copy-url="{{ $reportUrl }}" data-copy-feedback="share-copy-feedback">Kopiera länk</button>
+                    </div>
+                    <p id="share-copy-feedback" class="share-copy-feedback" aria-live="polite"></p>
+                    <noscript><p class="share-copy-noscript">Markera länken ovan och kopiera den manuellt.</p></noscript>
+                    <form method="post" action="{{ route('assignments.share', $assignment, false) }}" hidden data-record-copy>
+                        @csrf
+                    </form>
+                @endif
             </div>
         </section>
 

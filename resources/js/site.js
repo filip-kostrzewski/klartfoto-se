@@ -785,7 +785,7 @@ document.querySelectorAll('form[data-photo-upload-mode]').forEach((form) => {
                 showFormErrors(form, result.errors);
             }
 
-            showFailure(validationMessages || result.message || 'Uppladdningen kunde inte bekräftas. Försök igen med samma fil innan ni ändrar den.');
+            showFailure(validationMessages || result.message || 'Uppladdningen kunde inte bekräftas. Försök igen med samma fil innan du ändrar den.');
 
             if (result.status >= 400 && result.status < 500 && uploadRecords.size === 0 && placeField instanceof HTMLInputElement) {
                 placeField.readOnly = false;

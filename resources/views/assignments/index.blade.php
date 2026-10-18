@@ -22,9 +22,9 @@
         </div>
 
         @if ($onTrial && $trialEndsAt)
-            <div class="trial-strip"><span class="trial-strip-icon" aria-hidden="true">✓</span><p><strong>Provperiod</strong><span>Gratis till {{ $trialEndsAt->locale('sv')->translatedFormat('j F Y') }}. Inget kort behövs. <a href="{{ route('settings.billing', absolute: false) }}">Välj plan</a> innan dess så fortsätter ni utan avbrott. Annars pausas nya uppdrag och befintliga rapporter blir skrivskyddade.</span></p></div>
+            <div class="trial-strip"><span class="trial-strip-icon" aria-hidden="true">✓</span><p><strong>Provperiod</strong><span>Gratis till {{ $trialEndsAt->locale('sv')->translatedFormat('j F Y') }}. Inget kort behövs. <a href="{{ route('settings.billing', absolute: false) }}">Välj plan</a> innan dess så fortsätter du utan avbrott. Annars pausas nya uppdrag och befintliga rapporter blir skrivskyddade.</span></p></div>
         @elseif (! $canManageJobs)
-            <div class="form-status form-status-error" role="status">Ingen aktiv åtkomst till nya uppdrag. Ni kan fortfarande öppna befintliga rapporter. <a href="{{ route('settings.billing', absolute: false) }}">Aktivera en plan</a> för att fortsätta.</div>
+            <div class="form-status form-status-error" role="status">Ingen aktiv åtkomst till nya uppdrag. Du kan fortfarande öppna befintliga rapporter. <a href="{{ route('settings.billing', absolute: false) }}">Aktivera en plan</a> för att fortsätta.</div>
         @endif
 
         @if ($assignmentTotal > 0 || $hasAssignmentFilters)
@@ -48,7 +48,7 @@
 
         <section class="assignment-list-section" aria-labelledby="assignment-list-heading">
             <div class="assignment-list-heading">
-                <div><h2 id="assignment-list-heading">{{ $showingArchived ? 'Arkiverade uppdrag' : 'Era uppdrag' }}</h2><p>{{ $assignments->isEmpty() ? ($showingArchived ? 'Arkiverade kundbesök visas här.' : 'Era sparade kundbesök visas här.') : 'Sök bland kundbesök och öppna rapporten ni behöver.' }}</p></div>
+                <div><h2 id="assignment-list-heading">{{ $showingArchived ? 'Arkiverade uppdrag' : 'Dina uppdrag' }}</h2><p>{{ $assignments->isEmpty() ? ($showingArchived ? 'Arkiverade kundbesök visas här.' : 'Dina sparade kundbesök visas här.') : 'Sök bland kundbesök och öppna rapporten du behöver.' }}</p></div>
                 @if ($canManageJobs && $assignments->isNotEmpty())
                     <a class="text-link" href="{{ route('assignments.create', absolute: false) }}">Lägg till</a>
                 @endif
@@ -125,7 +125,7 @@
                             <h3>Här börjar nästa rapport</h3>
                             <p>Lägg till kundens namn, adress och datum. Ladda sedan upp bilder före och efter arbetet.</p>
                             @if ($canManageJobs)
-                                <a class="button button-dark" href="{{ route('assignments.create', absolute: false) }}">Skapa ert första uppdrag</a>
+                                <a class="button button-dark" href="{{ route('assignments.create', absolute: false) }}">Skapa ditt första uppdrag</a>
                             @endif
                         </div>
                     </div>

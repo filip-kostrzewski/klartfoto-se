@@ -100,7 +100,7 @@ class BillingController extends Controller
             }
         }
 
-        return back()->with('status', 'Tack. Er fakturaförfrågan är registrerad.');
+        return back()->with('status', 'Tack. Din fakturaförfrågan är registrerad.');
     }
 
     public function checkout(StoreSubscriptionRequest $request): Checkout|RedirectResponse

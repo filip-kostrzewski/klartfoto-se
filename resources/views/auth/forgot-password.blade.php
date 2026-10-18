@@ -5,7 +5,7 @@
 @section('content')
     <div class="auth-layout auth-layout-compact">
         @include('auth.partials.visual', [
-            'authVisualTitle' => 'Tillbaka till era rapporter.',
+            'authVisualTitle' => 'Tillbaka till dina rapporter.',
             'authVisualText' => 'Återställ lösenordet med länken vi skickar till din e-postadress.',
         ])
         <section class="auth-card" aria-label="Återställ lösenord">

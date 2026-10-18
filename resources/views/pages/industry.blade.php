@@ -20,8 +20,10 @@
                 </div>
                 <div class="industry-hero-visual">
                     @php($industryImage = ($page['route_key'] ?? 'cleaning').'-detail')
-                    <img src="{{ asset('images/'.$industryImage.'.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" srcset="{{ asset('images/'.$industryImage.'-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/'.$industryImage.'.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w" sizes="(max-width: 760px) 100vw, 48vw" width="1536" height="1024" alt="{{ $page['image_alt'] }}" fetchpriority="high" decoding="async">
-                    <span class="industry-image-note">{{ $home['photo_note'] }}</span>
+                    <div class="industry-hero-frame">
+                        <img src="{{ asset('images/'.$industryImage.'.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" srcset="{{ asset('images/'.$industryImage.'-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/'.$industryImage.'.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w" sizes="(max-width: 760px) 100vw, 48vw" width="1536" height="1024" alt="{{ $page['image_alt'] }}" fetchpriority="high" decoding="async">
+                        <span class="demo-photo-badge"><span aria-hidden="true">✳</span> {{ $home['photo_note'] }}</span>
+                    </div>
                     <span class="industry-visual-caption"><span>{{ $page['eyebrow'] }}</span><span>R/01</span></span>
                 </div>
             </div>

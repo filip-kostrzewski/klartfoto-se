@@ -14,7 +14,7 @@ class TrialEnded extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Er provperiod i Klartfoto har löpt ut',
+            subject: 'Din provperiod i Klartfoto har löpt ut',
         );
     }
 

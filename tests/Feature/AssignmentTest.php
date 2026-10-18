@@ -21,8 +21,9 @@ class AssignmentTest extends TestCase
         $this->assertDatabaseCount('assignments', 0);
     }
 
-    public function test_company_creates_a_job_and_gets_a_share_link(): void
+    public function test_company_creates_a_job_and_gets_a_share_link_after_adding_a_photo(): void
     {
+        Storage::fake('local');
         $user = User::factory()->create(['name' => 'Glans Städ AB']);
 
         $response = $this->actingAs($user)->post('/uppdrag', [
@@ -48,8 +49,19 @@ class AssignmentTest extends TestCase
         $this->actingAs($user)->get(route('assignments.show', $assignment))
             ->assertOk()
             ->assertSee('Uppdraget är sparat.', false)
-            ->assertSee(route('reports.show', ['token' => $assignment->public_token]), false)
+            ->assertDontSee(route('reports.show', ['token' => $assignment->public_token]), false)
+            ->assertSee('Länken visas när du har lagt till minst en bild.', false)
             ->assertSee('Anna Andersson', false);
+
+        $this->actingAs($user)->post(route('assignments.photos.store', $assignment, false), [
+            'place_name' => 'Hall',
+            'before_photos' => [UploadedFile::fake()->image('hall.jpg', 40, 40)],
+        ], ['Accept' => 'application/json'])->assertOk();
+
+        $this->actingAs($user)->get(route('assignments.show', $assignment))
+            ->assertOk()
+            ->assertSee(route('reports.show', ['token' => $assignment->public_token]), false)
+            ->assertDontSee('Länken visas när du har lagt till minst en bild.', false);
     }
 
     public function test_new_draft_stays_unpublished_until_the_report_is_published(): void
@@ -213,7 +225,7 @@ class AssignmentTest extends TestCase
         $this->actingAs($member)->get(route('assignments.show', $assignment))
             ->assertOk()
             ->assertSee('Ta bort', false)
-            ->assertSee('Vill ni ta bort den här bilden?', false)
+            ->assertSee('Vill du ta bort den här bilden?', false)
             ->assertSee('aria-label="Ta bort förebilden"', false)
             ->assertSee('aria-label="Ta bort efterbilden"', false);
 

@@ -36,13 +36,13 @@ class ManualBillingTest extends TestCase
         $this->actingAs($owner)->get('/installningar/abonnemang')
             ->assertOk()
             ->assertSee('href="/villkor"', false)
-            ->assertSee('innan ni begär faktura', false);
+            ->assertSee('innan du begär faktura', false);
 
         $this->from(route('settings.billing', absolute: false))
             ->actingAs($owner)
             ->post(route('settings.billing.request', absolute: false), $this->validRequest())
             ->assertRedirect(route('settings.billing', absolute: false))
-            ->assertSessionHas('status', 'Tack. Er fakturaförfrågan är registrerad.');
+            ->assertSessionHas('status', 'Tack. Din fakturaförfrågan är registrerad.');
 
         $company->refresh();
         $this->assertSame(CompanyPlan::Start, $company->plan);

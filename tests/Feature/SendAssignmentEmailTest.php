@@ -231,7 +231,7 @@ class SendAssignmentEmailTest extends TestCase
                 'message' => 'Please call me.',
             ])
             ->assertRedirect(route('assignments.show', $assignment, false))
-            ->assertSessionHas('error', 'Det gick inte att bekräfta om mejlet skickades. Kontrollera med mottagaren innan ni skickar igen.')
+            ->assertSessionHas('error', 'Det gick inte att bekräfta om mejlet skickades. Kontrollera med mottagaren innan du skickar igen.')
             ->assertSessionHas('_old_input.message', 'Please call me.');
 
         $this->assertStringNotContainsString('private transport detail', serialize($response->getSession()->all()));
@@ -337,7 +337,7 @@ class SendAssignmentEmailTest extends TestCase
             ])
             ->assertRedirect(route('assignments.show', $expiredAssignment, false))
             ->assertSessionHasErrors([
-                'email' => 'Er åtkomst till nya uppdrag har pausats. Ni kan fortfarande öppna befintliga rapporter.',
+                'email' => 'Din åtkomst till nya uppdrag har pausats. Du kan fortfarande öppna befintliga rapporter.',
             ]);
 
         $this->assertDatabaseCount('assignment_email_attempts', 0);
@@ -450,12 +450,12 @@ class SendAssignmentEmailTest extends TestCase
                 'recipient_email' => 'customer@example.test',
             ])
             ->assertRedirect(route('assignments.show', $assignment, false))
-            ->assertSessionHas('error', 'Ni har skickat för många rapporter, försök igen om en stund.');
+            ->assertSessionHas('error', 'Du har skickat för många rapporter, försök igen om en stund.');
 
         $this->actingAs($anotherMember)
             ->get(route('assignments.show', $assignment, false))
             ->assertOk()
-            ->assertSee('Ni har skickat för många rapporter, försök igen om en stund.', false)
+            ->assertSee('Du har skickat för många rapporter, försök igen om en stund.', false)
             ->assertDontSee('Too Many Requests', false);
 
         $this->assertDatabaseCount('assignment_email_attempts', 20);

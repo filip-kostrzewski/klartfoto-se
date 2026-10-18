@@ -45,7 +45,7 @@ class TrialReminderTest extends TestCase
         $mail->assertSeeInHtml('390 kr per månad');
         $mail->assertSeeInHtml('790 kr per månad');
         $mail->assertSeeInHtml('/installningar/abonnemang');
-        $this->assertSame('Er provperiod i Klartfoto slutar om 3 dagar', $mail->envelope()->subject);
+        $this->assertSame('Din provperiod i Klartfoto slutar om 3 dagar', $mail->envelope()->subject);
 
         $this->travelTo('2026-10-20 09:00:00');
         $this->artisan('billing:trial-reminders')->assertSuccessful();

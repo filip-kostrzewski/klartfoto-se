@@ -56,7 +56,7 @@ class CompanyInvitationController extends Controller
 
             if ($used >= $company->seatLimit()) {
                 throw ValidationException::withMessages([
-                    'email' => 'Ni har nått gränsen för antalet användare.',
+                    'email' => 'Du har nått gränsen för antalet användare.',
                 ]);
             }
 

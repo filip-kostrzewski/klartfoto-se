@@ -178,7 +178,7 @@ class ArchiveAssignmentTest extends TestCase
             ->get(route('assignments.index', ['arkiv' => 'arkiverade']))
             ->assertOk()
             ->assertSee('Inga arkiverade uppdrag', false)
-            ->assertDontSee('Skapa ert första uppdrag', false);
+            ->assertDontSee('Skapa ditt första uppdrag', false);
     }
 
     public function test_active_list_points_to_the_archive_when_every_job_is_archived(): void
@@ -193,7 +193,7 @@ class ArchiveAssignmentTest extends TestCase
             ->get(route('assignments.index'))
             ->assertOk()
             ->assertSee('Inga aktiva uppdrag', false)
-            ->assertDontSee('Skapa ert första uppdrag', false)
+            ->assertDontSee('Skapa ditt första uppdrag', false)
             ->assertDontSee('Endast arkiv', false);
     }
 

@@ -27,7 +27,7 @@
                 </div>
             </div>
 
-            <div class="landing-hero-visual" data-reveal>
+            <div class="landing-hero-visual">
                 <div class="comparison-slider" data-comparison style="--split: 54%;">
                     <div class="comparison-frame">
                         <img
@@ -156,7 +156,7 @@
             </div>
             <a class="text-link" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['sample_link'] }}</a>
         </div>
-        @include('pages.partials.example-mobile-shots')
+        @include('pages.partials.example-mobile-shots', ['loadPhoneShotEagerly' => true])
         <div class="sample-layout">
             <div class="sample-explainer">
                 <p class="sample-disclaimer"><span aria-hidden="true">✳</span> {{ $home['sample_disclaimer'] }}</p>

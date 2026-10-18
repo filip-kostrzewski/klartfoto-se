@@ -10,7 +10,7 @@
                 <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> Inställningar</p>
                 <h1>Abonnemang</h1>
                 <p class="auth-lead">Jämför planerna och skicka en fakturaförfrågan via Fortnox.</p>
-                <p class="auth-lead">Läs <a href="{{ route('site.sv.terms', absolute: false) }}">användarvillkoren</a> innan ni begär faktura.</p>
+                <p class="auth-lead">Läs <a href="{{ route('site.sv.terms', absolute: false) }}">användarvillkoren</a> innan du begär faktura.</p>
             </div>
             <a class="button button-outline-dark" href="{{ route('settings.edit', absolute: false) }}">Tillbaka till inställningar</a>
         </div>

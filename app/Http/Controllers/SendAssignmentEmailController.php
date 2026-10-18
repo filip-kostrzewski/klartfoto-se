@@ -26,19 +26,19 @@ class SendAssignmentEmailController extends Controller
 
         if (! $user instanceof User || ! $user->hasVerifiedEmail()) {
             return back()->withInput($previousInput)->withErrors([
-                'email' => 'Bekräfta din e-postadress innan ni skickar rapporter.',
+                'email' => 'Bekräfta din e-postadress innan du skickar rapporter.',
             ]);
         }
 
         if (! $user->canManageJobs()) {
             return back()->withInput($previousInput)->withErrors([
-                'email' => 'Er åtkomst till nya uppdrag har pausats. Ni kan fortfarande öppna befintliga rapporter.',
+                'email' => 'Din åtkomst till nya uppdrag har pausats. Du kan fortfarande öppna befintliga rapporter.',
             ]);
         }
 
         if (! $assignment->photos()->exists()) {
             return back()->withInput($previousInput)->withErrors([
-                'email' => 'Ladda upp minst ett foto innan ni skickar rapporten.',
+                'email' => 'Ladda upp minst ett foto innan du skickar rapporten.',
             ]);
         }
 
@@ -64,10 +64,10 @@ class SendAssignmentEmailController extends Controller
             $latestAttempt = $assignment->emailAttempts()->first();
 
             $message = match ($latestAttempt?->status) {
-                AssignmentEmailAttempt::STATUS_SENDING => 'Ett mejl håller redan på att skickas. Vänta en stund innan ni försöker igen.',
-                AssignmentEmailAttempt::STATUS_SENT => 'Rapporten skickades nyligen. Vänta en minut innan ni skickar igen.',
-                AssignmentEmailAttempt::STATUS_UNKNOWN => 'Det gick inte att bekräfta om mejlet skickades. Kontrollera med mottagaren innan ni skickar igen.',
-                default => 'Rapporten skickas redan. Kontrollera status innan ni försöker igen.',
+                AssignmentEmailAttempt::STATUS_SENDING => 'Ett mejl håller redan på att skickas. Vänta en stund innan du försöker igen.',
+                AssignmentEmailAttempt::STATUS_SENT => 'Rapporten skickades nyligen. Vänta en minut innan du skickar igen.',
+                AssignmentEmailAttempt::STATUS_UNKNOWN => 'Det gick inte att bekräfta om mejlet skickades. Kontrollera med mottagaren innan du skickar igen.',
+                default => 'Rapporten skickas redan. Kontrollera status innan du försöker igen.',
             };
 
             return back()->withInput($previousInput)->with('error', $message);
@@ -75,7 +75,7 @@ class SendAssignmentEmailController extends Controller
 
         return match ($attempt->status) {
             AssignmentEmailAttempt::STATUS_SENT => back()->with('status', 'Mejlet har lämnats till e-postleverantören.'),
-            AssignmentEmailAttempt::STATUS_UNKNOWN => back()->withInput($previousInput)->with('error', 'Det gick inte att bekräfta om mejlet skickades. Kontrollera med mottagaren innan ni skickar igen.'),
+            AssignmentEmailAttempt::STATUS_UNKNOWN => back()->withInput($previousInput)->with('error', 'Det gick inte att bekräfta om mejlet skickades. Kontrollera med mottagaren innan du skickar igen.'),
             default => back()->withInput($previousInput)->with('error', 'Mejlet kunde inte skickas. Försök igen eller kopiera rapportlänken och skicka den själv.'),
         };
     }

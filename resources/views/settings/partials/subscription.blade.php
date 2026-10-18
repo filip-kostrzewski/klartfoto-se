@@ -27,7 +27,7 @@
                     <span>Planen gäller till {{ $company->paid_until?->locale('sv')->translatedFormat('j F Y') }}. Abonnemanget löper tills vidare och nästa period faktureras {{ $company->billing_interval === \App\BillingInterval::Year ? 'årsvis' : 'månadsvis' }} i förskott.</span>
                 @elseif ($isTrialActive)
                     <strong>Provperiod pågår</strong>
-                    <span>Gratis till {{ $company->trial_ends_at?->locale('sv')->translatedFormat('j F Y') }}. Inget kort behövs. Välj plan innan dess så fortsätter ni utan avbrott. Annars pausas nya uppdrag och befintliga rapporter blir skrivskyddade.</span>
+                    <span>Gratis till {{ $company->trial_ends_at?->locale('sv')->translatedFormat('j F Y') }}. Inget kort behövs. Välj plan innan dess så fortsätter du utan avbrott. Annars pausas nya uppdrag och befintliga rapporter blir skrivskyddade.</span>
                 @else
                     <strong>Ingen aktiv betald plan</strong>
                     <span>Befintliga rapporter finns kvar i skrivskyddat läge. Begär en faktura så aktiverar vi planen när betalningen är registrerad.</span>
@@ -65,7 +65,7 @@
         @if (! $hasPendingInvoiceRequest && $isManualPlanActive)
             <p class="subscription-summary-note">
                 @if ($isOwner && $canRequestInvoice)
-                    Ni kan byta plan eller faktureringsperiod när som helst.
+                    Du kan byta plan eller faktureringsperiod när som helst.
                 @elseif ($isOwner)
                     Ett annat abonnemang är aktivt för kontot, så en Fortnox-faktura kan inte begäras just nu.
                 @else
@@ -95,9 +95,9 @@
                     <legend>Välj plan</legend>
                     <p id="billing-plan-help" class="billing-field-help">
                         @if ($isManualPlanActive)
-                            Välj om ni vill byta plan eller faktureringsperiod. Ändringen gäller från nästa period.
+                            Välj om du vill byta plan eller faktureringsperiod. Ändringen gäller från nästa period.
                         @else
-                            Under provperioden har ni allt i Team. Välj Team för att behålla användarna och logotypen.
+                            Under provperioden har du allt i Team. Välj Team för att behålla användarna och logotypen.
                         @endif
                     </p>
                     @error('plan') <span class="field-error" id="plan-error">{{ $message }}</span> @enderror
@@ -175,7 +175,7 @@
                     <p id="billing-request-note">
                         Förfrågan är inte en betalning. Fakturan skickas via Fortnox. Abonnemanget löper tills vidare utan bindningstid och kan sägas upp före nästa period.
                         @if ($isManualPlanActive)
-                            Er nuvarande betalda period fortsätter till {{ $company->paid_until?->locale('sv')->translatedFormat('j F Y') }}. Ändringen aktiveras av oss när betalningen har registrerats.
+                            Din nuvarande betalda period fortsätter till {{ $company->paid_until?->locale('sv')->translatedFormat('j F Y') }}. Ändringen aktiveras av oss när betalningen har registrerats.
                         @else
                             Planen aktiveras av oss när betalningen har registrerats.
                         @endif

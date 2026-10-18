@@ -17,8 +17,8 @@ class TrialEndingSoon extends Mailable
 
         return new Envelope(
             subject: $daysLeft === 1
-                ? 'Er provperiod i Klartfoto slutar i morgon'
-                : "Er provperiod i Klartfoto slutar om {$daysLeft} dagar",
+                ? 'Din provperiod i Klartfoto slutar i morgon'
+                : "Din provperiod i Klartfoto slutar om {$daysLeft} dagar",
         );
     }
 

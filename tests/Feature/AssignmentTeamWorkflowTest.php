@@ -43,8 +43,8 @@ class AssignmentTeamWorkflowTest extends TestCase
             ->assertSee('markerar rapporten med knappen Markera som granskad.', false)
             ->assertSee('class="app-topbar-logout"', false)
             ->assertSee('Logga ut', false)
-            ->assertSee('Vill ni skicka länken själva?', false)
-            ->assertDontSee('Vill du skicka länken själv?', false);
+            ->assertSee('Vill du skicka länken själv?', false)
+            ->assertDontSee('Vill ni skicka länken själva?', false);
 
         $this->actingAs($owner)->get(route('settings.edit'))
             ->assertOk()
