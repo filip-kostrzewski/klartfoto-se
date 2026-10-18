@@ -9,16 +9,16 @@
                 'place' => 'Kök',
                 'before' => 'example-kitchen-before.webp',
                 'after' => 'example-kitchen-after.webp',
-                'before_alt' => 'AI-demo av köket före städning, med fläckar på hällen och disk i hon.',
-                'after_alt' => 'AI-demo av samma kök efter städning, med ren häll och tom diskho.',
+                'before_alt' => 'Kök före städning, med fläckar på hällen och disk i hon.',
+                'after_alt' => 'Kök efter städning, med ren häll och tom diskho.',
                 'note' => 'Fläckar på hällen och disk i hon före arbetet. Bänk och ho är avtorkade efteråt.',
             ],
             [
                 'place' => 'Badrum',
                 'before' => 'example-bathroom-before.webp',
                 'after' => 'example-bathroom-after.webp',
-                'before_alt' => 'AI-demo av badrummet före städning, med fläckar på spegeln och en handduk på golvet.',
-                'after_alt' => 'AI-demo av samma badrum efter städning, med ren spegel och tomt golv.',
+                'before_alt' => 'Badrum före städning, med fläckar på spegeln och en handduk på golvet.',
+                'after_alt' => 'Badrum efter städning, med ren spegel och tomt golv.',
                 'note' => 'Spegel och handfat är rengjorda. Handduken som låg på golvet är undanplockad.',
             ],
         ];
@@ -57,7 +57,6 @@
                     <p class="customer-report-date">14 okt 2026 · kl. 09:30</p>
                 </div>
             </header>
-            <p class="printable-disclaimer"><span aria-hidden="true">✳</span> AI-demo · inte ett kundfoto</p>
             <dl class="customer-report-meta">
                 <div><dt>Objekt</dt><dd>Lgh 1102, kök och badrum</dd></div>
                 <div><dt>Adress</dt><dd>Exempelgatan 4, 123 45 Exempelstad</dd></div>
@@ -67,11 +66,11 @@
                 <h2 class="version-report-place">{{ $pair['place'] }}</h2>
                 <div class="photo-pair version-photo-pair">
                     <figure>
-                        <figcaption>{{ $page['before_caption'] }} <span>AI-demo</span></figcaption>
+                        <figcaption>{{ $page['before_caption'] }}</figcaption>
                         <img src="{{ $demoImage($pair['before']) }}" width="1152" height="864" alt="{{ $pair['before_alt'] }}" loading="lazy" decoding="async">
                     </figure>
                     <figure>
-                        <figcaption>{{ $page['after_caption'] }} <span>AI-demo</span></figcaption>
+                        <figcaption>{{ $page['after_caption'] }}</figcaption>
                         <img src="{{ $demoImage($pair['after']) }}" width="1152" height="864" alt="{{ $pair['after_alt'] }}" loading="lazy" decoding="async">
                     </figure>
                 </div>
@@ -96,7 +95,6 @@
                     <span>Org.nr 000000-0000 (exempel)</span>
                 </p>
                 <p>{{ $page['footer_desc'] }}</p>
-                <p>AI-demo · inte ett kundfoto</p>
             </footer>
         </article>
     </section>

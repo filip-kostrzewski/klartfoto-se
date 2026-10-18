@@ -220,6 +220,18 @@ class MarketingSiteTest extends TestCase
         $this->get('/priser')->assertStatus(301)->assertRedirect('/#priser');
     }
 
+    public function test_public_marketing_pages_do_not_label_photos_as_ai_generated(): void
+    {
+        foreach (['/', '/exempel-rapport', '/for-stadforetag', '/for-hantverkare', '/for-uthyrare'] as $path) {
+            $this->get($path)
+                ->assertOk()
+                ->assertDontSee('AI-demo', false)
+                ->assertDontSee('AI-genererat', false);
+        }
+
+        $this->get('/for-stadforetag')->assertSee('Kök före städning', false);
+    }
+
     public function test_homepage_shows_prices_photo_demos_and_the_company_footer(): void
     {
         $this->get('/')
@@ -247,7 +259,8 @@ class MarketingSiteTest extends TestCase
             ->assertSee('images/demo/kitchen-after-small.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('images/demo/example-report-phone.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('class="example-phone-frame"', false)
-            ->assertSee('AI-demo · inte ett kundfoto', false)
+            ->assertSee('alt="Kök före städning"', false)
+            ->assertSee('alt="Kök efter städning"', false)
             ->assertSee('images/renovation-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('images/property-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertDontSee('images/demo/kitchen-before.svg', false)
@@ -275,17 +288,19 @@ class MarketingSiteTest extends TestCase
             ->assertSee('Lgh 1102, kök och badrum', false)
             ->assertSee('Sammanfattning', false)
             ->assertSee('Bänkskivan avtorkad', false)
-            ->assertSee('AI-demo · inte ett kundfoto', false);
+            ->assertSee('alt="Kök före städning, med fläckar på hällen och disk i hon."', false)
+            ->assertDontSee('class="printable-disclaimer"', false);
 
         $this->get('/for-stadforetag')
             ->assertOk()
             ->assertSee('images/cleaning-detail.webp?v='.config('klartfoto.demo_asset_version'), false)
-            ->assertSee('AI-genererat demofoto av en person som torkar av en köksbänk', false)
+            ->assertSee('alt="En person torkar av en köksbänk i ett ljust kök."', false)
             ->assertSee('Efter städning', false)
             ->assertSee('Exempelkund', false)
             ->assertSee('Exempelvägen 12', false)
             ->assertSee('12 mars 2026', false)
-            ->assertSee('AI-demo · inte ett kundfoto', false)
+            ->assertSee('alt="Kök före städning"', false)
+            ->assertSee('alt="Kök efter städning"', false)
             ->assertSee('Fotodokumentation för städföretag.', false)
             ->assertSee('images/demo/kitchen-before-small.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('images/demo/example-report-phone.webp?v='.config('klartfoto.demo_asset_version'), false)
@@ -296,7 +311,7 @@ class MarketingSiteTest extends TestCase
             ->assertSee('Efter utfört arbete', false)
             ->assertSee('Brf Lindgården', false)
             ->assertSee('Badrumsrenovering', false)
-            ->assertSee('AI-demo · inte ett kundfoto', false)
+            ->assertSee('alt="En hantverkare arbetar med en träfönsterkarm under en renovering."', false)
             ->assertSee('Fotodokumentation för hantverkare.', false)
             ->assertSee('images/renovation-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('images/demo/example-report-phone.webp?v='.config('klartfoto.demo_asset_version'), false)
@@ -312,7 +327,7 @@ class MarketingSiteTest extends TestCase
             ->assertSee('Inför nästa gäst', false)
             ->assertSee('Lägenhet 3B', false)
             ->assertSee('Incheckning 14:00', false)
-            ->assertSee('AI-demo · inte ett kundfoto', false)
+            ->assertSee('alt="Entrén till en fastighet med grön dörr och stensteg."', false)
             ->assertSee('Fotodokumentation för uthyrare.', false)
             ->assertSee('images/property-detail-small.webp?v='.config('klartfoto.demo_asset_version'), false)
             ->assertSee('images/demo/example-report-phone.webp?v='.config('klartfoto.demo_asset_version'), false)

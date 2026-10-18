@@ -118,7 +118,6 @@
                     <div class="dashboard-empty-state">
                         <div class="empty-state-image">
                             <img src="{{ asset('images/cleaning-detail-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" width="768" height="512" alt="" loading="lazy" decoding="async">
-                            <span>AI-demo · inte kundarbete</span>
                         </div>
                         <div class="empty-state-copy">
                             <span class="empty-state-icon"><x-icon name="camera" /></span>

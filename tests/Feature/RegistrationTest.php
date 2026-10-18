@@ -32,7 +32,10 @@ class RegistrationTest extends TestCase
         $this->get('/register')
             ->assertOk()
             ->assertSee('href="/villkor"', false)
-            ->assertSee('användarvillkoren', false);
+            ->assertSee('användarvillkoren', false)
+            ->assertSee('alt="Kök före städning"', false)
+            ->assertSee('alt="Kök efter städning"', false)
+            ->assertDontSee('AI-demo', false);
 
         $response = $this->post('/register', [
             'company_name' => 'Glans Städ AB',

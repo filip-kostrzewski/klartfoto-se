@@ -30,7 +30,8 @@ class OnboardingTest extends TestCase
             ->assertSee('href="/installningar#medlemmar"', false)
             ->assertSee('Dölj', false)
             ->assertDontSee('>Klar<', false)
-            ->assertDontSee('data-copy-report', false);
+            ->assertDontSee('data-copy-report', false)
+            ->assertDontSee('AI-demo', false);
         $this->assertLessThan(
             strpos($empty->getContent(), 'class="dashboard-empty-state"'),
             strpos($empty->getContent(), 'Kom igång'),

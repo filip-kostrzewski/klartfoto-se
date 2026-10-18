@@ -48,13 +48,11 @@
                                 sizes="(max-width: 760px) calc(100vw - 32px), 52vw"
                                 width="1536"
                                 height="1024"
-                                alt=""
-                                aria-hidden="true"
+                                alt="{{ $copy['report']['before_alt'] }}"
                                 decoding="async">
                         </div>
                         <span class="photo-label photo-label-before">{{ $home['before'] }}</span>
                         <span class="photo-label photo-label-after">{{ $home['after'] }}</span>
-                        <span class="demo-photo-badge"><span aria-hidden="true">✳</span> {{ $home['photo_note'] }}</span>
                         <input
                             class="comparison-control"
                             type="range"
@@ -135,7 +133,6 @@
                     @php($industryImage = $industry['key'].'-detail')
                     <span class="industry-card-image">
                         <img src="{{ asset('images/'.$industryImage.'-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" srcset="{{ asset('images/'.$industryImage.'-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/'.$industryImage.'.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w" sizes="(max-width: 680px) 100vw, 33vw" width="1536" height="1024" alt="" loading="lazy" decoding="async">
-                        <span class="industry-image-note">{{ $home['photo_note'] }}</span>
                     </span>
                     <span class="industry-card-content">
                         <span class="industry-card-label">{{ $industry['label'] }}</span>
@@ -159,7 +156,6 @@
         @include('pages.partials.example-mobile-shots', ['loadPhoneShotEagerly' => true])
         <div class="sample-layout">
             <div class="sample-explainer">
-                <p class="sample-disclaimer"><span aria-hidden="true">✳</span> {{ $home['sample_disclaimer'] }}</p>
                 <p>{{ $home['sample_intro'] }}</p>
                 <a class="button button-dark" href="{{ \App\LocalizedUrl::route('report', $locale, false) }}">{{ $home['sample_cta'] }}</a>
             </div>
@@ -178,11 +174,11 @@
                 </div>
                 <div class="report-photo-row">
                     <figure class="report-photo report-photo-before">
-                        <img src="{{ asset('images/demo/kitchen-before-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" srcset="{{ asset('images/demo/kitchen-before-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/demo/kitchen-before.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w" sizes="(max-width: 560px) 50vw, 22vw" width="1536" height="1024" alt="" loading="lazy" decoding="async">
+                        <img src="{{ asset('images/demo/kitchen-before-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" srcset="{{ asset('images/demo/kitchen-before-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/demo/kitchen-before.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w" sizes="(max-width: 560px) 50vw, 22vw" width="1536" height="1024" alt="{{ $copy['report']['before_alt'] }}" loading="lazy" decoding="async">
                         <figcaption>{{ $home['before'] }}</figcaption>
                     </figure>
                     <figure class="report-photo report-photo-after">
-                        <img src="{{ asset('images/demo/kitchen-after-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" srcset="{{ asset('images/demo/kitchen-after-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/demo/kitchen-after.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w" sizes="(max-width: 560px) 50vw, 22vw" width="1536" height="1024" alt="" loading="lazy" decoding="async">
+                        <img src="{{ asset('images/demo/kitchen-after-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" srcset="{{ asset('images/demo/kitchen-after-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/demo/kitchen-after.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w" sizes="(max-width: 560px) 50vw, 22vw" width="1536" height="1024" alt="{{ $copy['report']['after_alt'] }}" loading="lazy" decoding="async">
                         <figcaption>{{ $home['after'] }}</figcaption>
                     </figure>
                 </div>
@@ -247,7 +243,6 @@
     <section class="signup-section section-pad" id="signup" aria-labelledby="signup-title">
         <div class="signup-cta-visual" aria-hidden="true">
             <img src="{{ asset('images/cleaning-detail-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }}" srcset="{{ asset('images/cleaning-detail-small.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 768w, {{ asset('images/cleaning-detail.webp') }}?v={{ config('klartfoto.demo_asset_version') }} 1536w" sizes="(max-width: 760px) 100vw, 40vw" width="1536" height="1024" alt="" loading="lazy" decoding="async">
-            <span class="industry-image-note">{{ $home['photo_note'] }}</span>
         </div>
         <div class="signup-copy">
             <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span> {{ $cta['eyebrow'] }}</p>

@@ -927,23 +927,6 @@ select {
     max-width: 390px;
 }
 
-.sample-disclaimer {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    margin: 0 0 17px;
-    color: #677444;
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-}
-
-.sample-disclaimer span {
-    color: #73932d;
-    font-size: 15px;
-}
-
 .sample-explainer > p:not(.sample-disclaimer) {
     color: #565d54;
     font-size: 14px;
@@ -1860,15 +1843,6 @@ html.cookie-choice-saved .cookie-banner {
 .printable-meta strong {
     font-size: 12px;
     font-weight: 650;
-}
-
-.printable-disclaimer {
-    margin: 17px 0 11px;
-    color: #65733f;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: .075em;
-    text-transform: uppercase;
 }
 
 .printable-photos {
@@ -4175,8 +4149,7 @@ html {
     outline-offset: 5px;
 }
 
-.photo-label,
-.demo-photo-badge {
+.photo-label {
     position: absolute;
     z-index: 2;
     display: inline-flex;
@@ -4203,21 +4176,6 @@ html {
 .photo-label-after {
     top: 18px;
     right: 18px;
-}
-
-.demo-photo-badge {
-    right: 17px;
-    bottom: 17px;
-    min-height: 32px;
-    gap: 7px;
-    font-size: 12px;
-    letter-spacing: 0;
-    text-transform: none;
-}
-
-.demo-photo-badge > span {
-    color: var(--lime);
-    font-size: 16px;
 }
 
 .comparison-caption {
@@ -4530,23 +4488,6 @@ html {
     transform: scale(1.04);
 }
 
-.industry-image-note,
-.empty-state-image > span {
-    position: absolute;
-    right: 12px;
-    bottom: 12px;
-    padding: 7px 10px;
-    border-radius: var(--radius-pill);
-    background: rgba(20, 35, 29, .86);
-    color: var(--white);
-    font-size: 11px;
-    font-weight: 650;
-}
-
-.industry-image-note {
-    font-size: 12px;
-}
-
 .industry-hero-frame {
     position: relative;
     overflow: hidden;
@@ -4716,21 +4657,6 @@ html {
 
 .sample-explainer {
     max-width: 420px;
-}
-
-.sample-disclaimer {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0 0 20px;
-    color: #ecf4e8;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.sample-disclaimer span {
-    color: var(--lime);
-    font-size: 16px;
 }
 
 .sample-explainer > p:not(.sample-disclaimer) {
@@ -5353,27 +5279,6 @@ html {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-.auth-photo-badge {
-    position: absolute;
-    z-index: 3;
-    top: 18px;
-    left: 18px;
-    display: inline-flex;
-    min-height: 34px;
-    align-items: center;
-    gap: 7px;
-    padding-inline: 12px;
-    border-radius: var(--radius-pill);
-    background: rgba(20, 35, 29, .86);
-    color: var(--white);
-    font-size: 11px;
-    font-weight: 700;
-}
-
-.auth-photo-badge > span {
-    color: var(--lime);
 }
 
 .auth-visual-content {
@@ -6869,13 +6774,6 @@ html {
         font-size: 13px;
     }
 
-    .auth-photo-badge {
-        top: 11px;
-        left: 11px;
-        min-height: 30px;
-        font-size: 10px;
-    }
-
     .auth-report-glance {
         padding: 10px;
     }
@@ -6980,14 +6878,6 @@ html {
         right: 10px;
     }
 
-    .demo-photo-badge {
-        right: 9px;
-        bottom: 9px;
-        min-height: 28px;
-        padding-inline: 9px;
-        font-size: 12px;
-    }
-
     .comparison-handle {
         width: 46px;
         height: 46px;
@@ -7050,17 +6940,6 @@ html {
     .industry-card-label {
         margin-bottom: 8px;
         font-size: 9px;
-    }
-
-    .industry-image-note {
-        right: 7px;
-        bottom: 7px;
-        padding: 6px 8px;
-        font-size: 12px;
-    }
-
-    .industry-card-image .industry-image-note {
-        left: 7px;
     }
 
     .report-card-header {
@@ -9141,13 +9020,6 @@ html {
 
 .signup-section:hover .signup-cta-visual > img {
     transform: scale(1.025);
-}
-
-.signup-cta-visual .industry-image-note {
-    z-index: 2;
-    right: 13px;
-    bottom: 13px;
-    left: auto;
 }
 
 .signup-cta-actions {
