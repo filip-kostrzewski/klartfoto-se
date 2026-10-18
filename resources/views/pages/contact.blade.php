@@ -40,6 +40,8 @@
 
             <form class="signup-form contact-form" method="POST" action="{{ \App\LocalizedUrl::route('contact.message', $locale, false) }}" data-submit-feedback>
                 @csrf
+                @php($startedAt = old('form_started_at'))
+                <input type="hidden" name="form_started_at" value="{{ is_string($startedAt) && $startedAt !== '' ? $startedAt : \App\Support\FormSpam::stamp() }}" autocomplete="off">
 
                 <div class="contact-honeypot" aria-hidden="true">
                     <label for="website">{{ $page['honeypot_label'] }}</label>
@@ -71,6 +73,10 @@
                 @endif
 
                 <p class="form-privacy">{{ $page['privacy_note'] }} <a href="{{ \App\LocalizedUrl::route('privacy', $locale, false) }}">{{ $page['privacy_link'] }}</a></p>
+                @if (\App\Support\FormSpam::turnstileEnabled())
+                    <div class="cf-turnstile contact-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}"></div>
+                    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+                @endif
                 <button class="button button-lime signup-submit" type="submit" data-loading-text="{{ $page['sending'] }}">{{ $page['submit'] }}</button>
             </form>
         </div>

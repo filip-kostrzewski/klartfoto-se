@@ -5177,6 +5177,10 @@ html {
     white-space: nowrap;
 }
 
+.contact-turnstile {
+    margin: 4px 0 16px;
+}
+
 .contact-direct-link {
     margin: 20px auto 0;
     color: #536057;

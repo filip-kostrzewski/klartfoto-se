@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\LocalizedUrl;
 use App\Mail\ContactMessage;
+use App\Support\FormSpam;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -18,9 +19,11 @@ class ContactMessageController extends Controller
     {
         $locale = app()->getLocale();
         $contactUrl = LocalizedUrl::route('contact', $locale, false).'#contact-form';
-        $honeypot = $request->input('website');
+        $reason = FormSpam::rejectionReason($request, 'website', ['name', 'message']);
 
-        if (filled($honeypot)) {
+        if ($reason !== null) {
+            FormSpam::record($request, 'contact', $reason, ['name', 'email', 'company', 'message', 'website']);
+
             return redirect()->to($contactUrl)->with('contact_status', 'success');
         }
 
@@ -79,7 +82,7 @@ class ContactMessageController extends Controller
      */
     private function safeOldInput(Request $request): array
     {
-        $oldInput = $request->only(['name', 'email', 'company', 'message']);
+        $oldInput = $request->only(['name', 'email', 'company', 'message', FormSpam::STARTED_AT_FIELD]);
 
         foreach ($oldInput as $key => $value) {
             if (! is_string($value)) {

@@ -4,6 +4,9 @@ namespace Tests\Feature;
 
 use App\LocalizedUrl;
 use App\Mail\ContactMessage;
+use App\Models\SpamSubmission;
+use App\Support\FormSpam;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use RuntimeException;
@@ -11,6 +14,8 @@ use Tests\TestCase;
 
 class ContactMessageTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_valid_message_is_sent_to_provider_with_fixed_sender_and_escaped_content(): void
     {
         config([
@@ -26,6 +31,7 @@ class ContactMessageTest extends TestCase
             'email' => 'SENDER@example.com',
             'company' => 'Example Co',
             'message' => "Hello <script>alert('x')</script>\nThanks",
+            'form_started_at' => $this->formStartedAt(),
         ])->assertRedirect('/en/contact#contact-form')
             ->assertSessionHas('contact_status', 'sent')
             ->assertSessionMissing('_old_input');
@@ -76,6 +82,7 @@ class ContactMessageTest extends TestCase
             'email' => 'private@example.com',
             'company' => 'Private Company',
             'message' => 'PRIVATE MESSAGE CONTENT',
+            'form_started_at' => $this->formStartedAt(),
         ])->assertRedirect('/kontakt#contact-form')
             ->assertSessionHas('contact_status', 'failed')
             ->assertSessionHas('_old_input.name', 'Private Name')
@@ -97,6 +104,7 @@ class ContactMessageTest extends TestCase
             'email' => ['not-a-string'],
             'company' => ['not-a-string'],
             'message' => ['not-a-string'],
+            'form_started_at' => $this->formStartedAt(),
         ]);
 
         $response->assertOk()
@@ -129,6 +137,7 @@ class ContactMessageTest extends TestCase
                 ->post(LocalizedUrl::route('contact.message', $locale, false), [
                     'email' => 'owner@example.com',
                     'message' => 'A valid contact message',
+                    'form_started_at' => $this->formStartedAt(),
                 ])
                 ->assertOk()
                 ->assertSee($expectedError, false);
@@ -149,12 +158,19 @@ class ContactMessageTest extends TestCase
             ->assertSessionHas('contact_status', 'success');
 
         Mail::assertNothingOutgoing();
+        $this->assertDatabaseCount('spam_submissions', 1);
+
+        $submission = SpamSubmission::query()->sole();
+        $this->assertSame('contact', $submission->form);
+        $this->assertSame('honeypot', $submission->reason);
+        $this->assertSame('https://spam.example', $submission->payload['website']);
     }
 
     public function test_contact_message_throttle_is_shared_across_locales_for_the_same_ip(): void
     {
         Mail::fake();
         $this->withServerVariables(['REMOTE_ADDR' => '192.0.2.30']);
+        $startedAt = $this->formStartedAt();
 
         foreach ([
             ['/kontakt/meddelande', 'first@example.com'],
@@ -167,6 +183,7 @@ class ContactMessageTest extends TestCase
                 'name' => 'Test Sender',
                 'email' => $email,
                 'message' => 'A valid message',
+                'form_started_at' => $startedAt,
             ])->assertRedirect();
         }
 
@@ -174,8 +191,14 @@ class ContactMessageTest extends TestCase
             'name' => 'Test Sender',
             'email' => 'sixth@example.com',
             'message' => 'A valid message',
+            'form_started_at' => $startedAt,
         ])->assertTooManyRequests();
 
         Mail::assertSentTimes(ContactMessage::class, 5);
+    }
+
+    private function formStartedAt(): string
+    {
+        return FormSpam::stamp(10);
     }
 }
