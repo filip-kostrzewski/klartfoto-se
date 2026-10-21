@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Actions\CreateCompanyAccount;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -67,8 +68,9 @@ class GoogleAuthController extends Controller
                 && strcasecmp(trim($email), $user->email) === 0
                 && $this->hasAuthoritativeVerifiedEmail($claims, $email)
                 && ! $user->hasVerifiedEmail()
+                && $user->markEmailAsVerified()
             ) {
-                $user->markEmailAsVerified();
+                event(new Verified($user));
             }
         } else {
             if (! is_string($email) || trim($email) === '') {
@@ -98,8 +100,8 @@ class GoogleAuthController extends Controller
 
                 $user->forceFill(['google_id' => $googleId])->save();
 
-                if (! $user->hasVerifiedEmail()) {
-                    $user->markEmailAsVerified();
+                if (! $user->hasVerifiedEmail() && $user->markEmailAsVerified()) {
+                    event(new Verified($user));
                 }
             } else {
                 $name = trim((string) $googleUser->getName());
@@ -113,7 +115,9 @@ class GoogleAuthController extends Controller
                 );
                 $created = true;
 
-                if (! $user->hasVerifiedEmail()) {
+                if ($user->hasVerifiedEmail()) {
+                    event(new Verified($user));
+                } else {
                     $user->sendEmailVerificationNotification();
                 }
             }

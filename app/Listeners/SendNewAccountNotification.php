@@ -21,28 +21,50 @@ class SendNewAccountNotification
             return;
         }
 
+        $company = $user->company;
+
+        if (! $company instanceof Company) {
+            return;
+        }
+
         $recipient = config('klartfoto.provider_contact_email');
 
         if (! is_string($recipient) || filter_var($recipient, FILTER_VALIDATE_EMAIL) === false) {
             return;
         }
 
-        try {
-            $company = $user->company;
+        if (! $this->claim($company)) {
+            return;
+        }
 
+        try {
             Mail::to($recipient)->send(new NewAccountConfirmed(
-                companyName: $company?->name,
+                companyName: $company->name,
                 name: $user->name,
                 email: $user->email,
                 registeredAt: ($user->created_at ?? now())->timezone('Europe/Stockholm')->format('Y-m-d H:i'),
-                plan: $company instanceof Company ? $this->chosenPlan($company)?->name : null,
+                plan: $this->chosenPlan($company)?->name,
             ));
         } catch (Throwable $exception) {
+            Company::query()->whereKey($company->id)->update(['new_account_notified_at' => null]);
+
             Log::warning('New account notification failed.', [
                 'user_id' => $user->id,
                 'exception' => $exception::class,
             ]);
         }
+    }
+
+    /**
+     * Marks the company as notified in one conditional update, so two
+     * confirmations racing each other still send a single mail.
+     */
+    private function claim(Company $company): bool
+    {
+        return Company::query()
+            ->whereKey($company->id)
+            ->whereNull('new_account_notified_at')
+            ->update(['new_account_notified_at' => now()]) === 1;
     }
 
     /**

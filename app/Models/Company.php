@@ -36,6 +36,7 @@ class Company extends Model
             'trial_ends_at' => 'datetime',
             'paid_until' => 'datetime',
             'requested_at' => 'datetime',
+            'new_account_notified_at' => 'datetime',
             'billing_details' => 'encrypted:array',
         ];
     }
