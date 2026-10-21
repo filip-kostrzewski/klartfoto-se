@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Actions\PurgeExposedTestJobPhotos;
 use App\Models\Assignment;
-use App\Models\AssignmentPhoto;
 use App\Models\AssignmentReportVersion;
 use App\Models\AssignmentReportVersionAsset;
 use App\Models\User;
