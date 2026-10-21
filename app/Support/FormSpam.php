@@ -122,7 +122,7 @@ class FormSpam
         return now()->getTimestamp() - (int) $startedAt < self::MINIMUM_FILL_SECONDS;
     }
 
-    private static function turnstileRejected(Request $request): bool
+    public static function turnstileRejected(Request $request): bool
     {
         if (! self::turnstileEnabled()) {
             return false;

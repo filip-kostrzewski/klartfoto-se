@@ -63,6 +63,12 @@
                 </label>
                 @error('privacy') <span class="field-error" id="privacy-error">{{ $message }}</span> @enderror
 
+                @if (\App\Support\FormSpam::turnstileEnabled())
+                    <div class="cf-turnstile contact-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}"></div>
+                    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+                @endif
+                @error(\App\Support\FormSpam::TURNSTILE_FIELD) <span class="field-error" id="turnstile-error">{{ $message }}</span> @enderror
+
                 <button class="button button-lime auth-submit" type="submit" data-loading-text="Skapar konto…">Skapa konto</button>
             </form>
             <p class="auth-switch">Har du redan konto? <a href="{{ route('login', absolute: false) }}">Logga in</a></p>
