@@ -222,7 +222,7 @@ class MarketingSiteTest extends TestCase
 
     public function test_public_marketing_pages_do_not_label_photos_as_ai_generated(): void
     {
-        foreach (['/', '/exempel-rapport', '/for-stadforetag', '/for-hantverkare', '/for-uthyrare'] as $path) {
+        foreach (['/', '/exempel-rapport', '/for-stadforetag', '/for-hantverkare', '/for-uthyrare', '/guider', '/guider/fotodokumentation-renovering'] as $path) {
             $this->get($path)
                 ->assertOk()
                 ->assertDontSee('AI-demo', false)
@@ -473,7 +473,7 @@ class MarketingSiteTest extends TestCase
         $response = $this->get('/sitemap.xml')->assertOk()->assertHeader('content-type', 'application/xml; charset=UTF-8');
         $xml = $response->getContent();
 
-        $this->assertSame(17, substr_count($xml, '<url>'));
+        $this->assertSame(18, substr_count($xml, '<url>'));
         $this->assertStringContainsString('<loc>https://klartfoto.example/</loc>', $xml);
         $this->assertStringContainsString('<loc>https://klartfoto.example/exempel-rapport</loc>', $xml);
         $this->assertStringContainsString('<loc>https://klartfoto.example/integritetspolicy</loc>', $xml);
@@ -482,6 +482,7 @@ class MarketingSiteTest extends TestCase
         $this->assertStringContainsString('<loc>https://klartfoto.example/pl/kontakt</loc>', $xml);
         $this->assertSame(1, substr_count($xml, '<loc>https://klartfoto.example/guider</loc>'));
         $this->assertSame(1, substr_count($xml, '<loc>https://klartfoto.example/guider/fotodokumentation-stadning</loc>'));
+        $this->assertSame(1, substr_count($xml, '<loc>https://klartfoto.example/guider/fotodokumentation-renovering</loc>'));
         $this->assertStringContainsString('https://klartfoto.example/for-stadforetag', $xml);
         $this->assertStringContainsString('<loc>https://klartfoto.example/pl/dla-firm-sprzatajacych</loc>', $xml);
         $this->assertStringContainsString('<loc>https://klartfoto.example/pl/polityka-prywatnosci</loc>', $xml);
@@ -492,6 +493,7 @@ class MarketingSiteTest extends TestCase
         $this->assertStringNotContainsString('/fi/', $xml);
         $this->assertStringNotContainsString('datenschutz', $xml);
         $this->assertStringContainsString('<loc>https://klartfoto.example/guider/fotodokumentation-stadning</loc><lastmod>2026-10-16</lastmod>', $xml);
+        $this->assertStringContainsString('<loc>https://klartfoto.example/guider/fotodokumentation-renovering</loc><lastmod>2026-10-29</lastmod>', $xml);
         $this->assertDoesNotMatchRegularExpression('#<loc>(?!https://)#', $xml);
 
         $this->get('/robots.txt')->assertOk()->assertSee('Sitemap: https://klartfoto.example/sitemap.xml', false);
@@ -529,7 +531,8 @@ class MarketingSiteTest extends TestCase
         $this->assertStringContainsString('<loc>https://klartfoto.se/</loc>', $sitemap);
         $this->assertStringContainsString('<loc>https://klartfoto.se/guider</loc>', $sitemap);
         $this->assertStringContainsString('<loc>https://klartfoto.se/guider/fotodokumentation-stadning</loc><lastmod>2026-10-16</lastmod>', $sitemap);
-        $this->assertStringContainsString('<loc>https://klartfoto.se/guider</loc><lastmod>2026-10-16</lastmod>', $sitemap);
+        $this->assertStringContainsString('<loc>https://klartfoto.se/guider/fotodokumentation-renovering</loc><lastmod>2026-10-29</lastmod>', $sitemap);
+        $this->assertStringContainsString('<loc>https://klartfoto.se/guider</loc><lastmod>2026-10-29</lastmod>', $sitemap);
         $this->assertStringNotContainsString('klartfoto.test', $sitemap);
     }
 
@@ -615,19 +618,121 @@ class MarketingSiteTest extends TestCase
         $this->assertStringNotContainsString('reklamation fastnar', $articleHtml);
         $this->assertStringNotContainsString('Bilden avgör inte hela avtalet', $articleHtml);
         $this->assertStringNotContainsString('innan länken går', $articleHtml);
+        $this->assertStringContainsString('Läs också', $articleHtml);
+        $this->assertStringContainsString('<a href="/guider/fotodokumentation-renovering">Fotodokumentation vid renovering – före- och efterbilder till kunden</a>', $articleHtml);
         $this->assertStringContainsString('<table class="guide-steps">', $articleHtml);
         $this->assertStringContainsString('images/guides/exempel-rapport.jpg?v='.config('klartfoto.demo_asset_version'), $articleHtml);
         $this->assertStringContainsString('images/guides/kok-fore.svg?v='.config('klartfoto.demo_asset_version'), $articleHtml);
         $this->assertStringContainsString('images/guides/badrum-efter.svg?v='.config('klartfoto.demo_asset_version'), $articleHtml);
         $this->assertStringContainsString('images/guides/hall-fore.svg?v='.config('klartfoto.demo_asset_version'), $articleHtml);
         $this->assertGreaterThanOrEqual(4, substr_count($articleHtml, '>Exempel<'));
+        $relatedNode = $xpath->query('//section[contains(@class, "guide-related")]')->item(0);
+        $this->assertInstanceOf(DOMElement::class, $relatedNode);
+        $relatedNode->parentNode?->removeChild($relatedNode);
         $words = preg_split('/\s+/u', trim($articleNode->textContent ?? ''), -1, PREG_SPLIT_NO_EMPTY);
         $this->assertIsArray($words);
         $this->assertGreaterThanOrEqual(1000, count($words));
         $this->assertLessThanOrEqual(1400, count($words));
     }
 
-    public function test_guide_index_lists_the_cleaning_photo_article(): void
+    public function test_swedish_renovation_photo_guide_is_an_indexable_article(): void
+    {
+        app()->detectEnvironment(fn () => 'production');
+
+        $html = $this->get('/guider/fotodokumentation-renovering')->assertOk()->getContent();
+        $document = $this->htmlDocument($html);
+        $xpath = new DOMXPath($document);
+        $h1 = $xpath->query('//h1');
+        $schema = $this->structuredData($html);
+        $types = array_column($schema['@graph'], '@type');
+        $article = collect($schema['@graph'])->firstWhere('@type', 'Article');
+        $breadcrumb = collect($schema['@graph'])->firstWhere('@type', 'BreadcrumbList');
+        $description = 'Så dokumenterar du ett renoveringsjobb med före- och efterbilder: vad du ska fotografera, hur du får med dolda arbeten och hur du lämnar över en tydlig rapport till kunden eller BRF:en.';
+
+        $this->assertNotFalse($h1);
+        $this->assertSame(1, $h1->length);
+        $this->assertInstanceOf(DOMElement::class, $h1->item(0));
+        $this->assertSame('Fotodokumentation vid renovering – före- och efterbilder till kunden', trim($h1->item(0)->textContent ?? ''));
+        $this->assertStringContainsString('<html lang="sv">', $html);
+        $this->assertStringContainsString('<title>Fotodokumentation vid renovering – före- och efterbilder till kunden | Klartfoto</title>', $html);
+        $this->assertStringContainsString('name="description" content="'.$description.'"', $html);
+        $this->assertStringContainsString('rel="canonical" href="https://klartfoto.se/guider/fotodokumentation-renovering"', $html);
+        $this->assertStringContainsString('property="og:type" content="article"', $html);
+        $this->assertStringContainsString('property="og:title" content="Fotodokumentation vid renovering – före- och efterbilder till kunden | Klartfoto"', $html);
+        $this->assertStringContainsString('property="og:description" content="'.$description.'"', $html);
+        $this->assertStringContainsString('property="og:url" content="https://klartfoto.se/guider/fotodokumentation-renovering"', $html);
+        $this->assertStringContainsString('property="og:locale" content="sv_SE"', $html);
+        $this->assertStringContainsString('property="og:image" content="https://klartfoto.se/images/guides/exempel-rapport.jpg?v='.config('klartfoto.demo_asset_version').'"', $html);
+        $this->assertStringContainsString('property="article:published_time" content="2026-10-29"', $html);
+        $this->assertStringContainsString('property="article:modified_time" content="2026-10-29"', $html);
+        $this->assertStringContainsString('<time datetime="2026-10-29">Publicerad 29 oktober 2026</time>', $html);
+        $this->assertStringNotContainsString('Uppdaterad 29 oktober 2026', $html);
+        $this->assertStringContainsString('name="robots" content="index,follow,max-image-preview:large"', $html);
+        $this->assertStringNotContainsString('rel="alternate"', $html);
+        $this->assertContains('Article', $types);
+        $this->assertContains('BreadcrumbList', $types);
+        $this->assertNotContains('FAQPage', $types);
+        $this->assertNotContains('Person', $types);
+        $this->assertIsArray($article);
+        $this->assertSame('Fotodokumentation vid renovering – före- och efterbilder till kunden', $article['headline']);
+        $this->assertSame($description, $article['description']);
+        $this->assertSame('2026-10-29', $article['datePublished']);
+        $this->assertSame('2026-10-29', $article['dateModified']);
+        $this->assertSame('sv-SE', $article['inLanguage']);
+        $this->assertSame(['@id' => 'https://klartfoto.se/#organization'], $article['author']);
+        $this->assertIsArray($breadcrumb);
+        $this->assertSame(
+            [
+                ['Startsida', 'https://klartfoto.se/'],
+                ['Guider', 'https://klartfoto.se/guider'],
+                ['Fotodokumentation vid renovering', 'https://klartfoto.se/guider/fotodokumentation-renovering'],
+            ],
+            array_map(fn (array $crumb): array => [$crumb['name'], $crumb['item']], $breadcrumb['itemListElement']),
+        );
+
+        $articleNode = $xpath->query('//article[contains(concat(" ", normalize-space(@class), " "), " guide-article ")]')->item(0);
+        $this->assertInstanceOf(DOMElement::class, $articleNode);
+        $articleHtml = $document->saveHTML($articleNode);
+        $this->assertIsString($articleHtml);
+        $articleText = preg_replace('/\s+/u', ' ', $articleNode->textContent ?? '');
+        $this->assertIsString($articleText);
+
+        $this->assertStringContainsString('Av Klartfoto-teamet', $articleText);
+        $this->assertStringContainsString('<a href="/">Startsida</a>', $articleHtml);
+        $this->assertStringContainsString('<a href="/guider">Guider</a>', $articleHtml);
+        $this->assertStringContainsString('<a href="/for-hantverkare">sidan för hantverkare</a>', $articleHtml);
+        $this->assertStringContainsString('<a href="/exempel-rapport">exempelrapporten</a>', $articleHtml);
+        $this->assertStringContainsString('<a href="/integritetspolicy">integritetspolicyn</a>', $articleHtml);
+        $this->assertStringContainsString('<a href="https://www.gvk.se">GVK</a>', $articleHtml);
+        $this->assertStringContainsString('<a href="https://www.sakervatten.se">Säker Vatten</a>', $articleHtml);
+        $this->assertStringContainsString('<a href="https://www.imy.se">Integritetsskyddsmyndigheten (IMY)</a>', $articleHtml);
+        $this->assertStringContainsString('<a href="/guider/fotodokumentation-stadning">Fotodokumentation vid städning med före- och efterbilder</a>', $articleHtml);
+        $this->assertStringContainsString('<a href="/exempel-rapport">Exempelrapport</a>', $articleHtml);
+        $this->assertSame(1, substr_count($articleHtml, 'href="/register"'));
+        $this->assertSame(1, substr_count($articleHtml, 'Kom igång gratis'));
+        $this->assertLessThan(
+            strpos($articleHtml, 'Personuppgifter i bild'),
+            strpos($articleHtml, 'class="button button-lime" href="/register"'),
+        );
+        $this->assertGreaterThan(
+            strpos($articleHtml, 'Se hur det ser ut i'),
+            strpos($articleHtml, 'class="button button-lime" href="/register"'),
+        );
+        $this->assertStringContainsString('<li><strong>Dolda arbeten försvinner.</strong> Tätskikt, rör, el och reglar täcks över.', $articleHtml);
+        $this->assertStringContainsString('<ol class="guide-ordered">', $articleHtml);
+        $this->assertStringContainsString('När ett renoveringsjobb är klart ser kunden bara ytan', $articleText);
+        $this->assertStringContainsString('Bilderna ersätter inte avtal, egenkontroll eller intyg.', $articleText);
+        $this->assertStringContainsString('Hundra bilder utan ordning hjälper ingen.', $articleText);
+        $this->assertStringNotContainsString('Historia zmian', $html);
+        $this->assertStringNotContainsString('Kiko', $html);
+        $this->assertStringNotContainsString('[Kom igång gratis]', $html);
+        $this->assertDoesNotMatchRegularExpression('/\bAI\b/u', $articleText);
+        $this->assertStringNotContainsString('guide-steps', $articleHtml);
+        $this->assertStringNotContainsString('guide-faq', $articleHtml);
+        $this->assertInternalLinksOmitTheExternalMark($html);
+    }
+
+    public function test_guide_index_lists_the_renovation_and_cleaning_photo_articles(): void
     {
         $html = $this->get('/guider')->assertOk()->getContent();
         $xpath = new DOMXPath($this->htmlDocument($html));
@@ -638,8 +743,8 @@ class MarketingSiteTest extends TestCase
         $this->assertInstanceOf(DOMElement::class, $h1->item(0));
         $this->assertSame('Guider', trim($h1->item(0)->textContent ?? ''));
         $this->assertStringContainsString('<html lang="sv">', $html);
-        $this->assertStringContainsString('<title>Guider för städföretag | Klartfoto</title>', $html);
-        $this->assertStringContainsString('name="description" content="Praktiska guider för städföretag om fotodokumentation, före- och efterbilder och städrapporter att dela med kunden."', $html);
+        $this->assertStringContainsString('<title>Guider för städföretag och hantverkare | Klartfoto</title>', $html);
+        $this->assertStringContainsString('name="description" content="Praktiska guider för städföretag och hantverkare om fotodokumentation, före- och efterbilder och rapporter att dela med kunden."', $html);
         $this->assertStringContainsString('rel="canonical" href="https://klartfoto.se/guider"', $html);
         $this->assertStringContainsString('property="og:type" content="website"', $html);
         $this->assertStringContainsString('>Startsida</a>', $html);
@@ -647,6 +752,13 @@ class MarketingSiteTest extends TestCase
         $this->assertStringContainsString('Se exempelrapporten', $html);
         $this->assertStringContainsString('href="/guider/fotodokumentation-stadning"', $html);
         $this->assertStringContainsString('Fotodokumentation vid städning med före- och efterbilder', $html);
+        $this->assertStringContainsString('href="/guider/fotodokumentation-renovering"', $html);
+        $this->assertStringContainsString('Fotodokumentation vid renovering – före- och efterbilder till kunden', $html);
+        $this->assertStringContainsString('<time datetime="2026-10-29">Publicerad 29 oktober 2026</time>', $html);
+        $this->assertLessThan(
+            strpos($html, 'href="/guider/fotodokumentation-stadning"'),
+            strpos($html, 'href="/guider/fotodokumentation-renovering"'),
+        );
 
         $this->get('/guider/saknas')->assertNotFound();
         $this->get('/en/guider')->assertNotFound();
@@ -654,7 +766,7 @@ class MarketingSiteTest extends TestCase
 
     public function test_marketing_calls_to_action_open_registration_without_an_arrow(): void
     {
-        foreach (['/', '/guider', '/guider/fotodokumentation-stadning', '/for-stadforetag', '/exempel-rapport'] as $path) {
+        foreach (['/', '/guider', '/guider/fotodokumentation-stadning', '/guider/fotodokumentation-renovering', '/for-stadforetag', '/for-hantverkare', '/exempel-rapport'] as $path) {
             $html = $this->get($path)->assertOk()->getContent();
 
             $this->assertStringContainsString('class="mobile-menu-signup" href="/register"', $html);
@@ -681,6 +793,17 @@ class MarketingSiteTest extends TestCase
         $this->get('/')->assertOk()->assertSee('>Guider</a>', false);
         $this->get('/en/for-cleaning-companies')->assertOk()->assertDontSee('/guider', false);
         $this->get('/en')->assertOk()->assertDontSee('>Guider</a>', false);
+    }
+
+    public function test_swedish_contractor_page_links_to_the_renovation_photo_guide(): void
+    {
+        $this->get('/for-hantverkare')->assertOk()
+            ->assertSee('<a class="text-link" href="/guider/fotodokumentation-renovering">Läs guiden om fotodokumentation vid renovering</a>', false)
+            ->assertDontSee('href="/guider/fotodokumentation-stadning"', false);
+
+        $this->get('/for-stadforetag')->assertOk()->assertDontSee('href="/guider/fotodokumentation-renovering"', false);
+        $this->get('/en/for-contractors')->assertOk()->assertDontSee('/guider', false);
+        $this->get('/pl/dla-ekip-remontowych')->assertOk()->assertDontSee('/guider', false);
     }
 
     public function test_homepage_video_object_uses_the_swedish_thumbnail_and_keeps_the_page_schema(): void

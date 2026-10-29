@@ -17,11 +17,13 @@
 
     <section class="guide-index section-pad" aria-label="{{ $page['h1'] }}">
         <div class="guide-index-list">
-            <a class="guide-index-card" href="{{ route('guides.cleaning-photos', absolute: false) }}">
-                <time datetime="{{ $featured['published_on'] }}">{{ $featured['published_label'] }}</time>
-                <h2>{{ $featured['h1'] }}</h2>
-                <p>{{ $featured['card'] }}</p>
-            </a>
+            @foreach ($guides as $guide)
+                <a class="guide-index-card" href="{{ $guide['href'] }}">
+                    <time datetime="{{ $guide['published_on'] }}">{{ $guide['published_label'] }}</time>
+                    <h2>{{ $guide['h1'] }}</h2>
+                    <p>{{ $guide['card'] }}</p>
+                </a>
+            @endforeach
         </div>
     </section>
 @endsection

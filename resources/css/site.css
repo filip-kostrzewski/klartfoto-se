@@ -10091,9 +10091,33 @@ html {
     content: "";
 }
 
-.guide-faq {
+.guide-list strong {
+    font-weight: 700;
+}
+
+.guide-ordered {
+    margin: 0 0 1.2em;
+    padding-left: 1.4em;
+}
+
+.guide-ordered li {
+    margin: 0 0 .5em;
+    padding-left: .2em;
+}
+
+.guide-ordered li::marker {
+    color: #2f4a1c;
+    font-weight: 700;
+}
+
+.guide-faq,
+.guide-related {
     margin-top: 2.4em;
     border-top: 1px solid var(--line);
+}
+
+.guide-related h2 {
+    margin-top: 1.2em;
 }
 
 .guide-faq h2 {
@@ -10113,6 +10137,8 @@ html {
 }
 
 .guide-index-list {
+    display: grid;
+    gap: 18px;
     width: min(100%, 760px);
     margin: 0 auto;
 }

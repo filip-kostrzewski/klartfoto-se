@@ -202,12 +202,15 @@ class SiteSeo
         }
 
         $document['@graph'][] = $article;
-        $document['@graph'][] = [
-            '@type' => 'FAQPage',
-            '@id' => $canonical.'#faq',
-            'inLanguage' => $language,
-            'mainEntity' => $questions,
-        ];
+
+        if ($questions !== []) {
+            $document['@graph'][] = [
+                '@type' => 'FAQPage',
+                '@id' => $canonical.'#faq',
+                'inLanguage' => $language,
+                'mainEntity' => $questions,
+            ];
+        }
 
         return $document;
     }
