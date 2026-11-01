@@ -19,6 +19,7 @@ class MarketingPageController extends Controller
      * @var array<string, array{path: string, route: string}>
      */
     private const GUIDES = [
+        'rental_photos' => ['path' => '/guider/fotodokumentation-uthyrning', 'route' => 'guides.rental-photos'],
         'renovation_photos' => ['path' => '/guider/fotodokumentation-renovering', 'route' => 'guides.renovation-photos'],
         'cleaning_photos' => ['path' => '/guider/fotodokumentation-stadning', 'route' => 'guides.cleaning-photos'],
     ];
@@ -104,6 +105,11 @@ class MarketingPageController extends Controller
     public function renovationPhotoGuide(): View
     {
         return $this->guide('renovation_photos');
+    }
+
+    public function rentalPhotoGuide(): View
+    {
+        return $this->guide('rental_photos');
     }
 
     public function notFound(): Response
@@ -271,8 +277,10 @@ class MarketingPageController extends Controller
 
         $content['home_crumb'] = (string) trans('guides.home_crumb');
 
-        if (isset($content['intro_more'])) {
-            $content['intro_more'] = $this->withInlineLinks((string) $content['intro_more']);
+        foreach (['intro_more', 'closing'] as $field) {
+            if (isset($content[$field])) {
+                $content[$field] = $this->withInlineLinks((string) $content[$field]);
+            }
         }
 
         if (isset($content['sections']) && is_array($content['sections'])) {
@@ -356,6 +364,10 @@ class MarketingPageController extends Controller
             ':report' => $link(LocalizedUrl::route('report', $locale, false), 'report'),
             ':privacy' => $link(LocalizedUrl::route('privacy', $locale, false), 'privacy'),
             ':cleaning' => $link(LocalizedUrl::route('cleaning', $locale, false), 'cleaning'),
+            ':property' => $link(LocalizedUrl::route('property', $locale, false), 'property'),
+            ':contact' => $link(LocalizedUrl::route('contact', $locale, false), 'contact'),
+            ':register' => $link(route('register', absolute: false), 'register'),
+            ':cleaning_guide' => $link(route('guides.cleaning-photos', absolute: false), 'cleaning_guide'),
             ':renovation' => $link(LocalizedUrl::route('renovation', $locale, false), 'renovation'),
             ':imy_home' => $link('https://www.imy.se', 'imy'),
             ':imy' => $link('https://www.imy.se/verksamhet/dataskydd/det-har-galler-enligt-gdpr/de-registrerades-rattigheter', 'imy'),

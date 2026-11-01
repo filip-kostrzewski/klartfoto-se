@@ -104,7 +104,7 @@
         </section>
     @endif
 
-    @php($guidePromo = ['cleaning' => ['cleaning_link', 'guides.cleaning-photos'], 'renovation' => ['renovation_link', 'guides.renovation-photos']][$page['route_key'] ?? ''] ?? null)
+    @php($guidePromo = ['cleaning' => ['cleaning_link', 'guides.cleaning-photos'], 'renovation' => ['renovation_link', 'guides.renovation-photos'], 'property' => ['rental_link', 'guides.rental-photos']][$page['route_key'] ?? ''] ?? null)
     @if ($guidePromo !== null && $locale === 'sv')
         @php($guideLink = trans('guides.'.$guidePromo[0]))
         <aside class="guide-promo section-pad">

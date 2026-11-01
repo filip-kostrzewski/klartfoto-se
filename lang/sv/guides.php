@@ -6,6 +6,10 @@ return [
         'privacy' => 'integritetspolicyn',
         'cleaning' => 'sidan för städföretag',
         'renovation' => 'sidan för hantverkare',
+        'property' => 'sidan för uthyrare',
+        'contact' => 'kontakta oss',
+        'register' => 'Skapa ett konto',
+        'cleaning_guide' => 'guiden om fotodokumentation vid städning',
         'imy' => 'Integritetsskyddsmyndigheten (IMY)',
         'gvk' => 'GVK',
         'sakervatten' => 'Säker Vatten',
@@ -22,6 +26,12 @@ return [
         'title' => 'Fotodokumentation vid renovering',
         'text' => 'Vad du fotograferar före, under och efter jobbet, och hur du lämnar över bilderna till kunden i en rapport.',
         'label' => 'Läs guiden om fotodokumentation vid renovering',
+    ],
+    'rental_link' => [
+        'kicker' => 'Guide',
+        'title' => 'Fotodokumentation mellan gäster',
+        'text' => 'Vad du fotograferar efter utcheckning och efter städning, och hur värden får en rapport via länk.',
+        'label' => 'Läs guiden om fotodokumentation mellan gäster',
     ],
     'index' => [
         'title' => 'Guider för städföretag och hantverkare | :brand',
@@ -189,6 +199,7 @@ return [
         'related_title' => 'Läs också',
         'related' => [
             ['label' => 'Fotodokumentation vid renovering – före- och efterbilder till kunden', 'route' => 'guides.renovation-photos'],
+            ['label' => 'Fotodokumentation mellan gäster – visa värden att bostaden är klar', 'route' => 'guides.rental-photos'],
         ],
         'cta_eyebrow' => 'Klartfoto',
         'cta_title' => 'Samla före och efter',
@@ -331,9 +342,120 @@ return [
         'related_title' => 'Läs också',
         'related' => [
             ['label' => 'Fotodokumentation vid städning med före- och efterbilder', 'route' => 'guides.cleaning-photos'],
+            ['label' => 'Fotodokumentation mellan gäster – visa värden att bostaden är klar', 'route' => 'guides.rental-photos'],
             ['label' => 'Exempelrapport', 'route' => 'site.sv.report'],
         ],
         'cta_label' => 'Kom igång gratis',
         'card' => 'Vad du fotograferar före, under och efter ett renoveringsjobb, hur du får med dolda arbeten och hur rapporten lämnas över till kunden.',
+    ],
+
+    'rental_photos' => [
+        'title' => 'Fotodokumentation mellan gäster: visa värden att bostaden är klar | :brand',
+        'description' => 'Så dokumenterar du en uthyrd bostad mellan två gäster: vad du fotograferar efter utcheckning och efter städning, hur skador noteras och hur värden får en rapport via länk.',
+        'breadcrumb' => 'Fotodokumentation mellan gäster',
+        'eyebrow' => 'Guide',
+        'h1' => 'Fotodokumentation mellan gäster: visa värden att bostaden är klar',
+        'byline' => 'Av Klartfoto-teamet',
+        'published_on' => '2026-11-01',
+        'updated_on' => '2026-11-01',
+        'published_label' => 'Publicerad 1 november 2026',
+        'updated_label' => 'Uppdaterad 1 november 2026',
+        'intro' => 'Mellan två gäster har du ofta några timmar på dig. Den förra gästen checkar ut, bostaden ska städas, sängarna bäddas och allt ska vara på plats innan nästa incheckning. Värden är sällan där. Bilder från bytet gör det möjligt att visa hur bostaden såg ut när gästen lämnat och hur den såg ut när du var klar.',
+        'intro_more' => 'Guiden är skriven för dig som städar eller förvaltar lägenheter och fritidshus som hyrs ut för kortare perioder, och för dig som är värd och vill ha ett tydligt underlag från den som städar. Upplägget hör ihop med :property.',
+        'report_image' => [
+            'alt' => 'Exempel på Klartfotos rapportvy med före- och efterbild, kundens namn, adress och datum. Inte ett riktigt kunduppdrag.',
+        ],
+        'sections' => [
+            [
+                'id' => 'why',
+                'title' => 'Varför bilderna behövs',
+                'bullets' => [
+                    ['term' => 'Värden är inte på plats.', 'text' => 'En rapport med bilder visar att bostaden är klar utan att någon behöver åka dit.'],
+                    ['term' => 'Skador upptäcks mellan gäster.', 'text' => 'Ett trasigt glas, en fläck på soffan eller en saknad fjärrkontroll syns först när någon går igenom bostaden. Bilden visar när det upptäcktes.'],
+                    ['term' => 'Frågor kommer i efterhand.', 'text' => 'När nästa gäst klagar på något är det lättare att visa hur det såg ut vid incheckningen än att minnas.'],
+                    ['term' => 'Flera städare, samma standard.', 'text' => 'När olika personer gör bytet blir resultatet jämnare om alla fotograferar samma saker.'],
+                ],
+                'paragraphs_after' => [
+                    'Bilderna ersätter inte hyresavtalet, husreglerna eller det som uthyrningsplattformen kräver. De gör det lättare att visa vad som gällde.',
+                ],
+            ],
+            [
+                'id' => 'checkout',
+                'title' => 'Efter utcheckning: läget som gästen lämnade',
+                'paragraphs' => [
+                    'Ta de första bilderna innan du rör något. Det är de som visar hur gästen lämnade bostaden.',
+                ],
+                'bullets' => [
+                    'en översiktsbild av varje rum från dörren',
+                    'skador och fläckar: på möbler, textilier, väggar och golv',
+                    'sådant som saknas eller står fel, till exempel nycklar, fjärrkontroller eller husets egen utrustning',
+                    'sopor, disk eller kvarglömda saker som är mer än vanligt',
+                ],
+                'paragraphs_after' => [
+                    'Hittar du en skada, ta en översiktsbild där man ser var i rummet den finns och en närbild på själva skadan. Skriv en kort notering med rum och vad du såg. Hyr värden ut via en plattform har den egna regler och tidsfrister för hur skador ska anmälas. Värden behöver få veta snabbt, så skicka hellre underlaget samma dag.',
+                ],
+            ],
+            [
+                'id' => 'cleaned',
+                'title' => 'Efter städning: bostaden inför nästa gäst',
+                'paragraphs' => [
+                    'När du är klar går du samma runda igen och fotograferar det nästa gäst ser först:',
+                ],
+                'bullets' => [
+                    'bäddade sängar och handdukar',
+                    'kök: bänk, diskho, spis och kyl',
+                    'badrum: handfat, dusch eller badkar och toalett',
+                    'förbrukningsvaror som ska finnas, till exempel toalettpapper, tvål och kaffe, om det ingår i ditt uppdrag',
+                    'dörr, nycklar eller kodlås om du lämnar dem i ett visst skick',
+                ],
+                'paragraphs_after' => [
+                    'Stå på samma ställe som i första rundan och håll telefonen på ungefär samma höjd. Då kan värden lägga bilderna bredvid varandra. Mer om hur du håller före och efter jämförbara finns i :cleaning_guide.',
+                ],
+            ],
+            [
+                'id' => 'same-order',
+                'title' => 'Samma ordning varje gång',
+                'paragraphs' => [
+                    'Gör en fast runda för varje bostad, till exempel entré, kök, vardagsrum, sovrum, badrum och sist balkong eller uteplats. Skriv ner rundan och ge den till alla som städar där. Det tar lite tid första gången men gör att ingen glömmer badrummet i stressen före nästa incheckning.',
+                ],
+            ],
+            [
+                'id' => 'meta',
+                'title' => 'Adress, datum och tid hör till bilderna',
+                'paragraphs' => [
+                    'En bild som bara ligger i en telefon är svår att använda när någon frågar. Rapporten ska tala om vilken bostad det gäller, vilken dag och helst vilken tid du var där, så att två byten i samma lägenhet inte blandas ihop. Döp rummen så som värden och gästerna gör: kök, sovrum 1, badrum.',
+                ],
+            ],
+            [
+                'id' => 'share',
+                'title' => 'Skicka en rapport i stället för lösa bilder',
+                'paragraphs' => [
+                    'Lösa bilder i en chatt tappar ordningen och hamnar mellan andra meddelanden. En rapport via länk samlar bilderna från bytet med adress och datum på en sida som värden kan öppna i webbläsaren och spara.',
+                    'I Klartfoto fyller du i kund, adress och datum, laddar upp bilderna från bytet och delar en länk med värden. Hur det ser ut syns i :report.',
+                ],
+            ],
+            [
+                'id' => 'personal-data',
+                'title' => 'Gästernas saker och personuppgifter',
+                'paragraphs' => [
+                    'En bild från en bostad kan innehålla personuppgifter även utan ansikten: en kvarglömd plånbok, ett brev, en skärm eller en resväska med namnlapp. Fotografera rummet, inte gästens saker, om de inte är själva anledningen till bilden, till exempel något som glömts kvar och ska lämnas tillbaka. :imy_home beskriver vad som gäller när du behandlar personuppgifter. Det här är vanor, inte juridisk rådgivning. Läs :privacy för hur Klartfoto hanterar konton och foton.',
+                ],
+            ],
+        ],
+        'checklist_title' => 'Checklista för ett byte mellan gäster',
+        'checklist' => [
+            'Bilder av varje rum innan du börjar',
+            'Översikt och närbild på varje skada, med en kort notering',
+            'Samma runda efter städningen, från samma platser',
+            'Adress, datum och tid i rapporten',
+            'Rapporten skickad till värden samma dag',
+        ],
+        'closing' => 'Vill du testa upplägget på nästa byte? :register eller :contact.',
+        'related_title' => 'Läs också',
+        'related' => [
+            ['label' => 'Fotodokumentation vid städning med före- och efterbilder', 'route' => 'guides.cleaning-photos'],
+            ['label' => 'Exempelrapport', 'route' => 'site.sv.report'],
+        ],
+        'card' => 'Vad du fotograferar efter utcheckning och efter städning, hur skador noteras och hur värden får en rapport via länk.',
     ],
 ];

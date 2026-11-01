@@ -106,6 +106,9 @@
                                 <li>{{ $item }}</li>
                             @endforeach
                         </ul>
+                        @if (! empty($page['closing']))
+                            <p>{!! $page['closing'] !!}</p>
+                        @endif
                     </section>
                 @endif
 
