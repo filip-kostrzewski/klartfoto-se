@@ -19,6 +19,7 @@ class MarketingPageController extends Controller
      * @var array<string, array{path: string, route: string}>
      */
     private const GUIDES = [
+        'move_out_complaints' => ['path' => '/guider/reklamation-flyttstadning', 'route' => 'guides.move-out-complaints'],
         'rental_photos' => ['path' => '/guider/fotodokumentation-uthyrning', 'route' => 'guides.rental-photos'],
         'renovation_photos' => ['path' => '/guider/fotodokumentation-renovering', 'route' => 'guides.renovation-photos'],
         'cleaning_photos' => ['path' => '/guider/fotodokumentation-stadning', 'route' => 'guides.cleaning-photos'],
@@ -110,6 +111,11 @@ class MarketingPageController extends Controller
     public function rentalPhotoGuide(): View
     {
         return $this->guide('rental_photos');
+    }
+
+    public function moveOutComplaintGuide(): View
+    {
+        return $this->guide('move_out_complaints');
     }
 
     public function notFound(): Response
@@ -359,6 +365,8 @@ class MarketingPageController extends Controller
         $locale = app()->getLocale();
         $link = fn (string $href, string $label): string => '<a href="'.e($href).'">'.e((string) trans("guides.links.{$label}")).'</a>';
 
+        $externalLink = fn (string $href, string $label): string => '<a href="'.e($href).'" rel="noopener noreferrer">'.e((string) trans("guides.links.{$label}")).'</a>';
+
         // strtr matches the longest token first, so :imy never swallows :imy_home.
         return strtr(e($paragraph), [
             ':report' => $link(LocalizedUrl::route('report', $locale, false), 'report'),
@@ -371,6 +379,9 @@ class MarketingPageController extends Controller
             ':renovation' => $link(LocalizedUrl::route('renovation', $locale, false), 'renovation'),
             ':imy_home' => $link('https://www.imy.se', 'imy'),
             ':imy' => $link('https://www.imy.se/verksamhet/dataskydd/det-har-galler-enligt-gdpr/de-registrerades-rattigheter', 'imy'),
+            ':konsumenttjanstlagen' => $externalLink('https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/konsumenttjanstlag-1985716_sfs-1985-716/', 'konsumenttjanstlagen'),
+            ':konsumentverket' => $externalLink('https://www.konsumentverket.se/varor-och-tjanster/problem-med-stadfirma/', 'konsumentverket'),
+            ':arn_konsument' => $externalLink('https://arn.se/konsument/', 'arn_konsument'),
             ':gvk' => $link('https://www.gvk.se', 'gvk'),
             ':sakervatten' => $link('https://www.sakervatten.se', 'sakervatten'),
         ]);

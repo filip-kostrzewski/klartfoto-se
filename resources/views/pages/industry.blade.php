@@ -104,17 +104,19 @@
         </section>
     @endif
 
-    @php($guidePromo = ['cleaning' => ['cleaning_link', 'guides.cleaning-photos'], 'renovation' => ['renovation_link', 'guides.renovation-photos'], 'property' => ['rental_link', 'guides.rental-photos']][$page['route_key'] ?? ''] ?? null)
-    @if ($guidePromo !== null && $locale === 'sv')
-        @php($guideLink = trans('guides.'.$guidePromo[0]))
-        <aside class="guide-promo section-pad">
-            <div class="guide-promo-copy">
-                <p class="section-kicker">{{ $guideLink['kicker'] }}</p>
-                <h2>{{ $guideLink['title'] }}</h2>
-                <p>{{ $guideLink['text'] }}</p>
-                <a class="text-link" href="{{ route($guidePromo[1], absolute: false) }}">{{ $guideLink['label'] }}</a>
-            </div>
-        </aside>
+    @php($guidePromos = ['cleaning' => [['cleaning_link', 'guides.cleaning-photos'], ['complaints_link', 'guides.move-out-complaints']], 'renovation' => [['renovation_link', 'guides.renovation-photos']], 'property' => [['rental_link', 'guides.rental-photos']]][$page['route_key'] ?? ''] ?? [])
+    @if ($guidePromos !== [] && $locale === 'sv')
+        @foreach ($guidePromos as $guidePromo)
+            @php($guideLink = trans('guides.'.$guidePromo[0]))
+            <aside class="guide-promo section-pad">
+                <div class="guide-promo-copy">
+                    <p class="section-kicker">{{ $guideLink['kicker'] }}</p>
+                    <h2>{{ $guideLink['title'] }}</h2>
+                    <p>{{ $guideLink['text'] }}</p>
+                    <a class="text-link" href="{{ route($guidePromo[1], absolute: false) }}">{{ $guideLink['label'] }}</a>
+                </div>
+            </aside>
+        @endforeach
     @endif
 
     <section class="industry-cta section-pad">

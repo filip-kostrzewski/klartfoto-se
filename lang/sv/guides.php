@@ -13,6 +13,9 @@ return [
         'imy' => 'Integritetsskyddsmyndigheten (IMY)',
         'gvk' => 'GVK',
         'sakervatten' => 'Säker Vatten',
+        'konsumentverket' => 'Konsumentverket',
+        'konsumenttjanstlagen' => 'konsumenttjänstlagen',
+        'arn_konsument' => 'ARN:s sida för konsumenter',
     ],
     'home_crumb' => 'Startsida',
     'cleaning_link' => [
@@ -32,6 +35,12 @@ return [
         'title' => 'Fotodokumentation mellan gäster',
         'text' => 'Vad du fotograferar efter utcheckning och efter städning, och hur värden får en rapport via länk.',
         'label' => 'Läs guiden om fotodokumentation mellan gäster',
+    ],
+    'complaints_link' => [
+        'kicker' => 'Guide',
+        'title' => 'Reklamation av flyttstädning',
+        'text' => 'Vad konsumenttjänstlagen säger, hur du svarar skriftligt och hur före- och efterbilder hjälper om ärendet går till ARN.',
+        'label' => 'Läs guiden om reklamation av flyttstädning',
     ],
     'index' => [
         'title' => 'Guider för städföretag och hantverkare | :brand',
@@ -200,6 +209,7 @@ return [
         'related' => [
             ['label' => 'Fotodokumentation vid renovering – före- och efterbilder till kunden', 'route' => 'guides.renovation-photos'],
             ['label' => 'Fotodokumentation mellan gäster – visa värden att bostaden är klar', 'route' => 'guides.rental-photos'],
+            ['label' => 'Reklamation av flyttstädning: så bemöter städfirman den med bilder', 'route' => 'guides.move-out-complaints'],
         ],
         'cta_eyebrow' => 'Klartfoto',
         'cta_title' => 'Samla före och efter',
@@ -457,5 +467,119 @@ return [
             ['label' => 'Exempelrapport', 'route' => 'site.sv.report'],
         ],
         'card' => 'Vad du fotograferar efter utcheckning och efter städning, hur skador noteras och hur värden får en rapport via länk.',
+    ],
+
+    'move_out_complaints' => [
+        'title' => 'Reklamation av flyttstädning: så bemöter städfirman den med bilder | :brand',
+        'description' => 'När kunden reklamerar en flyttstädning: vad konsumenttjänstlagen säger, hur du svarar skriftligt, erbjuder omstädning och visar före- och efterbilder om ärendet går till ARN.',
+        'breadcrumb' => 'Reklamation av flyttstädning',
+        'eyebrow' => 'Guide',
+        'h1' => 'Reklamation av flyttstädning: så bemöter städfirman den med bilder',
+        'byline' => 'Av Klartfoto-teamet',
+        'published_on' => '2026-11-04',
+        'updated_on' => '2026-11-04',
+        'published_label' => 'Publicerad 4 november 2026',
+        'updated_label' => 'Uppdaterad 4 november 2026',
+        'intro' => 'En flyttstädning granskas ofta av någon annan än kunden, till exempel den nya ägaren eller hyresvärden. Då kan reklamationen komma några dagar efter jobbet, när du inte längre har tillgång till bostaden. Då står det som finns i din rapport mot det kunden säger.',
+        'intro_more' => 'Guiden är skriven för dig som driver städfirma och vill veta vad som gäller när en kund reklamerar en flyttstädning, och hur bilder från uppdraget hjälper dig att svara sakligt. Det här är praktiska råd, inte juridisk rådgivning. Hur du fotograferar själva städningen beskrivs i :cleaning_guide.',
+        'report_image' => [
+            'alt' => 'Exempel på Klartfotos rapportvy med före- och efterbild, kundens namn, adress och datum. Inte ett riktigt kunduppdrag.',
+        ],
+        'sections' => [
+            [
+                'id' => 'law',
+                'title' => 'Vad lagen säger om reklamation av städning',
+                'paragraphs' => [
+                    'När en privatperson köper en städtjänst av ett företag gäller :konsumenttjanstlagen. Det skriver :konsumentverket. Några delar är viktiga för dig som städfirma:',
+                ],
+                'bullets' => [
+                    ['term' => 'Fackmässigt utfört.', 'text' => 'Tjänsten ska utföras fackmässigt (4 §).'],
+                    ['term' => 'Kunden ska reklamera inom skälig tid.', 'text' => 'Reklamation inom två månader efter att kunden märkt felet räknas alltid som i rätt tid. Senast får det ske tre år efter att uppdraget avslutades (17 §).'],
+                    ['term' => 'Omstädning kommer först.', 'text' => 'Konsumentverket skriver att kunden i första hand kan kräva att firman gör om hela städningen eller de delar som inte blev bra, utan extra kostnad. Lagen ger också dig rätt att rätta felet om du erbjuder dig att göra det utan dröjsmål efter reklamationen och kunden inte har särskilda skäl att säga nej (20 §).'],
+                    ['term' => 'Prisavdrag om felet inte rättas.', 'text' => 'Rättas felet inte får kunden göra avdrag på priset (21 §). Kunden får också hålla inne så mycket av betalningen som behövs som säkerhet för kravet (19 §).'],
+                ],
+                'paragraphs_after' => [
+                    'Lagen är tvingande till kundens förmån. Villkor i ditt avtal som är sämre för kunden än lagen gäller inte.',
+                ],
+            ],
+            [
+                'id' => 'scope',
+                'title' => 'Vad som avgör: vad ingick i städningen?',
+                'paragraphs' => [
+                    'Oenigheten kan handla lika mycket om vad som ingick som om hur väl något städades. Ingick ugnen, fläktfiltret, balkongen, förrådet, fönstren på insidan och utsidan? Konsumentverket råder kunder att ha en tydlig överenskommelse om vad som ska städas, vad det ska kosta och hur lång tid det ska ta.',
+                    'Skriv därför ner omfattningen i bokningsbekräftelsen eller avtalet, med samma rumsnamn som du sedan använder i rapporten. När kunden pekar på en yta är första frågan: ingick den? Om den ingick, visa bilden. Om den inte ingick, hänvisa till bekräftelsen.',
+                ],
+            ],
+            [
+                'id' => 'photos',
+                'title' => 'Bilderna du behöver ha innan kunden hör av sig',
+                'paragraphs' => [
+                    'Vid en reklamation är det för sent att ta bilderna. Det som hjälper är det du tog när du var på plats:',
+                ],
+                'bullets' => [
+                    ['term' => 'Före-bilder', 'text' => 'som visar läget när du kom, också skador och fläckar som inte går att få bort, till exempel en brännskada i bänkskivan eller kalk som har ätit sig in i en kakelfog.'],
+                    ['term' => 'Efter-bilder från samma plats', 'text' => 'av de ytor som brukar granskas vid flyttstäd: ugnen invändigt, spisen och fläkten, kylen och frysen, diskhon, badrummets golvbrunn, kakel, toalett och dusch, fönster, golv längs lister och garderober invändigt.'],
+                    ['term' => 'En kort notering', 'text' => 'vid det som lämnades och varför, till exempel att en fläck inte gick bort utan att skada ytan.'],
+                    ['term' => 'Adress, datum och tid', 'text' => 'för jobbet, så att det framgår när bostaden lämnades.'],
+                ],
+                'paragraphs_after' => [
+                    'En bild visar bara det som finns i rutan. Den ersätter inte avtalet och kan inte visa något utanför bilden. Men den visar hur en viss yta såg ut när du gick.',
+                ],
+            ],
+            [
+                'id' => 'respond',
+                'title' => 'När kunden reklamerar: så svarar du',
+                'paragraphs' => [],
+                'ordered' => [
+                    'Svara skriftligt och snabbt. Konsumentverket råder kunden att klaga skriftligt, till exempel via mejl, så att det går att visa när det skedde. Gör likadant med ditt svar. Allmänna reklamationsnämnden (ARN) skriver att företaget bör ha svarat inom fyra veckor.',
+                    'Be om kundens bilder. Konsumentverket råder kunder att dokumentera bristerna med foto eller film, med både närbilder och bilder som visar omfattningen. Be om dem och om var i bostaden de är tagna.',
+                    'Jämför med din rapport. Lägg kundens bild bredvid din efter-bild av samma yta. Ingick ytan? Syns felet på din efter-bild? Fanns det redan på före-bilden?',
+                    'Erbjud omstädning när något har missats. Om din efter-bild visar att ytan inte blev klar, eller om ytan saknas i rapporten, säg det och erbjud att komma tillbaka. Lagen ger dig rätt att erbjuda det (20 §).',
+                    'Förklara när bilden visar något annat. Om din efter-bild visar en ren yta, eller om skadan syns redan på före-bilden, skicka bildparet och förklara lugnt vad det visar. Skriv vad som ingick enligt bokningen.',
+                    'Fotografera omstädningen. Gör du om något, ta en ny efter-bild och skicka en uppdaterad rapport.',
+                ],
+            ],
+            [
+                'id' => 'arn',
+                'title' => 'Om ärendet går till ARN',
+                'paragraphs' => [
+                    'Om ni inte blir överens kan kunden anmäla tvisten till ARN. Enligt Konsumentverket kostar anmälan 150 kr, normal handläggningstid är cirka sex månader, och kunden ska anmäla inom ett år från att hen först klagade till företaget. ARN:s beslut är en rekommendation om hur tvisten ska lösas.',
+                    'Två saker från :arn_konsument är bra att känna till när du skickar in ditt underlag:',
+                ],
+                'bullets' => [
+                    ['term' => 'ARN tar inte del av bevisning via länkar.', 'text' => 'En länk till en webbrapport räcker alltså inte. Skicka bilderna eller rapporten som fil.'],
+                    ['term' => 'Färre och tydligare bilder.', 'text' => 'ARN ber om att man skriver vad varje bild ska visa och begränsar antalet. Ett bildpar per yta som kunden klagar på, med en mening om vad det visar, är lättare att bedöma än hela kamerarullen.'],
+                ],
+                'paragraphs_after' => [
+                    'Handläggningen hos ARN är skriftlig och nämnden gör inga egna efterforskningar. Det du har dokumenterat på plats är alltså det som finns att visa.',
+                ],
+            ],
+            [
+                'id' => 'klartfoto',
+                'title' => 'Så hjälper Klartfoto vid en reklamation',
+                'paragraphs' => [
+                    'I Klartfoto skapar du ett uppdrag med kundens namn, adress, datum och start- och sluttid. Bilderna läggs i par, före och efter, under varje rum eller plats. Till varje par kan du skriva en kommentar som kunden ser och en intern anteckning som bara ni ser.',
+                    'Kunden får en länk till rapporten, kan markera att den är mottagen och kan kommentera ett enskilt bildpar. Då vet du exakt vilken yta frågan gäller. Varje delad rapport sparas som en egen version, så om du gör en omstädning och delar på nytt finns både den första och den uppdaterade rapporten kvar. Från rapportsidan går det att ladda ner rapporten som PDF, vilket behövs om underlaget ska skickas som fil. Upplägget syns i :report och på :cleaning.',
+                ],
+            ],
+        ],
+        'checklist_title' => 'Checklista: flyttstädning som håller vid en reklamation',
+        'checklist' => [
+            'Omfattningen står i bokningsbekräftelsen, med samma rumsnamn som i rapporten',
+            'Före-bilder av skador och fläckar som fanns innan',
+            'Efter-bilder från samma plats av ugn, fläkt, kyl, badrum, golvbrunn, fönster och golv',
+            'En kort notering vid det som lämnades och varför',
+            'Adress, datum och tid i rapporten',
+            'Rapporten skickad till kunden samma dag',
+            'Skriftligt svar på reklamationen, med bildparet för den yta det gäller',
+            'Ny efter-bild och uppdaterad rapport efter en omstädning',
+        ],
+        'closing' => 'Vill du ha rapporten klar innan nästa flyttstädning? :register eller :contact.',
+        'related_title' => 'Läs också',
+        'related' => [
+            ['label' => 'Fotodokumentation vid städning med före- och efterbilder', 'route' => 'guides.cleaning-photos'],
+            ['label' => 'Exempelrapport', 'route' => 'site.sv.report'],
+        ],
+        'card' => 'Vad konsumenttjänstlagen säger om reklamation av städning, hur du svarar skriftligt och hur före- och efterbilder hjälper om ärendet går till ARN.',
     ],
 ];
