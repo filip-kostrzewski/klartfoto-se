@@ -9,3 +9,10 @@ Jedna spójna generacja przedstawia tę samą neutralną kuchnię przed i po upo
 - Pliki responsywne: `public/images/demo/kitchen-before-480.webp` (480 × 640, 32 232 B), `kitchen-before-768.webp` (768 × 1024, 69 860 B), `kitchen-after-480.webp` (480 × 640, 29 036 B), `kitchen-after-768.webp` (768 × 1024, 63 588 B). Razem około 191 KiB.
 - Hero ładuje większy wariant z priorytetem i srcset; niższe przykłady używają lazy loading. Uchwyt zmienia wyłącznie maskę/przesunięcie podziału. Nie twórz zdjęć pomieszczeń przez CSS ani SVG.
 - Prompt i zasób wolno zmienić po wyborze marki lub kierunku wizualnego; nie przypisuj obrazów prawdziwej firmie ani klientowi.
+
+## Łazienka (/exempel-rapport)
+
+- Para `public/images/demo/example-bathroom-before.webp` i `example-bathroom-after.webp` (1152 × 864) pochodzi z jednego dyptyku: `resources/images/source/bathroom-diptych.png`; lewa połowa to przed, prawa to po.
+- To samo pomieszczenie w obu kadrach; różnią się wyłącznie efekty sprzątania (brudne lustro i ręcznik na podłodze → czyste lustro, ręcznik na drążku, umyta podłoga).
+- Obraz służy wyłącznie jako poglądowa ilustracja, nie dokumentuje pracy prawdziwego klienta.
+- Po zmianie plików zwiększ `demo_asset_version` w `config/klartfoto.php` (aktualnie 4).

@@ -17,7 +17,7 @@ return [
         ? $billingNotifyEmail
         : ($contactEmail && filter_var($contactEmail, FILTER_VALIDATE_EMAIL) ? $contactEmail : null),
     'pricing_visible' => filter_var(env('KLARTFOTO_PRICING_VISIBLE', true), FILTER_VALIDATE_BOOL),
-    'demo_asset_version' => 3,
+    'demo_asset_version' => 4,
     'photo_max_edge' => 1600,
     'logo_max_edge' => 800,
     'start_seat_limit' => 1,
