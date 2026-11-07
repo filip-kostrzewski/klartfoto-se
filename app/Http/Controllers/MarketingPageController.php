@@ -19,6 +19,7 @@ class MarketingPageController extends Controller
      * @var array<string, array{path: string, route: string}>
      */
     private const GUIDES = [
+        'construction_cleaning_photos' => ['path' => '/guider/fotodokumentation-byggstadning', 'route' => 'guides.construction-cleaning-photos'],
         'move_out_complaints' => ['path' => '/guider/reklamation-flyttstadning', 'route' => 'guides.move-out-complaints'],
         'rental_photos' => ['path' => '/guider/fotodokumentation-uthyrning', 'route' => 'guides.rental-photos'],
         'renovation_photos' => ['path' => '/guider/fotodokumentation-renovering', 'route' => 'guides.renovation-photos'],
@@ -116,6 +117,11 @@ class MarketingPageController extends Controller
     public function moveOutComplaintGuide(): View
     {
         return $this->guide('move_out_complaints');
+    }
+
+    public function constructionCleaningPhotoGuide(): View
+    {
+        return $this->guide('construction_cleaning_photos');
     }
 
     public function notFound(): Response
@@ -376,11 +382,14 @@ class MarketingPageController extends Controller
             ':contact' => $link(LocalizedUrl::route('contact', $locale, false), 'contact'),
             ':register' => $link(route('register', absolute: false), 'register'),
             ':cleaning_guide' => $link(route('guides.cleaning-photos', absolute: false), 'cleaning_guide'),
+            ':renovation_guide' => $link(route('guides.renovation-photos', absolute: false), 'renovation_guide'),
             ':renovation' => $link(LocalizedUrl::route('renovation', $locale, false), 'renovation'),
             ':imy_home' => $link('https://www.imy.se', 'imy'),
             ':imy' => $link('https://www.imy.se/verksamhet/dataskydd/det-har-galler-enligt-gdpr/de-registrerades-rattigheter', 'imy'),
             ':konsumenttjanstlagen' => $externalLink('https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/konsumenttjanstlag-1985716_sfs-1985-716/', 'konsumenttjanstlagen'),
             ':konsumentverket' => $externalLink('https://www.konsumentverket.se/varor-och-tjanster/problem-med-stadfirma/', 'konsumentverket'),
+            ':byggstad' => $externalLink('https://byggstad.nu/byggstadning-i-nyproduktion-krav-ansvar-slutbesiktning/', 'byggstad'),
+            ':cicceorinas' => $externalLink('https://cicceorinas.se/byggstad-sa-lamnar-du-arbetsplatsen-ren-och-saker/', 'cicceorinas'),
             ':arn_konsument' => $externalLink('https://arn.se/konsument/', 'arn_konsument'),
             ':gvk' => $link('https://www.gvk.se', 'gvk'),
             ':sakervatten' => $link('https://www.sakervatten.se', 'sakervatten'),

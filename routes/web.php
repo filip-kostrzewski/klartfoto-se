@@ -187,6 +187,7 @@ Route::get('/guider/fotodokumentation-stadning', [MarketingPageController::class
 Route::get('/guider/fotodokumentation-renovering', [MarketingPageController::class, 'renovationPhotoGuide'])->name('guides.renovation-photos');
 Route::get('/guider/fotodokumentation-uthyrning', [MarketingPageController::class, 'rentalPhotoGuide'])->name('guides.rental-photos');
 Route::get('/guider/reklamation-flyttstadning', [MarketingPageController::class, 'moveOutComplaintGuide'])->name('guides.move-out-complaints');
+Route::get('/guider/fotodokumentation-byggstadning', [MarketingPageController::class, 'constructionCleaningPhotoGuide'])->name('guides.construction-cleaning-photos');
 
 Route::get('/sitemap.xml', [MarketingPageController::class, 'sitemap'])->name('sitemap');
 Route::get('/robots.txt', [MarketingPageController::class, 'robots'])->name('robots');
