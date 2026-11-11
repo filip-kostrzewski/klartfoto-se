@@ -19,6 +19,8 @@ return [
         'arn_konsument' => 'ARN:s sida för konsumenter',
         'byggstad' => 'Byggstad.nu',
         'cicceorinas' => 'Cicceorinas',
+        'optivanta' => 'Optivanta',
+        'sweepit' => 'Sweepit',
     ],
     'home_crumb' => 'Startsida',
     'cleaning_link' => [
@@ -50,6 +52,12 @@ return [
         'title' => 'Fotodokumentation vid byggstädning',
         'text' => 'Vilka ytor du fotograferar före överlämning och slutbesiktning, och hur rapporten delas med beställaren.',
         'label' => 'Läs guiden om fotodokumentation vid byggstädning',
+    ],
+    'stairwell_link' => [
+        'kicker' => 'Guide',
+        'title' => 'Trappstädning i BRF: fotorapport till styrelsen',
+        'text' => 'Vilka punkter du fotograferar i uppgången, hur avvikelser dokumenteras och hur rapporten delas med styrelsen.',
+        'label' => 'Läs guiden om trappstädning i BRF',
     ],
     'index' => [
         'title' => 'Guider för städföretag och hantverkare | :brand',
@@ -220,6 +228,7 @@ return [
             ['label' => 'Fotodokumentation mellan gäster – visa värden att bostaden är klar', 'route' => 'guides.rental-photos'],
             ['label' => 'Reklamation av flyttstädning: så bemöter städfirman den med bilder', 'route' => 'guides.move-out-complaints'],
             ['label' => 'Fotodokumentation vid byggstädning: före- och efterbilder inför överlämning', 'route' => 'guides.construction-cleaning-photos'],
+            ['label' => 'Trappstädning i BRF: fotorapport som visar styrelsen att det är gjort', 'route' => 'guides.stairwell-cleaning-photos'],
         ],
         'cta_eyebrow' => 'Klartfoto',
         'cta_title' => 'Samla före och efter',
@@ -590,6 +599,7 @@ return [
         'related' => [
             ['label' => 'Fotodokumentation vid städning med före- och efterbilder', 'route' => 'guides.cleaning-photos'],
             ['label' => 'Fotodokumentation vid byggstädning: före- och efterbilder inför överlämning', 'route' => 'guides.construction-cleaning-photos'],
+            ['label' => 'Trappstädning i BRF: fotorapport som visar styrelsen att det är gjort', 'route' => 'guides.stairwell-cleaning-photos'],
             ['label' => 'Exempelrapport', 'route' => 'site.sv.report'],
         ],
         'card' => 'Vad konsumenttjänstlagen säger om reklamation av städning, hur du svarar skriftligt och hur före- och efterbilder hjälper om ärendet går till ARN.',
@@ -696,9 +706,112 @@ return [
             ['label' => 'Fotodokumentation vid städning med före- och efterbilder', 'route' => 'guides.cleaning-photos'],
             ['label' => 'Fotodokumentation vid renovering – före- och efterbilder till kunden', 'route' => 'guides.renovation-photos'],
             ['label' => 'Reklamation av flyttstädning: så bemöter städfirman den med bilder', 'route' => 'guides.move-out-complaints'],
+            ['label' => 'Trappstädning i BRF: fotorapport som visar styrelsen att det är gjort', 'route' => 'guides.stairwell-cleaning-photos'],
             ['label' => 'Exempelrapport', 'route' => 'site.sv.report'],
             ['label' => 'För städföretag', 'route' => 'site.sv.cleaning'],
         ],
         'card' => 'Vilka ytor du fotograferar före överlämning och slutbesiktning, hur före och efter hålls jämförbara och hur rapporten delas med beställaren.',
+    ],
+
+    'stairwell_cleaning_photos' => [
+        'title' => 'Trappstädning i BRF: fotorapport som visar styrelsen att det är gjort | :brand',
+        'description' => 'Så visar städfirman styrelsen i en BRF att trappstädningen är gjord — före- och efterbilder per uppgång, avvikelser med bild och en rapport via länk i stället för städpärm.',
+        'breadcrumb' => 'Trappstädning i BRF',
+        'eyebrow' => 'Guide',
+        'h1' => 'Trappstädning i BRF: fotorapport som visar styrelsen att det är gjort',
+        'byline' => 'Av Klartfoto-teamet',
+        'published_on' => '2026-11-11',
+        'updated_on' => '2026-11-11',
+        'published_label' => 'Publicerad 11 november 2026',
+        'updated_label' => 'Uppdaterad 11 november 2026',
+        'intro' => 'Trappstädning är ett jobb som nästan ingen ser när det görs. Städaren kommer på förmiddagen, de boende är på jobbet, och när någon i styrelsen kliver in i porten på kvällen har trappan hunnit få nya fotspår. Klagomålen kommer ändå till styrelsen, och styrelsen frågar städfirman. Då är det bra att ha något mer att visa än ”vi var där i tisdags”.',
+        'intro_more' => 'Guiden är skriven för dig som städar trapphus åt bostadsrättsföreningar och fastighetsägare. Den handlar om hur du visar vad som är gjort och hanterar avvikelser med bilder, inte om hur du städar. Grunderna i före- och efterbilder finns i :cleaning_guide.',
+        'report_image' => [
+            'alt' => 'Exempel på Klartfotos rapportvy med före- och efterbild, kundens namn, adress och datum. Inte ett riktigt kunduppdrag.',
+        ],
+        'sections' => [
+            [
+                'id' => 'why',
+                'title' => 'Vad styrelsen vill kunna se',
+                'paragraphs' => [
+                    'Ett bra avtal om trappstädning beskriver vilka ytor som ingår, vilka moment som görs och hur resultatet följs upp. :optivanta räknar upp det som brukar behöva stå på papper: kontaktpersoner på båda sidor, en kvittens på att städningen är utförd (till exempel en signerad lista i städskåpet), hur en brist anmäls, om leverantörens egenkontroller delas med styrelsen och en gemensam genomgång på plats någon gång per år.',
+                    ':sweepit beskriver samma sak i praktiken: en städpärm per port med signatur, datum, åtgärd och avvikelse, där styrelsen kan begära en månadsrapport.',
+                    'En signatur i en pärm visar att någon var där. Den visar inte hur trappan såg ut. Bilder gör kvittensen konkret, och de går att skicka till en styrelse som inte har nyckel till städskåpet.',
+                ],
+            ],
+            [
+                'id' => 'what',
+                'title' => 'Fotografera samma punkter vid varje besök',
+                'paragraphs' => [
+                    'Välj ett fåtal fasta punkter per uppgång och håll dig till dem. Det blir inte en bild av varje trappsteg, utan en runda som tar några minuter och som ser likadan ut varje gång. Utgå från ytorna i avtalet, till exempel:',
+                ],
+                'bullets' => [
+                    ['term' => 'Entrén', 'text' => 'med golv, dörrmatta och glaspartiet i porten.'],
+                    ['term' => 'Postboxar och anslagstavla,', 'text' => 'där fingeravtryck och reklam syns direkt.'],
+                    ['term' => 'Ett vilplan per våning eller varannan våning,', 'text' => 'snett uppifrån så att hörnen kommer med.'],
+                    ['term' => 'Ledstången', 'text' => 'på ett ställe där den används mest.'],
+                    ['term' => 'Hissen invändigt', 'text' => 'med golv och knappsats, om hissen ingår.'],
+                    ['term' => 'Källargång, tvättstuga eller soprum', 'text' => 'de gånger de ingår enligt avtalet.'],
+                ],
+                'paragraphs_after' => [
+                    'Stå på samma ställe före och efter, och använd samma ljus. En efter-bild med tänd belysning bredvid en före-bild i halvmörker visar ljuset, inte städningen.',
+                ],
+            ],
+            [
+                'id' => 'deviations',
+                'title' => 'Avvikelser behöver en egen bild',
+                'paragraphs' => [
+                    'Det mesta som styrelsen hör från de boende handlar inte om själva städningen, utan om sådant städaren inte rår på: en cykel i trapphuset, klotter, en trasig lampa, en vattenfläck i taket eller något som läckt ut i soprummet. Fotografera det, skriv var det är och vad du har gjort.',
+                    'Skriv kort och sakligt, till exempel ”Barnvagn i entrén, ej flyttad” eller ”Lampa trasig plan 3, ej i vårt uppdrag”. Då blir det tydligt för styrelsen vad som är städfirmans sak och vad som är en felanmälan till fastighetsskötseln.',
+                    'Fotografera inte de boende, deras dörrar inifrån eller namn på dörrskyltar när det inte behövs. Bilden ska visa trapphuset, inte vem som bor där.',
+                ],
+            ],
+            [
+                'id' => 'label',
+                'title' => 'Adress, port och datum hör till bilden',
+                'paragraphs' => [
+                    'En BRF har ofta flera portar med samma gatunamn. Skriv adressen med portnummer eller uppgång precis som i avtalet och sätt datum på varje besök. Döp platserna med samma ord varje gång: ”Entré”, ”Plan 2 vilplan”, ”Hiss”. Då kan styrelsen jämföra en vecka med nästa utan att gissa.',
+                ],
+            ],
+            [
+                'id' => 'share',
+                'title' => 'En rapport via länk i stället för en pärm i städskåpet',
+                'paragraphs' => [
+                    'En pärm i städskåpet läses av den som har nyckel. En rapport via länk kan styrelsens kontaktperson öppna på telefonen samma dag, och den kan vidarebefordras till hela styrelsen eller fastighetsskötaren.',
+                    'Skicka inte varje besök om styrelsen inte vill det. Fråga hellre i början hur de vill ha det: efter varje besök, bara när något avviker, eller samlat inför den gemensamma genomgången. Det som spelar roll är att samma upplägg håller över tid.',
+                    'När en boende klagar på att det inte är städat räcker det då att öppna rapporten från den veckan. Det ersätter inte samtalet, men det gör samtalet kortare.',
+                ],
+            ],
+            [
+                'id' => 'klartfoto',
+                'title' => 'Så hjälper Klartfoto vid trappstädning',
+                'paragraphs' => [
+                    'I Klartfoto skapar du ett uppdrag med kundens namn, adress och datum. Bilderna läggs i par, före och efter, under varje plats, till exempel entré, vilplan eller hiss. Till varje par kan du skriva en kommentar som kunden ser och en intern anteckning som bara ni ser.',
+                    'Kunden får en länk till rapporten som öppnas i webbläsaren, utan app eller konto. Från rapportsidan går det att ladda ner rapporten som PDF om styrelsen vill spara den med övriga föreningshandlingar. Upplägget syns i :report och på :cleaning.',
+                    'Abonnemanget Start kostar 390 kr/mån exkl. moms och Team 790 kr/mån exkl. moms. Du får 14 dagar gratis utan kort.',
+                ],
+            ],
+        ],
+        'checklist_title' => 'Checklista: trappstädning som går att visa för styrelsen',
+        'checklist' => [
+            'Ytorna i avtalet har samma namn som platserna i rapporten',
+            'Några fasta fotopunkter per uppgång, samma vid varje besök',
+            'Före- och efterbild från samma ställe och i samma ljus',
+            'Avvikelser fotograferade med en kort notering om vad som är gjort',
+            'Inga boende, namnskyltar eller privata utrymmen på bilderna',
+            'Adress, port och datum på varje rapport',
+            'Överenskommet med styrelsen hur ofta rapporten skickas',
+            'Rapporterna sparade inför den årliga genomgången',
+        ],
+        'closing' => 'Vill du visa nästa trappstädning med bilder? :register eller :contact.',
+        'related_title' => 'Läs också',
+        'related' => [
+            ['label' => 'Fotodokumentation vid städning med före- och efterbilder', 'route' => 'guides.cleaning-photos'],
+            ['label' => 'Reklamation av flyttstädning: så bemöter städfirman den med bilder', 'route' => 'guides.move-out-complaints'],
+            ['label' => 'Fotodokumentation vid byggstädning: före- och efterbilder inför överlämning', 'route' => 'guides.construction-cleaning-photos'],
+            ['label' => 'Exempelrapport', 'route' => 'site.sv.report'],
+            ['label' => 'För städföretag', 'route' => 'site.sv.cleaning'],
+        ],
+        'card' => 'Vilka punkter du fotograferar i uppgången, hur avvikelser dokumenteras med bild och hur rapporten delas med styrelsen.',
     ],
 ];

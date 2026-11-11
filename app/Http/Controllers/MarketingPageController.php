@@ -19,6 +19,7 @@ class MarketingPageController extends Controller
      * @var array<string, array{path: string, route: string}>
      */
     private const GUIDES = [
+        'stairwell_cleaning_photos' => ['path' => '/guider/fotodokumentation-trappstadning', 'route' => 'guides.stairwell-cleaning-photos'],
         'construction_cleaning_photos' => ['path' => '/guider/fotodokumentation-byggstadning', 'route' => 'guides.construction-cleaning-photos'],
         'move_out_complaints' => ['path' => '/guider/reklamation-flyttstadning', 'route' => 'guides.move-out-complaints'],
         'rental_photos' => ['path' => '/guider/fotodokumentation-uthyrning', 'route' => 'guides.rental-photos'],
@@ -122,6 +123,11 @@ class MarketingPageController extends Controller
     public function constructionCleaningPhotoGuide(): View
     {
         return $this->guide('construction_cleaning_photos');
+    }
+
+    public function stairwellCleaningPhotoGuide(): View
+    {
+        return $this->guide('stairwell_cleaning_photos');
     }
 
     public function notFound(): Response
@@ -390,6 +396,8 @@ class MarketingPageController extends Controller
             ':konsumentverket' => $externalLink('https://www.konsumentverket.se/varor-och-tjanster/problem-med-stadfirma/', 'konsumentverket'),
             ':byggstad' => $externalLink('https://byggstad.nu/byggstadning-i-nyproduktion-krav-ansvar-slutbesiktning/', 'byggstad'),
             ':cicceorinas' => $externalLink('https://cicceorinas.se/byggstad-sa-lamnar-du-arbetsplatsen-ren-och-saker/', 'cicceorinas'),
+            ':optivanta' => $externalLink('https://www.optivantafacility.se/tips/trappstadning-brf-vad-ingar-avtal/', 'optivanta'),
+            ':sweepit' => $externalLink('https://sweepit.se/trappstadning', 'sweepit'),
             ':arn_konsument' => $externalLink('https://arn.se/konsument/', 'arn_konsument'),
             ':gvk' => $link('https://www.gvk.se', 'gvk'),
             ':sakervatten' => $link('https://www.sakervatten.se', 'sakervatten'),

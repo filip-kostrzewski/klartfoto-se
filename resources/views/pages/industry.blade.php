@@ -104,7 +104,7 @@
         </section>
     @endif
 
-    @php($guidePromos = ['cleaning' => [['cleaning_link', 'guides.cleaning-photos'], ['complaints_link', 'guides.move-out-complaints'], ['construction_link', 'guides.construction-cleaning-photos']], 'renovation' => [['renovation_link', 'guides.renovation-photos']], 'property' => [['rental_link', 'guides.rental-photos']]][$page['route_key'] ?? ''] ?? [])
+    @php($guidePromos = ['cleaning' => [['cleaning_link', 'guides.cleaning-photos'], ['complaints_link', 'guides.move-out-complaints'], ['construction_link', 'guides.construction-cleaning-photos'], ['stairwell_link', 'guides.stairwell-cleaning-photos']], 'renovation' => [['renovation_link', 'guides.renovation-photos']], 'property' => [['rental_link', 'guides.rental-photos']]][$page['route_key'] ?? ''] ?? [])
     @if ($guidePromos !== [] && $locale === 'sv')
         @foreach ($guidePromos as $guidePromo)
             @php($guideLink = trans('guides.'.$guidePromo[0]))
